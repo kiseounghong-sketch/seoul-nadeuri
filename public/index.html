@@ -578,6 +578,11 @@ button { font: inherit; color: inherit; }
 .team-card li { padding: 6px 12px; border: 2px solid var(--on-day); border-radius: 10px; font-size: 18px; font-weight: 800; }
 .team-card li.me { background: var(--on-day); color: var(--day); }
 .team-card .say { margin-top: 12px; font-size: 15px; font-weight: 700; line-height: 1.5; }
+.team-card.room { margin-top: 10px; background: var(--bg2); color: var(--ink); }
+.team-card.room li { border-color: var(--ink); }
+.team-card.room li.me { background: var(--ink); color: var(--bg); }
+.team-label { font-size: 14px; font-weight: 800; color: var(--ink2); }
+.room-wait { margin-top: 10px; padding: 12px 14px; border-radius: 12px; background: var(--bg2); color: var(--ink2); font-size: 15.5px; font-weight: 700; line-height: 1.5; }
 
 /* 뮤지컬 끝난 밤: 내일 박물관 미리 보기 */
 #tonight { padding-top: 20px; }
@@ -718,7 +723,7 @@ button { font: inherit; color: inherit; }
 
       <div class="sec" id="team">
         <div class="memo-head">
-          <h2>우리 조</h2>
+          <h2>우리 조와 방</h2>
           <button type="button" class="text-btn" id="team-change" hidden>다시 고르기</button>
         </div>
         <div id="team-view"></div>
@@ -1233,7 +1238,8 @@ function renderBoard() {
   } else {
     const c = st.cur, x = st.next, d = DAYS[c.day];
     const wn = workNext();
-    key = c.id + '/' + (wn ? wn.id : '');
+    const rm = (c.here === 'hostel' || (c.rules || []).includes('hostel')) ? roomOf() : null;
+    key = c.id + '/' + (wn ? wn.id : '') + '/' + (rm && rm.room ? rm.room : '');
     const links = (ruleOf(c) ? '<a class="board-link here" href="#rules" data-rule="' + ruleOf(c) + '">여기서 지킬 것 보기</a>' : '') +
       (wn ? '<a class="board-link" href="#work" data-sec="' + wn.id + '">활동지 쓰기: ' + esc(wn.short) + '</a>' : '');
     let pos = c.idx;
@@ -1243,6 +1249,7 @@ function renderBoard() {
       '<p class="board-title">' + esc(c.title) + '</p>' +
       '<p class="board-when">' + c.t + (c.end ? '~' + c.end : '') + '</p>' +
       '<p class="board-sub">' + esc(c.note) + '</p>' +
+      (rm && rm.room ? '<p class="board-sub" style="margin-top:6px">내 방: <b>' + esc(rm.room) + '</b></p>' : '') +
       (links ? '<div class="board-links">' + links + '</div>' : '') +
       strip(c.day, pos) +
       (x ? '<div class="next"><p class="board-label">다음</p>' +
@@ -1478,7 +1485,7 @@ function whoLine() {
 }
 
 /* ── 우리 조: 명단은 암호로 잠가 두고, 선생님이 알려 준 코드를 넣은 휴대전화에서만 푼다 ── */
-const TEAMS_SEALED = {"it": 300000, "salt": "aI7XLUSojyYD7RJ3qOXqgA==", "iv": "Lrwjz6Inr3gw5l0A", "ct": "jaG9sS4A84rZX2f6pvKm/+GsFvmF+ryX5bwVlnGq6jXEdM7SDg4cmvDSKeAr5VafokZx1LwMp/z4ozRujnDh+jwm/Dk3H/HhgKV7E6ojb6dt3QcIF4uD5uMLHccUdtfWfQPvmSyoo9f59AiYMH53BQBq/q/uGpz1paJeMlL9NtfvvkUPS0owCLOdtWtpwQP+DxoE1UJUMDC0qXqFiWJHfon1rlIh1GsS6ZWqNj0TylRQCrArNxJiYC7xYUurSNtg9MWbGc3gtzuapI9wEakc9WBqWQp/jADe2qXqYJqyVEts7ZkD5P/FneHDDGf0+NpHPjiW9JsTmH/QMmLgHBEhUqSXwGmsTQV6KqDnrpM8wgPEC4VHNFYof5F7GVOAGf+YN+h36SnGrIpxbMbfe0phHoqh8aUoi3P7h9fOKsghogG8vDfLlavV3J6S9Pi2c84vtt5NMDtYp5zyNSd2fVEmzdJZeJ5eX1LfjQQib73cB4CnrwWMDA0ucrBAZx2RXHAlyS1gVPU0Fw=="};
+const TEAMS_SEALED = {"it": 300000, "salt": "uE7OgHzAHWwVD/jV0UI17A==", "iv": "aSoMoivASHWX3rcM", "ct": "lzPmkbOl+VuYJNtWyv9wQXFSn6OnGVhyPJ/JfWQv3+4S6N10NgPRCVVszfgQPZ6k5Hj8i1HtNVb9wIAhxeNNgIqUbLmKjYnaDsgGMqBWF0XBv4bzhn3Z1X8VEcf1YAM9pqAWjuf3gvxAWoJy/eN98MDWqOq3zQLLva8Aw3qSM55ulUgsHWTuUXIJ5GL0omQwWP3w0zwoJPQac1uhZYYiXTQjfRC9y+tfp26o2DKlWFmvhxVxVUTueWQ9CsL24v6RkOfb8IF/JreUA3IP4gQ3iMyXuZELSER9g/di6OeKTILeUEzBBh5sJr4hoSm2S0jXiRAmW8lPvfdbfUlrVFqYQyGt9D3SnN7LAUW/rGTBBdKb4qsjsoWUCToDbaERaRpCber4sz8zC1omWEkSyzKcsfwRk2ULugGJpKN4J6Ivc5xaU0ihrLv+r2GFOXyjfAo4N6L8PA8iN3dbHtH6TgdSE7PYhWJkeXO6bWb+P3B7XLAB67r7rqJa9rdMMF/h41keu9wDsKNjhNX5UtzsMQmhi8a/mlA/2GbAF3A="};
 async function unseal(code) {
   const b = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
   const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(code), 'PBKDF2', false, ['deriveKey']);
@@ -1488,7 +1495,25 @@ async function unseal(code) {
   return JSON.parse(new TextDecoder().decode(plain));
 }
 const sealKey = TEAMS_SEALED.salt.slice(0, 8);
-const getTeams = () => { const t = store.get('teams', null); return t && t.k === sealKey ? t.list : null; };
+/* 잠금을 푼 내용: { teams: {학년: [[이름...], ...]}, rooms: [{ room: '503', names: [...] }] } */
+const sealed = () => { const t = store.get('teams', null); return t && t.k === sealKey && t.data ? t.data : null; };
+const getTeams = () => { const d = sealed(); return d ? d.teams : null; };
+const roomName = (r) => (/^\d+$/.test(r) ? r + '호' : r);
+function roomOf() {
+  const d = sealed(), me = getMe();
+  if (!d || !d.rooms || !d.rooms.length || !teamOf()) return null;
+  const r = d.rooms.find((x) => x.names.includes(me.name));
+  return r ? { room: roomName(r.room), names: r.names, others: r.names.filter((x) => x !== me.name) } : { room: '' };
+}
+/* 이름을 고른 뒤 조원과 방 정보를 '내 메모'의 빈칸에 채워 둔다 */
+function fillMemo() {
+  const t = teamOf(), r = roomOf(), m = memo();
+  let changed = false;
+  if (t && t.others.length && !m.buddy) { m.buddy = t.others.join(', '); changed = true; }
+  if (r && r.room && !m.room) { m.room = r.room; changed = true; }
+  if (r && r.room && r.others.length && !m.mates) { m.mates = r.others.join(', '); changed = true; }
+  if (changed) { store.set('memo', m); renderMemo(); }
+}
 function teamOf() {
   const list = getTeams(), me = getMe();
   if (!list || !me.team) return null;
@@ -1507,9 +1532,14 @@ function renderTeam() {
     return;
   }
   if (t) {
-    v.innerHTML = '<div class="team-card"><p class="team-no">' + t.g + '학년 ' + t.n + '조</p><ul>' +
-      t.names.map((x) => '<li' + (x === me.name ? ' class="me"' : '') + '>' + esc(x) + '</li>').join('') + '</ul>' +
-      '<p class="say">' + (t.others.length ? '박물관에서도, 휴게소에서도 우리 조끼리 함께 다녀요.' : '짝은 선생님과 함께 정해요. 출발 전에 담임 선생님께 확인해요.') + '</p></div>';
+    const r = roomOf(), li = (names) => names.map((x) => '<li' + (x === me.name ? ' class="me"' : '') + '>' + esc(x) + '</li>').join('');
+    v.innerHTML = '<div class="team-card"><p class="team-no">' + t.g + '학년 ' + t.n + '조</p><ul>' + li(t.names) + '</ul>' +
+      '<p class="say">' + (t.others.length ? '박물관에서도, 휴게소에서도 우리 조끼리 함께 다녀요.' : '짝은 선생님과 함께 정해요. 출발 전에 담임 선생님께 확인해요.') + '</p></div>' +
+      (!r ? '<p class="room-wait">숙소 방 배정은 아직 나오지 않았어요. 나오면 여기에 바로 보여요.</p>'
+        : !r.room ? '<p class="room-wait">방 배정 명단에서 내 이름을 찾지 못했어요. 담임 선생님께 확인해요.</p>'
+        : '<div class="team-card room"><p class="team-label">서울유스호스텔</p><p class="team-no">' + esc(r.room) + '</p><ul>' + li(r.names) + '</ul>' +
+          '<p class="say">방에 들어가면 문에 붙은 피난안내도부터 확인해요.</p></div>');
+    fillMemo();
     return;
   }
   const g = teamGrade || me.grade || 0;
@@ -1523,8 +1553,8 @@ $('#team-view').addEventListener('submit', (e) => {
   const code = $('#team-code').value.replace(/\D/g, ''), msg = $('#team-msg'), btn = e.target.querySelector('button');
   if (code.length !== 6) { msg.textContent = '숫자 여섯 자리를 넣어 주세요.'; msg.className = 'hint bad'; return; }
   btn.disabled = true; btn.textContent = '여는 중…';
-  unseal(code).then((list) => {
-    store.set('teams', { k: sealKey, list: list });
+  unseal(code).then((data) => {
+    store.set('teams', { k: sealKey, code: code, data: data });
     renderTeam();
   }, () => {
     btn.disabled = false; btn.textContent = '조 명단 열기';
@@ -1539,8 +1569,6 @@ $('#team-view').addEventListener('click', (e) => {
   const grade = teamGrade || getMe().grade, i = +n.dataset.ti, me = getMe();
   me.grade = grade; me.name = n.dataset.tn; me.team = { g: grade, i: i };
   store.set('me', me);
-  const t = teamOf(), m = memo();
-  if (t && t.others.length && !m.buddy) { m.buddy = t.others.join(', '); store.set('memo', m); }
   renderTeam(); renderMemo(); renderNight();
 });
 $('#team-change').addEventListener('click', () => {
@@ -1861,6 +1889,15 @@ renderPack();
 renderMemo();
 renderMuseum();
 renderTeam();
+/* 명단이 바뀌어 다시 올라오면(방 배정 등) 저장해 둔 코드로 다시 푼다 */
+(() => {
+  const old = store.get('teams', null);
+  if (!old || old.k === sealKey || !old.code) return;
+  unseal(old.code).then((data) => {
+    store.set('teams', { k: sealKey, code: old.code, data: data });
+    renderTeam(); renderNight(); boardKey = ''; tick();
+  }, () => {});
+})();
 setTabs();
 go(location.hash.slice(1), false);
 tick();
