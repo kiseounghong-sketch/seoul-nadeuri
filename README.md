@@ -4,6 +4,7 @@
 
 - 주소: https://seoul-nadeuri.web.app
 - `main`에 올리면 GitHub Actions가 Firebase Hosting에 자동으로 올립니다.
-- 내용 수정: `public/index.html`의 `DAYS`(일정), `RULES`(지킬 것), `PACK`(준비물), `MUSEUM`(박물관) 부분
+- 내용 수정: `public/index.html`의 `DAYS`(일정), `RULES`(지킬 것), `PACK`(준비물), `MUSEUM`(박물관), `WORK`(활동지 질문) 부분
+- 활동지 탭은 11. 19. 09:00(출발)부터 준비물 탭 자리에 나오고, 칸마다 `open` 시각에 열립니다.
 - 미리 보기: 주소 끝에 `?now=2026-11-19T13:40`처럼 붙이면 그 시각의 화면을 볼 수 있습니다.
 - 학교 이름, 선생님 전화번호, 학생 이름은 넣지 않습니다. 검색 노출은 막아 두었습니다.

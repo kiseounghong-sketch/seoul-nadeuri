@@ -565,6 +565,35 @@ button { font: inherit; color: inherit; }
 .count { margin: 0 0 4px; font-size: 15px; font-weight: 700; color: var(--ink2); }
 .count.over { color: var(--red-ink); }
 
+/* 뮤지컬 끝난 밤: 내일 박물관 미리 보기 */
+#tonight { padding-top: 20px; }
+.night { padding: 18px 16px 16px; border-radius: 16px; background: var(--bg2); border-top: 6px solid var(--day); }
+.night-label { font: 400 21px/1.2 var(--display); color: var(--day-ink); }
+.night h2 { margin: 4px 0 10px; font-size: 22px; font-weight: 800; line-height: 1.3; }
+.night h3 { margin: 18px 0 4px; font-size: 17px; font-weight: 800; }
+.night .rules { border-top: 2px solid var(--ink); }
+.night .say { font-size: 16px; line-height: 1.5; color: var(--ink2); }
+.night .btn { margin-top: 16px; }
+.picked { border-top: 2px solid var(--ink); }
+.picked li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 17px; font-weight: 800; line-height: 1.4; }
+.picked small { flex: none; font-size: 14px; font-weight: 700; color: var(--day-ink); }
+
+/* 활동지 */
+.wsec { margin: 30px var(--gut) 0; scroll-margin-top: 8px; }
+.wsec-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+.wsec-head h3 { font-size: 21px; font-weight: 800; line-height: 1.3; }
+.wsec-head .badge { background: var(--day); color: var(--on-day); }
+.wsec-head .badge.wait { background: var(--bg2); color: var(--ink2); }
+.wsec-head .badge.done { padding: 1px 7px; border: 2px solid currentColor; background: transparent; color: var(--day-ink); }
+.wsec-when { flex-basis: 100%; font-size: 15px; font-weight: 700; color: var(--ink2); }
+.wsec .q { margin-top: 20px; }
+.wsec.locked .q, .wsec.locked .field, .wsec.locked .btn-row, .wsec.locked .seen { opacity: .5; }
+.q .tag { flex: none; padding: 1px 8px; border-radius: 6px; background: var(--day); color: var(--on-day); font-size: 14px; font-weight: 800; line-height: 1.5; }
+.mine { margin: 0 0 8px; padding: 10px 12px; border-radius: 10px; background: var(--bg2); font-size: 15.5px; line-height: 1.5; }
+.wsub { margin: 18px 0 4px; font-size: 17px; font-weight: 800; }
+.seen label { min-height: 50px; font-size: 17px; }
+.field textarea:disabled { background: var(--bg2); }
+
 /* 아래 메뉴 */
 .tabs {
   position: fixed;
@@ -662,6 +691,7 @@ button { font: inherit; color: inherit; }
     <!-- 지금 -->
     <section class="page" id="now" aria-label="지금">
       <div class="board" id="board" aria-live="polite"></div>
+      <div class="sec d2" id="tonight" hidden></div>
 
       <div class="sec">
         <h2>세 가지 약속</h2>
@@ -764,7 +794,30 @@ button { font: inherit; color: inherit; }
           <li><b>09:00</b>서울로 출발</li>
         </ul>
       </div>
-      <p class="foot">늦을 것 같으면 담임 선생님께 바로 연락하세요.</p>
+      <p class="foot">늦을 것 같으면 담임 선생님께 바로 연락하세요. 11월 19일 09:00에 출발하면 이 탭은 ‘활동지’로 바뀌어요.</p>
+    </section>
+
+    <!-- 활동지: 출발 시각부터 준비물 탭 자리에 나온다 -->
+    <section class="page" id="work" aria-label="활동지" hidden>
+      <div class="page-head">
+        <h2 class="page-title">활동지</h2>
+        <p class="lead">칸마다 열리는 시간이 있어요. 한두 줄로 짧게 써도 괜찮아요.</p>
+        <p class="prog-text" id="work-prog"></p>
+        <div class="prog" aria-hidden="true"><i id="work-bar"></i></div>
+      </div>
+      <div class="sec" style="padding-top:8px">
+        <div class="seg" id="work-grade" role="group" aria-label="학년">
+          <button type="button" data-grade="1" aria-pressed="false">1학년</button>
+          <button type="button" data-grade="2" aria-pressed="false">2학년</button>
+        </div>
+        <label class="field"><span>이름</span><input id="work-name" placeholder="내 이름" autocomplete="off"></label>
+      </div>
+      <div id="work-list"></div>
+      <div class="sec">
+        <div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn" id="work-all">쓴 것 한꺼번에 보내기</button></div>
+        <p class="hint" style="margin-top:10px">적는 대로 이 휴대전화에만 저장돼요. ‘선생님께 보내기’를 누르면 카카오톡 같은 앱으로 보낼 수 있어요.</p>
+      </div>
+      <p class="foot">무엇을 써야 할지 모르겠으면 짝과 먼저 이야기해 보고 써요.</p>
     </section>
 
     <!-- 국립중앙박물관: 견학 계획서와 안내 -->
@@ -874,7 +927,7 @@ button { font: inherit; color: inherit; }
       <li><a href="#now"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v2.5M16 18v2.5"/><path d="M8 14.5h.01M16 14.5h.01" stroke-width="2.6"/></svg>지금</a></li>
       <li><a href="#plan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14"/><circle cx="6" cy="5" r="2" fill="var(--bg)"/><circle cx="6" cy="12" r="2" fill="var(--bg)"/><circle cx="6" cy="19" r="2" fill="var(--bg)"/><path d="M12 5h8M12 12h8M12 19h5"/></svg>일정</a></li>
       <li><a href="#rules"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2.5"/><path d="M9 12.2l2.2 2.3 4-4.5"/></svg>지킬 것</a></li>
-      <li><a href="#pack"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5.5" y="8" width="13" height="13" rx="3.5"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8M9.5 15h5"/></svg>준비물</a></li>
+      <li><a href="#pack" id="tab-swap"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5.5" y="8" width="13" height="13" rx="3.5"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8M9.5 15h5"/></svg>준비물</a></li>
       <li><a href="#sos" class="sos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.9l1.4 3.9-1.9 1.4a12 12 0 0 0 6.2 6.2l1.4-1.9 3.9 1.4v2.9a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg>비상</a></li>
     </ul>
   </nav>
@@ -890,7 +943,7 @@ button { font: inherit; color: inherit; }
 'use strict';
 
 /* ─────────────────────────────────────────────────────────────
-   내용을 바꿀 때는 아래 DAYS, RULES, PACK 만 고치면 됩니다.
+   내용을 바꿀 때는 아래 DAYS, RULES, PACK, MUSEUM, WORK 만 고치면 됩니다.
    - t: 시작 시간, end: 끝나는 시간(있을 때만)
    - key: true 이면 늦으면 안 되는 시간(노란색)
    - rules: 일정 화면에서 펼쳐 볼 '지킬 것' 묶음 이름
@@ -1024,6 +1077,47 @@ const MUSEUM = [
 ];
 const PICK_MAX = 5;
 
+/* 활동지: WORK_FROM(출발 시각)부터 준비물 탭 자리에 나온다.
+   - open: 그 칸이 열리는 시각, qs: [질문, 예시] (셋째 값 'ask'면 계획서의 '알아 오고 싶은 것'을 같이 보여 줌)
+   - grades: 학년마다 질문이 다를 때, seen: 계획서에서 고른 유물 중 본 것 표시 */
+const WORK_FROM = '2026-11-19T09:00';
+const WORK = [
+  { id: 'lg', title: 'LG디스커버리랩 AI 교육', short: 'LG디스커버리랩', day: 1, open: '2026-11-19T15:30', when: '11월 19일 13:30~15:30',
+    grades: {
+      1: { topic: '스마트팩토리 양불판정', qs: [
+        ['AI가 좋은 제품과 불량품을 가려내게 하려고 먼저 무엇을 했나요?', '예: 좋은 제품과 불량품 사진을 나눠서 보여 주고 이름을 붙였다'],
+        ['AI가 헷갈리거나 틀리게 판정한 적이 있었나요? 왜 그랬을까요?', '예: 어둡게 찍힌 사진을 불량으로 판정했다. 어두운 사진을 덜 배워서'],
+        ['공장 말고 이 기술을 쓰면 좋을 곳 한 군데와 이유', '예: 과일 선별장. 상한 과일을 빨리 골라낼 수 있어서']
+      ] },
+      2: { topic: '자율주행과 SLAM', qs: [
+        ['SLAM은 무엇을 하는 기술인지 내 말로 한 줄', '예: 처음 가 보는 곳의 지도를 그리면서 내 위치도 함께 찾는 기술'],
+        ['로봇(차)이 주변을 알아차리는 데 무엇을 썼나요?', '예: 라이다 센서로 벽까지의 거리를 쟀다'],
+        ['자율주행차가 사고를 내면 누구 책임일까요? 내 생각과 이유', '예: 만든 회사. 운전을 사람이 아니라 프로그램이 했으니까']
+      ] }
+    },
+    feel: '오늘 교육에서 새로 알게 된 것, 느낀 점' },
+  { id: 'show', title: '뮤지컬 ‘연의 편지’', short: '뮤지컬', day: 1, open: '2026-11-19T21:40', when: '11월 19일 20:00~21:40, 공연이 끝나면 열려요',
+    qs: [
+      ['가장 기억에 남는 장면과 그 이유', '예: 편지를 처음 발견하는 장면. 보는 나도 두근거렸다'],
+      ['이야기에서 편지는 어떤 역할을 했나요?', '예: 주인공이 혼자가 아니라고 느끼게 해 줬다'],
+      ['나라면 누구에게 어떤 편지를 남기고 싶나요? 한 줄로', '예: 내년에 우리 교실을 쓸 후배에게, 창가 자리는 겨울에 추워']
+    ],
+    feel: '공연을 보고 느낀 점' },
+  { id: 'museum', title: '국립중앙박물관', short: '박물관', day: 2, open: '2026-11-20T10:00', when: '11월 20일 10:00~12:00', seen: true,
+    qs: [
+      ['가장 인상 깊었던 유물 하나와 그 이유', '예: 반가사유상. 어두운 방에서 보니 표정이 더 또렷했다'],
+      ['계획서에 쓴 ‘알아 오고 싶은 것’의 답', '설명문이나 전시 안내에서 찾은 답을 적어요', 'ask'],
+      ['사진으로 볼 때와 직접 볼 때 달랐던 점', '예: 달항아리가 생각보다 크고, 완전히 둥글지 않았다']
+    ],
+    feel: '박물관을 보고 느낀 점' },
+  { id: 'trip', title: '이틀을 돌아보며', short: '돌아보기', day: 0, open: '2026-11-20T13:30', when: '11월 20일, 학교로 가는 버스에서',
+    qs: [
+      ['이틀 동안 가장 좋았던 것 하나와 그 이유', '예: LG디스커버리랩. 직접 AI를 학습시켜 봐서'],
+      ['다음 체험학습에서 바뀌면 좋겠는 점', '예: 박물관 관람 시간이 조금 더 길었으면']
+    ],
+    feel: '이틀 전체 소감' }
+];
+
 /* ───────────── 여기부터는 동작 ───────────── */
 const $ = (s, r = document) => r.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -1108,13 +1202,18 @@ function renderBoard() {
       '<div class="board-links"><a class="board-link" href="#museum">' + (pn >= 5 ? '박물관 견학 계획서 다 썼어요' : pn ? '박물관 견학 계획서 이어 쓰기' : '박물관 견학 계획서 쓰기') + '</a>' +
       '<a class="board-link here" href="#pack">준비물 ' + PACK.length + '개 중 ' + done + '개 챙겼어요</a></div>';
   } else if (st.mode === 'post') {
-    key = 'post';
+    const wn = workNext();
+    key = 'post/' + (wn ? wn.id : '');
     html = '<p class="board-day"><span class="badge">끝</span>11월 19일~20일</p>' +
       '<p class="board-title">잘 다녀왔습니다</p>' +
-      '<p class="board-sub">이틀 동안 수고했어요.</p>';
+      '<p class="board-sub">이틀 동안 수고했어요.</p>' +
+      (wn ? '<a class="board-link" href="#work" data-sec="' + wn.id + '">활동지 마저 쓰기: ' + esc(wn.short) + '</a>' : '');
   } else {
     const c = st.cur, x = st.next, d = DAYS[c.day];
-    key = c.id;
+    const wn = workNext();
+    key = c.id + '/' + (wn ? wn.id : '');
+    const links = (ruleOf(c) ? '<a class="board-link here" href="#rules" data-rule="' + ruleOf(c) + '">여기서 지킬 것 보기</a>' : '') +
+      (wn ? '<a class="board-link" href="#work" data-sec="' + wn.id + '">활동지 쓰기: ' + esc(wn.short) + '</a>' : '');
     let pos = c.idx;
     if (x && x.day === c.day) pos += Math.min(1, (n - c.start) / (x.start - c.start));
     html = '<p class="board-day"><span class="badge">' + d.name + '</span>' + d.long + '</p>' +
@@ -1122,7 +1221,7 @@ function renderBoard() {
       '<p class="board-title">' + esc(c.title) + '</p>' +
       '<p class="board-when">' + c.t + (c.end ? '~' + c.end : '') + '</p>' +
       '<p class="board-sub">' + esc(c.note) + '</p>' +
-      (ruleOf(c) ? '<a class="board-link here" href="#rules" data-rule="' + ruleOf(c) + '">여기서 지킬 것 보기</a>' : '') +
+      (links ? '<div class="board-links">' + links + '</div>' : '') +
       strip(c.day, pos) +
       (x ? '<div class="next"><p class="board-label">다음</p>' +
         '<p class="next-row"><span class="next-time">' + (x.day !== c.day ? '내일 ' : '') + x.t + '</span><span class="next-title">' + esc(x.title) + '</span></p>' +
@@ -1399,15 +1498,204 @@ document.addEventListener('click', (e) => {
   go(a.dataset.go);
 });
 
-/* ── 화면 전환 ── */
-const PAGES = ['now', 'plan', 'rules', 'pack', 'museum', 'sos'];
-function go(id, push) {
-  if (!PAGES.includes(id)) id = 'now';
-  PAGES.forEach((p) => { document.getElementById(p).hidden = p !== id; });
-  const tab = id === 'museum' ? 'pack' : id;
+/* ── 뮤지컬 끝난 밤부터 관람 전까지: 박물관 미리 보기 ── */
+const NIGHT_FROM = at('2026-11-19', '21:40'), NIGHT_TO = at('2026-11-20', '10:00');
+let nightKey = '';
+function renderNight() {
+  const n = now(), el = $('#tonight');
+  const on = n >= NIGHT_FROM && n < NIGHT_TO;
+  const today = kst(n).ymd === DAYS[1].date;
+  const p = getPlan(), m = memo();
+  const key = on ? (today ? 'today' : 'eve') + JSON.stringify([p, m.meet || '']) : '';
+  if (key === nightKey) return;
+  nightKey = key;
+  el.hidden = !on;
+  if (!on) { el.innerHTML = ''; return; }
+  const picked = [];
+  MUSEUM.forEach((f) => f.items.forEach((it) => { if (p.picks.includes(it.id)) picked.push('<li>' + esc(it.name) + '<small>' + f.floor + ' ' + esc(it.where) + '</small></li>'); }));
+  const full = planDone() >= 5;
+  el.innerHTML = '<div class="night">' +
+    '<p class="night-label">' + (today ? '오늘' : '내일') + ' 10:00~12:00</p>' +
+    '<h2>' + (today ? '박물관에 들어가기 전에' : '자기 전에 박물관 미리 보기') + '</h2>' +
+    '<ul class="rules">' +
+    '<li><b>짝과 둘이서</b> 봐요. <b>12:00</b>까지 집결 장소로 와요.</li>' +
+    '<li>' + (m.meet ? '집결 장소: <b>' + esc(m.meet) + '</b>' : '집결 장소는 선생님이 알려 줘요. ‘내 메모’에 적어 두세요.') + '</li>' +
+    '<li>입구에서 <b>가방 보안검색</b>을 해요. 음식물은 가지고 들어갈 수 없으니 가방은 가볍게.</li>' +
+    '<li>탐험 활동지에 쓸 <b>필기도구</b>를 챙겨요.</li>' +
+    (today ? '' : '<li>휴대전화는 오늘 밤에 <b>충전</b>해 둬요. 사진도 찍고 활동지도 써요.</li>') +
+    '<li>사진은 찍어도 되지만 <b>플래시</b>는 꺼요.</li></ul>' +
+    '<h3>내가 고른 것</h3>' +
+    (picked.length ? '<ul class="picked">' + picked.join('') + '</ul>'
+      : '<p class="say">아직 고르지 않았어요. 지금 다섯 개만 골라 두면 내일 헤매지 않아요.</p>') +
+    (p.order.trim() ? '<h3>내 관람 순서</h3><p class="say">' + esc(p.order.trim()) + '</p>' : '') +
+    '<a class="btn day" href="#museum" data-go="museum">' + (full ? '박물관 안내와 내 계획서 보기' : '계획서 마저 쓰기') + '</a>' +
+    '</div>';
+}
+
+/* ── 활동지 ── */
+const kt = (s) => new Date(s + ':00+09:00');
+const workOn = () => now() >= kt(WORK_FROM);
+const isOpen = (s) => now() >= kt(s.open);
+const getWork = () => store.get('work', {});
+const myGrade = () => getMe().grade;
+const wkey = (s, g) => (s.grades ? s.id + g : s.id);
+const qsOf = (s, g) => (s.grades ? (s.grades[g] ? s.grades[g].qs : null) : s.qs);
+function ansOf(s, g) {
+  const w = getWork()[wkey(s, g)] || {};
+  return { a: w.a || [], feel: w.feel || '', seen: w.seen || [] };
+}
+function stateOf(s, g) {
+  if (!isOpen(s)) return 'lock';
+  const qs = qsOf(s, g);
+  if (!qs) return 'empty';
+  const v = ansOf(s, g);
+  const n = qs.filter((q, i) => (v.a[i] || '').trim()).length + (v.feel.trim() ? 1 : 0);
+  return n === 0 ? 'empty' : n === qs.length + 1 ? 'done' : 'part';
+}
+function badgeOf(s, st) {
+  if (st === 'lock') {
+    const k = kst(kt(s.open));
+    return '<span class="badge wait">' + (k.ymd === kst(now()).ymd ? '' : k.d + '일 ') + k.hm + '에 열려요</span>';
+  }
+  if (st === 'done') return '<span class="badge done">다 썼어요</span>';
+  return '<span class="badge">' + (st === 'part' ? '쓰는 중' : '쓸 차례') + '</span>';
+}
+/* 가장 최근에 열린 칸 가운데 아직 다 쓰지 않은 것 */
+function workNext() {
+  if (!workOn()) return null;
+  const g = myGrade(), open = WORK.filter(isOpen);
+  for (let i = open.length - 1; i >= 0; i--) if (stateOf(open[i], g) !== 'done') return open[i];
+  return null;
+}
+let workKey = '';
+function renderWork() {
+  const g = myGrade(), p = getPlan();
+  $('#work-name').value = getMe().name;
+  document.querySelectorAll('#work-grade button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.grade === g)));
+  workKey = g + '/' + WORK.map((s) => (isOpen(s) ? 1 : 0)).join('');
+  $('#work-list').innerHTML = WORK.map((s) => {
+    const st = stateOf(s, g), qs = qsOf(s, g), v = ansOf(s, g), k = wkey(s, g), lock = st === 'lock', dis = lock ? ' disabled' : '';
+    const sub = s.grades && s.grades[g] ? ', ' + g + '학년 ' + s.grades[g].topic : '';
+    let body = '';
+    if (!qs) {
+      body = '<p class="mine" style="margin-top:14px">위에서 학년을 고르면 질문이 나와요.</p>';
+    } else {
+      if (s.seen) {
+        const items = p.picks.map(itemOf).filter(Boolean);
+        if (items.length) {
+          body += '<p class="wsub">계획서에서 고른 것 가운데 본 것에 표시해요</p><ul class="check seen">' +
+            items.map((it) => '<li><label><input type="checkbox" data-k="' + k + '" data-seen="' + it.id + '"' + (v.seen.includes(it.id) ? ' checked' : '') + dis + '><span>' + esc(it.name) + '</span></label></li>').join('') + '</ul>';
+        }
+      }
+      body += qs.map((q, i) => '<h4 class="q"><span class="n">' + (i + 1) + '</span>' + esc(q[0]) + '</h4>' +
+        (q[2] === 'ask' && p.ask.trim() ? '<p class="mine">내가 쓴 질문: ' + esc(p.ask.trim()) + '</p>' : '') +
+        '<label class="field"><textarea data-k="' + k + '" data-i="' + i + '" aria-label="' + esc(q[0]) + '" placeholder="' + esc(q[1]) + '"' + dis + '>' + esc(v.a[i] || '') + '</textarea></label>').join('') +
+        '<h4 class="q"><span class="tag">소감</span>' + esc(s.feel) + '</h4>' +
+        '<label class="field"><textarea data-k="' + k + '" data-i="feel" aria-label="' + esc(s.feel) + '" placeholder="느낀 대로 두세 줄"' + dis + '>' + esc(v.feel) + '</textarea></label>' +
+        '<div class="btn-row"><button type="button" class="btn day" data-send="' + s.id + '"' + dis + '>선생님께 보내기</button><button type="button" class="btn" data-copy="' + s.id + '"' + dis + '>내용 복사</button></div>';
+    }
+    return '<section class="wsec ' + (s.day ? 'd' + s.day : 'dn') + (lock ? ' locked' : '') + '" id="w-' + s.id + '">' +
+      '<div class="wsec-head"><h3>' + esc(s.title) + '</h3><span data-badge>' + badgeOf(s, st) + '</span><p class="wsec-when">' + esc(s.when + sub) + '</p></div>' + body + '</section>';
+  }).join('');
+  workStatus();
+}
+function workStatus() {
+  const g = myGrade();
+  let done = 0;
+  WORK.forEach((s) => {
+    const st = stateOf(s, g);
+    if (st === 'done') done++;
+    const b = document.querySelector('#w-' + s.id + ' [data-badge]');
+    if (b) b.innerHTML = badgeOf(s, st);
+  });
+  $('#work-prog').textContent = done === WORK.length ? '다 썼어요. 수고했어요.' : WORK.length + '개 중 ' + done + '개 다 썼어요';
+  $('#work-bar').style.width = (done / WORK.length * 100) + '%';
+  renderBoard();
+}
+function workText(s) {
+  const g = myGrade(), qs = qsOf(s, g) || [], v = ansOf(s, g), p = getPlan();
+  const lines = ['[서울 나들이] 활동지: ' + s.title + (s.grades && s.grades[g] ? ' (' + s.grades[g].topic + ')' : ''), whoLine()];
+  if (s.seen && p.picks.length) lines.push('본 것: ' + (v.seen.map(itemOf).filter(Boolean).map((x) => x.name).join(', ') || '-'));
+  qs.forEach((q, i) => lines.push((i + 1) + '. ' + q[0], '→ ' + ((v.a[i] || '').trim() || '-')));
+  lines.push('소감: ' + (v.feel.trim() || '-'));
+  return lines.filter(Boolean).join('\n');
+}
+const secOf = (id) => WORK.find((s) => s.id === id);
+$('#work-list').addEventListener('input', (e) => {
+  const t = e.target;
+  if (!t.dataset.k || t.dataset.i == null) return;
+  const w = getWork(), o = w[t.dataset.k] || {};
+  if (t.dataset.i === 'feel') o.feel = t.value.slice(0, 600);
+  else { o.a = o.a || []; o.a[+t.dataset.i] = t.value.slice(0, 600); }
+  w[t.dataset.k] = o;
+  store.set('work', w);
+  workStatus();
+});
+$('#work-list').addEventListener('change', (e) => {
+  const t = e.target;
+  if (!t.dataset.seen) return;
+  const w = getWork(), o = w[t.dataset.k] || {};
+  o.seen = (o.seen || []).filter((x) => x !== t.dataset.seen);
+  if (t.checked) o.seen.push(t.dataset.seen);
+  w[t.dataset.k] = o;
+  store.set('work', w);
+});
+$('#work-list').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-send], button[data-copy]');
+  if (!b) return;
+  const s = secOf(b.dataset.send || b.dataset.copy);
+  if (b.dataset.send) { sendOut(b, workText(s), '활동지: ' + s.title); return; }
+  copyText(workText(s)).then(() => flash(b, '복사했어요'), () => flash(b, '복사하지 못했어요'));
+});
+$('#work-all').addEventListener('click', (e) => {
+  const g = myGrade(), open = WORK.filter((s) => isOpen(s) && stateOf(s, g) !== 'empty');
+  if (!open.length) { flash(e.currentTarget, '아직 쓴 칸이 없어요'); return; }
+  sendOut(e.currentTarget, open.map(workText).join('\n\n'), '서울 나들이 활동지');
+});
+$('#work-grade').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-grade]');
+  if (!b) return;
+  const me = getMe();
+  me.grade = +b.dataset.grade;
+  store.set('me', me);
+  renderWork();
+});
+$('#work-name').addEventListener('input', (e) => {
+  const me = getMe();
+  me.name = e.target.value.trim().slice(0, 20);
+  store.set('me', me);
+});
+
+/* 출발 시각이 되면 '준비물' 탭이 '활동지' 탭으로 바뀐다 */
+const tabEl = $('#tab-swap');
+const TAB_PACK = tabEl.innerHTML;
+const TAB_WORK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20l1.1-4.4L16 5.7a2.1 2.1 0 0 1 3 3L9.1 18.6z"/><path d="M14.3 7.4l3 3"/><path d="M13 20h6"/></svg>활동지';
+let tabMode = '', curPage = 'now';
+function setTabs() {
+  const mode = workOn() ? 'work' : 'pack';
+  if (mode === tabMode) return;
+  tabMode = mode;
+  tabEl.setAttribute('href', '#' + mode);
+  tabEl.innerHTML = mode === 'work' ? TAB_WORK : TAB_PACK;
+  markTab(curPage);
+}
+function markTab(id) {
+  const tab = id === 'museum' ? tabMode : id;
   document.querySelectorAll('.tabs a').forEach((a) => {
     if (a.getAttribute('href') === '#' + tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
+}
+
+/* ── 화면 전환 ── */
+const PAGES = ['now', 'plan', 'rules', 'pack', 'work', 'museum', 'sos'];
+function go(id, push) {
+  if (!PAGES.includes(id)) id = 'now';
+  PAGES.forEach((p) => { document.getElementById(p).hidden = p !== id; });
+  curPage = id;
+  if (id === 'work') renderWork();
+  if (id === 'museum') renderMuseum();
+  if (id === 'now') renderNight();
+  markTab(id);
   if (push !== false && location.hash !== '#' + id) {
     try { history.replaceState(null, '', location.pathname + location.search + '#' + id); } catch (e) { /* 미리 보기 창에서는 주소를 못 바꿔도 된다 */ }
   }
@@ -1425,6 +1713,7 @@ $('#board').addEventListener('click', (e) => {
   e.preventDefault();
   go(a.getAttribute('href').slice(1));
   if (a.dataset.rule) document.getElementById('rule-' + a.dataset.rule).scrollIntoView({ block: 'start' });
+  if (a.dataset.sec) { const w = document.getElementById('w-' + a.dataset.sec); if (w) w.scrollIntoView({ block: 'start' }); }
 });
 window.addEventListener('hashchange', () => go(location.hash.slice(1), false));
 
@@ -1455,8 +1744,13 @@ if (!standalone) {
 
 /* ── 시작 ── */
 function tick() {
+  setTabs();
   const st = renderBoard();
   renderPlan(st);
+  renderNight();
+  /* 새 칸이 열리면 활동지를 다시 그린다 (쓰는 중이면 다 쓴 뒤에) */
+  const wk = myGrade() + '/' + WORK.map((s) => (isOpen(s) ? 1 : 0)).join('');
+  if (curPage === 'work' && wk !== workKey && !$('#work-list').contains(document.activeElement)) renderWork();
 }
 $('#foot-now').textContent = '안내 기준일 ' + UPDATED;
 $('#foot-sos').textContent = '안내 기준일 ' + UPDATED;
@@ -1469,6 +1763,7 @@ renderRules();
 renderPack();
 renderMemo();
 renderMuseum();
+setTabs();
 go(location.hash.slice(1), false);
 tick();
 setInterval(tick, 20000);
