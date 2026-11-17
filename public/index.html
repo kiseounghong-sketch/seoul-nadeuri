@@ -2342,7 +2342,7 @@ function syncSoon() {
   if (TEACHER) return;
   if (syncBusy) { syncDirty = true; return; }
   clearTimeout(syncTimer);
-  syncTimer = setTimeout(syncUp, 2500);
+  syncTimer = setTimeout(syncUp, 800);
 }
 async function syncUp() {
   if (TEACHER || syncBusy) return;
@@ -2597,7 +2597,6 @@ function tick() {
   /* 새 칸이 열리면 활동지를 다시 그린다 (쓰는 중이면 다 쓴 뒤에) */
   const wk = myGrade() + '/' + WORK.map((s) => (isOpen(s) ? 1 : 0)).join('');
   if (curPage === 'teacher' && tPick == null && autoCp() !== tShown && !$('#t-body').contains(document.activeElement)) renderTeacher();
-  if (curPage === 'twork' && !twBusy && Date.now() - (store.get('twork', { at: 0 }).at || 0) > 60000 && navigator.onLine !== false) loadTWork();
   if (!TEACHER && lunchShown !== lunchLocked() + '/' + !!who() && !$('#lunch').contains(document.activeElement)) renderLunch();
   if (curPage === 'work' && wk !== workKey && !$('#work-list').contains(document.activeElement)) renderWork();
 }
@@ -2652,6 +2651,8 @@ syncSoon();
 go(location.hash.slice(1), false);
 tick();
 setInterval(tick, 20000);
+/* 선생님 앱 활동지 화면을 보고 있으면 10초마다 새로 받아 온다 */
+if (TEACHER) setInterval(() => { if (curPage === 'twork' && !document.hidden && !twBusy && navigator.onLine !== false) loadTWork(); }, 10000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { pulled = false; tick(); syncSoon(); } });
 
 try {
