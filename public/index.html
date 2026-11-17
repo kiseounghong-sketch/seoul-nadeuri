@@ -597,6 +597,20 @@ button { font: inherit; color: inherit; }
 .count { margin: 0 0 4px; font-size: 13.5px; font-weight: 700; color: var(--ink2); }
 .count.over { color: var(--red-ink); }
 
+/* 점심 고르기 */
+.seg button:disabled { opacity: .4; cursor: not-allowed; }
+.seg.menu button { min-height: 50px; line-height: 1.2; }
+.seg .hot { display: block; margin: 2px 0 0; font-size: 12px; color: var(--red-ink); opacity: 1; }
+.seg button[aria-pressed="true"] .hot { color: inherit; }
+.lunch-q { margin: 14px 0 6px; font-size: 15px; font-weight: 800; }
+.lunch-q:first-of-type { margin-top: 10px; }
+.tally { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 8px 0 4px; }
+.tally div { padding: 6px 4px; border-radius: 10px; background: var(--bg2); text-align: center; }
+.tally b { display: block; font: 400 24px/1.1 var(--display); color: var(--day-ink); }
+.tally span { display: block; font-size: 12.5px; font-weight: 800; line-height: 1.3; }
+.tally .hot { color: var(--red-ink); }
+.names-line { font-size: 15px; line-height: 1.5; }
+
 /* 우리 조 */
 .team-lock { border-top: 2px solid var(--ink); }
 .team-lock .field { margin-top: 14px; }
@@ -773,6 +787,7 @@ button { font: inherit; color: inherit; }
       <div class="sub dn" role="group" aria-label="지금 화면에서 볼 것">
         <button type="button" data-pane="now" aria-pressed="true">지금</button>
         <button type="button" class="s-only" data-pane="team" aria-pressed="false">우리 조·방</button>
+        <button type="button" class="s-only" data-pane="lunch" aria-pressed="false">점심</button>
         <button type="button" class="s-only" data-pane="memo" aria-pressed="false">내 메모</button>
         <button type="button" class="t-only" data-pane="tmemo" aria-pressed="false">메모·코드</button>
       </div>
@@ -820,6 +835,10 @@ button { font: inherit; color: inherit; }
         </div>
         <div id="team-view"></div>
       </div>
+      </div>
+
+      <div class="pane s-only" data-pane="lunch" hidden>
+      <div class="sec" id="lunch"></div>
       </div>
 
       <div class="pane" data-pane="memo" hidden>
@@ -1170,7 +1189,7 @@ const DAYS = [
       { t: '06:20', title: '학교 집결', note: '수능 응원 가는 학생만 모여요. 06:30에 수능 시험장으로 출발합니다.', key: true },
       { t: '08:35', title: '학교 집결', note: '응원에 가지 않는 학생이 모이는 시간이에요. 출결을 확인합니다.', key: true },
       { t: '09:00', title: '서울로 출발', note: '전세버스로 가고, 중간에 휴게소에서 쉬어 가요.', rules: ['bus'] },
-      { t: '12:30', title: 'LG아트센터 서울 도착, 점심', note: '같은 건물 식당 ‘차알’에서 볶음밥, 짬뽕, 짜장 가운데 골라 먹어요.', map: 'https://place.map.kakao.com/643449402', here: 'lg' },
+      { t: '12:30', title: 'LG아트센터 서울 도착, 점심', note: '같은 건물 식당 ‘차알’에서 미리 고른 메뉴를 먹어요.', map: 'https://place.map.kakao.com/643449402', here: 'lg' },
       { t: '13:15', title: '교육장 입장 마감', note: '1층 ‘튜브’의 LAB별 표지판 앞에 모여요. 늦으면 교육에 참여할 수 없어요.', key: true, here: 'lg' },
       { t: '13:30', end: '15:30', title: 'LG디스커버리랩 AI 교육', note: '1학년은 2층 LAB3에서 스마트팩토리 양불판정, 2학년은 1층 OPENLAB에서 자율주행과 SLAM을 배워요.', rules: ['lg'] },
       { t: '15:30', title: '숙소로 이동', note: '버스로 서울유스호스텔까지 가요. 퇴근 시간이라 길이 막힐 수 있어요.', here: 'bus' },
@@ -1261,6 +1280,16 @@ const RULE_ORDER = ['bus', 'lg', 'hostel', 'fire', 'show', 'museum', 'respect', 
 
 const PACK = ['따뜻한 겉옷', '편한 운동화', '세면도구', '여벌 옷', '상비약, 먹고 있는 약', '휴대전화', '충전기', '필기도구 (박물관 활동지에 써요)'];
 
+/* 1일차 점심(식당 ‘차알’). 학생은 ‘지금 → 점심’에서 고르고, 선생님 앱 ‘활동지 → 점심’에서 모아 본다.
+   - hot: true 이면 매운 메뉴. ‘매운 거 못 먹어요’를 고른 학생은 고를 수 없다
+   - until: 이 시각부터는 바꿀 수 없다 */
+const LUNCH = { title: '11월 19일 점심', place: 'LG아트센터 식당 ‘차알’', until: '2026-11-19T12:30', menu: [
+  { id: 'jjajang', name: '짜장면' },
+  { id: 'rice', name: '볶음밥' },
+  { id: 'jjamppong', name: '짬뽕', hot: true },
+  { id: 'mala', name: '마라짬뽕', hot: true }
+] };
+
 const MEMO = [
   ['teacher', '담임 선생님'], ['buddy', '내 짝'], ['room', '숙소 방'],
   ['mates', '같은 방 친구'], ['seat', '버스 자리'], ['meet', '박물관 집결 장소']
@@ -1340,7 +1369,7 @@ const CHECKS = [
   { at: '2026-11-19T08:35', title: '학교 집결', mode: 'grade', todo: ['출결을 확인하고, 오지 않은 학생은 보호자에게 연락', '수능 응원 학생(06:20 집결)도 함께 확인'] },
   { at: '2026-11-19T09:00', title: '서울로 출발, 버스 탑승', mode: 'grade', todo: ['운전기사 음주감지 결과 확인', '안전벨트 착용 확인'] },
   { title: '휴게소에서 다시 출발', mode: 'grade', todo: ['버스에 오르면 바로 인원 확인'] },
-  { at: '2026-11-19T12:30', title: 'LG아트센터 도착, 점심', mode: 'grade', todo: ['식당 ‘차알’에 들어가기 전 인원 확인'] },
+  { at: '2026-11-19T12:30', title: 'LG아트센터 도착, 점심', mode: 'grade', todo: ['식당 ‘차알’에 들어가기 전 인원 확인', '메뉴별 인원은 ‘활동지 → 점심’에서 보기'] },
   { at: '2026-11-19T13:15', title: '교육장 입장', mode: 'grade', todo: ['1학년은 2층 LAB3, 2학년은 1층 OPENLAB으로 인솔', '비상구(엘리베이터 쪽) 위치 안내'] },
   { at: '2026-11-19T15:30', title: '숙소로 이동, 버스 탑승', mode: 'grade', todo: ['안전벨트 착용 확인'] },
   { at: '2026-11-19T17:30', title: '숙소 도착, 입실', mode: 'room', todo: ['방마다 피난안내도와 비상계단 위치 안내', '22:00 이후 방 밖 이동 금지, 22:30 점호 안내'] },
@@ -1366,7 +1395,7 @@ const rich = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
 /* 주소가 /teacher/ 이면 선생님 앱 */
 const TEACHER = document.documentElement.dataset.app === 'teacher';
 let syncTimer = 0, syncBusy = false, syncDirty = false, syncKeys = null;
-const SYNCED = ['work', 'plan', 'me', 'teams'];
+const SYNCED = ['work', 'plan', 'me', 'teams', 'lunch'];
 const store = {
   get(k, d) { try { const v = localStorage.getItem('nadeuri:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) {
@@ -1389,6 +1418,7 @@ document.addEventListener('click', (e) => {
   const page = b.closest('.page').id, pane = b.dataset.pane || b.dataset.to;
   showPane(page, pane);
   if (page === 'now' && pane === 'memo') memoPane();
+  if (page === 'now' && pane === 'lunch') renderLunch();
   if (page === 'twork') renderTWork();
   window.scrollTo(0, 0);
 });
@@ -1458,14 +1488,16 @@ function renderBoard() {
   if (st.mode === 'pre') {
     const done = store.get('pack', []).length;
     const pn = planDone();
-    key = 'pre' + st.days + '/' + done + '/' + pn;
+    const lp = menuOf(getLunch().pick);
+    key = 'pre' + st.days + '/' + done + '/' + pn + '/' + (lp ? lp.id : '');
     html = '<p class="board-label">' + DAYS[0].short + '</p>' +
       '<ul class="meet" style="margin-top:6px">' +
       '<li><b>06:20</b>수능 응원 가는 학생, 학교 집결</li>' +
       '<li><b>08:35</b>그 외 학생, 학교 집결</li>' +
       '<li><b>09:00</b>서울로 출발</li></ul>' +
-      (TEACHER ? '<div class="board-links"><a class="board-link" href="#teacher">인원 체크</a><a class="board-link here" href="#twork">학생 계획서 보기</a></div>' : '') +
-      '<div class="board-links s-only"><a class="board-link" href="#museum">' + (pn >= 5 ? '박물관 견학 계획서 다 썼어요' : pn ? '박물관 견학 계획서 이어 쓰기' : '박물관 견학 계획서 쓰기') + '</a>' +
+      (TEACHER ? '<div class="board-links"><a class="board-link" href="#teacher">인원 체크</a><a class="board-link here" href="#twork" data-tw="lunch">점심 메뉴 보기</a><a class="board-link here" href="#twork" data-tw="plan">학생 계획서 보기</a></div>' : '') +
+      '<div class="board-links s-only"><a class="board-link" href="#now" data-lunch="1">' + (lp ? '점심: ' + esc(lp.name) : '11월 19일 점심 고르기') + '</a>' +
+      '<a class="board-link" href="#museum">' + (pn >= 5 ? '박물관 견학 계획서 다 썼어요' : pn ? '박물관 견학 계획서 이어 쓰기' : '박물관 견학 계획서 쓰기') + '</a>' +
       '<a class="board-link here" href="#pack">준비물 ' + PACK.length + '개 중 ' + done + '개 챙겼어요</a></div>';
   } else if (st.mode === 'post') {
     const wn = workNext();
@@ -1478,9 +1510,11 @@ function renderBoard() {
     const c = st.cur, x = st.next, d = DAYS[c.day];
     const wn = workNext();
     const rm = (c.here === 'hostel' || (c.rules || []).includes('hostel')) ? roomOf() : null;
-    key = c.id + '/' + (wn ? wn.id : '') + '/' + (rm && rm.room ? rm.room : '') + '/' + (ruleOf(c) === 'museum' ? meetPlace() : '');
-    const links = TEACHER ? '<a class="board-link" href="#teacher">인원 체크</a><a class="board-link here" href="#twork">학생 활동지 보기</a>'
-      : (ruleOf(c) ? '<a class="board-link here" href="#rules" data-rule="' + ruleOf(c) + '">여기서 지킬 것 보기</a>' : '') +
+    const lunchSoon = c.day === LUNCH_STOP.day && c.idx <= LUNCH_STOP.idx, lp = menuOf(getLunch().pick);
+    key = c.id + '/' + (wn ? wn.id : '') + '/' + (rm && rm.room ? rm.room : '') + '/' + (ruleOf(c) === 'museum' ? meetPlace() : '') + '/' + (lp ? lp.id : '');
+    const links = TEACHER ? '<a class="board-link" href="#teacher">인원 체크</a>' + (lunchSoon ? '<a class="board-link here" href="#twork" data-tw="lunch">점심 메뉴 보기</a>' : '<a class="board-link here" href="#twork">학생 활동지 보기</a>')
+      : (lunchSoon && c !== LUNCH_STOP && !lp ? '<a class="board-link" href="#now" data-lunch="1">점심 고르기</a>' : '') +
+      (ruleOf(c) ? '<a class="board-link here" href="#rules" data-rule="' + ruleOf(c) + '">여기서 지킬 것 보기</a>' : '') +
       (wn ? '<a class="board-link" href="#work" data-sec="' + wn.id + '">활동지 쓰기: ' + esc(wn.short) + '</a>' : '');
     let pos = c.idx;
     if (x && x.day === c.day) pos += Math.min(1, (n - c.start) / (x.start - c.start));
@@ -1490,6 +1524,7 @@ function renderBoard() {
       '<p class="board-when">' + c.t + (c.end ? '~' + c.end : '') + '</p>' +
       '<p class="board-sub">' + esc(c.note) + '</p>' +
       (rm && rm.room ? '<p class="board-sub" style="margin-top:6px">내 방: <b>' + esc(rm.room) + '</b></p>' : '') +
+      (!TEACHER && c === LUNCH_STOP && lp ? '<p class="board-sub" style="margin-top:6px">내 점심: <b>' + esc(lp.name) + '</b></p>' : '') +
       (ruleOf(c) === 'museum' && meetPlace() ? '<p class="board-sub" style="margin-top:6px">12:00 집결 장소: <b>' + esc(meetPlace()) + '</b></p>' : '') +
       (links ? '<div class="board-links">' + links + '</div>' : '') +
       strip(c.day, pos) +
@@ -1858,15 +1893,66 @@ $('#team-view').addEventListener('click', (e) => {
   const grade = teamGrade || getMe().grade, i = +n.dataset.ti, me = getMe();
   me.grade = grade; me.name = n.dataset.tn; me.team = { g: grade, i: i };
   store.set('me', me);
-  renderTeam(); renderMemo(); renderNight();
+  renderTeam(); renderMemo(); renderNight(); renderLunch();
 });
 $('#team-change').addEventListener('click', () => {
   const me = getMe();
   delete me.team;
   store.set('me', me);
   teamGrade = me.grade;
-  renderTeam();
+  renderTeam(); renderLunch();
 });
+/* ── 점심 고르기: 조 명단에서 이름을 고른 학생 것만 선생님 앱에 모인다 ── */
+const getLunch = () => Object.assign({ hot: null, pick: '', at: 0 }, store.get('lunch', {}));
+const menuOf = (id) => LUNCH.menu.find((m) => m.id === id);
+const lunchLocked = () => now() >= kt(LUNCH.until);
+const LUNCH_STOP = ALL.find((x) => DAYS[x.day].date === LUNCH.until.slice(0, 10) && x.t === LUNCH.until.slice(11));
+let lunchShown = '';
+function renderLunch() {
+  const el = $('#lunch'), l = getLunch(), t = teamOf(), m = menuOf(l.pick), u = kst(kt(LUNCH.until));
+  lunchShown = lunchLocked() + '/' + !!t;
+  let html = '<h2>' + esc(LUNCH.title) + '</h2><p class="hint">' + esc(LUNCH.place) + '</p>';
+  if (lunchLocked()) {
+    html += '<div class="team-card" style="margin-top:10px"><p class="team-no">' + (m ? esc(m.name) : '고르지 않았어요') + '</p></div>' +
+      '<p class="hint" style="margin-top:8px">' + (m ? '이제 바꿀 수 없어요.' : '선생님께 먹을 메뉴를 말해요.') + '</p>';
+  } else if (!t) {
+    html += '<p class="memo-empty" style="margin-top:8px">먼저 ‘우리 조·방’에서 내 이름을 골라요. 그래야 고른 메뉴가 선생님께 가요.</p>' +
+      '<div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn day" data-to="team">우리 조·방 열기</button></div>';
+  } else {
+    html += '<p class="lunch-q">매운 음식 먹을 수 있어요?</p><div class="seg" role="group" aria-label="매운 음식">' +
+      [[1, '먹을 수 있어요'], [0, '못 먹어요']].map(([v, label]) => '<button type="button" data-hot="' + v + '" aria-pressed="' + (l.hot === v) + '">' + label + '</button>').join('') + '</div>' +
+      '<p class="lunch-q">메뉴 하나 고르기</p><div class="seg menu" role="group" aria-label="점심 메뉴">' +
+      LUNCH.menu.map((x) => '<button type="button" data-menu="' + x.id + '" aria-pressed="' + (x.id === l.pick) + '"' +
+        (l.hot == null || (x.hot && l.hot === 0) ? ' disabled' : '') + '>' + esc(x.name) + (x.hot ? '<small class="hot">매워요</small>' : '') + '</button>').join('') + '</div>' +
+      '<p class="hint">' + (l.hot == null ? '매운 음식을 먹을 수 있는지부터 골라요.' : l.hot === 0 ? '매운 메뉴는 고를 수 없어요.' : '') + '</p>' +
+      '<p class="hint" style="margin-top:6px" data-lunch-sync></p>' +
+      '<p class="hint">' + u.m + '월 ' + u.d + '일 ' + u.hm + '까지 바꿀 수 있어요.</p>';
+  }
+  el.innerHTML = html;
+  showSync();
+}
+$('#lunch').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-hot], button[data-menu]');
+  if (!b || b.disabled || lunchLocked()) return;
+  const l = getLunch();
+  if (b.dataset.hot != null) {
+    l.hot = +b.dataset.hot;
+    if (l.hot === 0 && menuOf(l.pick) && menuOf(l.pick).hot) l.pick = '';
+  } else l.pick = b.dataset.menu;
+  l.at = Date.now();
+  store.set('lunch', l);
+  renderLunch();
+  boardKey = '';
+  renderBoard();
+});
+function lunchSyncText() {
+  const l = getLunch();
+  if (!l.pick || !teamOf()) return '';
+  if (syncWait) return '아직 선생님께 전달되지 않았어요. 인터넷에 연결되면 다시 보내요.';
+  const at = Math.max(store.get('sync', {}).at || 0, syncOk);
+  return at >= l.at ? '선생님께 전달했어요. (' + kst(new Date(at)).hm + ')' : '선생님께 보내는 중…';
+}
+
 function planText() {
   const p = getPlan();
   const picks = p.picks.map((id) => itemOf(id)).filter(Boolean).map((it) => it.name + '(' + it.floor + ' ' + it.where + ')');
@@ -2337,7 +2423,8 @@ function workPack() {
     if (s.seen && p.picks.length) rows.unshift(['본 것', v.seen.map(itemOf).filter(Boolean).map((x) => x.name).join(', ')]);
     secs.push({ id: s.id, n: n, of: qs.length + 1, rows: rows });
   });
-  return { v: 1, n: getMe().name, g: g, t: t.n, secs: secs };
+  const l = getLunch();
+  return { v: 1, n: getMe().name, g: g, t: t.n, secs: secs, lunch: l.pick || l.hot != null ? { m: l.pick, hot: l.hot } : undefined };
 }
 function syncSoon() {
   if (TEACHER) return;
@@ -2348,7 +2435,7 @@ function syncSoon() {
 async function syncUp() {
   if (TEACHER || syncBusy) return;
   const pack = workPack(), d = sealed(), last = store.get('sync', {});
-  if (!pack || !d || (!pack.secs.length && !last.h)) { showSync(); return; }
+  if (!pack || !d || (!pack.secs.length && !pack.lunch && !last.h)) { showSync(); return; }
   syncBusy = true;
   try {
     const body = JSON.stringify(pack), h = hex(await crypto.subtle.digest('SHA-256', utf8(body + '|' + JSON.stringify(d.teams))));
@@ -2364,6 +2451,7 @@ async function syncUp() {
       store.set('sync', { h: h, at: Date.now() });
     }
     syncWait = false;
+    syncOk = Date.now();
   } catch (e) {
     syncWait = true;
   }
@@ -2371,19 +2459,20 @@ async function syncUp() {
   if (syncDirty) { syncDirty = false; syncSoon(); }
   showSync();
 }
-let syncWait = false;
+let syncWait = false, syncOk = 0;
 function showSync() {
   const last = store.get('sync', {}), t = teamOf();
   const text = TEACHER ? '' : !t ? '‘지금 → 우리 조·방’에서 이름을 고르면 쓴 내용이 선생님 앱에 자동으로 보여요.'
     : syncWait ? '아직 선생님께 전달되지 않았어요. 인터넷에 연결되면 다시 보내요.'
     : last.at ? '쓴 내용은 선생님 앱에 자동으로 보여요. 마지막 전달 ' + kst(new Date(last.at)).hm : '쓴 내용은 선생님 앱에 자동으로 보여요.';
   document.querySelectorAll('[data-sync]').forEach((el) => { el.textContent = text; });
+  document.querySelectorAll('[data-lunch-sync]').forEach((el) => { el.textContent = lunchSyncText(); });
 }
 window.addEventListener('online', syncSoon);
 
 /* ── 선생님 앱: 학생 활동지 ── */
 let twGrade = 0, twBusy = false, twErr = false;
-const TW_TABS = [['plan', '계획서', 2, '박물관 견학 계획서']].concat(WORK.map((s) => [s.id, s.tab, s.day, s.title]));
+const TW_TABS = [['lunch', '점심', 1, LUNCH.title], ['plan', '계획서', 2, '박물관 견학 계획서']].concat(WORK.map((s) => [s.id, s.tab, s.day, s.title]));
 async function loadTWork() {
   const d = tData();
   if (!d || twBusy) return;
@@ -2419,11 +2508,12 @@ function renderTWork() {
   sub.hidden = !d;
   if (!d) { body.innerHTML = LOCK; return; }
   const open = WORK.filter(isOpen);
-  const sel = TW_TABS.some((t) => t[0] === subSel.twork) ? subSel.twork : (open.length ? open[open.length - 1].id : 'plan');
+  const sel = TW_TABS.some((t) => t[0] === subSel.twork) ? subSel.twork : (open.length ? open[open.length - 1].id : 'lunch');
   subSel.twork = sel;
   sub.innerHTML = TW_TABS.map((t) => '<button type="button" class="' + dayCls(t[2]) + '" data-pane="' + t[0] + '" aria-pressed="' + (t[0] === sel) + '">' + esc(t[1]) + '</button>').join('');
   const tab = TW_TABS.find((t) => t[0] === sel), cache = store.get('twork', { at: 0, data: {} });
   const list = roster().filter((st) => !twGrade || st.g === twGrade);
+  if (sel === 'lunch') { body.innerHTML = lunchTHTML(list, cache); return; }
   const got = [], none = [];
   list.forEach((st) => {
     const rec = cache.data[st.g + '|' + st.n], sec = rec && (rec.secs || []).find((x) => x.id === sel);
@@ -2431,10 +2521,10 @@ function renderTWork() {
   });
   body.innerHTML = '<div class="sec ' + dayCls(tab[2]) + '">' +
     '<h3>' + esc(tab[3]) + '</h3>' +
-    '<div class="seg three" id="tw-grade" role="group" aria-label="학년">' + [[0, '전체'], [1, '1학년'], [2, '2학년']].map(([g, l]) => '<button type="button" data-twg="' + g + '" aria-pressed="' + (g === twGrade) + '">' + l + '</button>').join('') + '</div>' +
+    twGradeSeg() +
     '<p class="tcount"><b>' + got.length + '</b>/ ' + list.length + '명 썼어요</p>' +
     (none.length ? '<p class="tmiss">아직 ' + none.length + '명: ' + none.map(esc).join(', ') + '</p>' : '<p class="tmiss ok">모두 썼어요.</p>') +
-    '<p class="tnote">' + (twBusy ? '받아 오는 중…' : twErr ? '받아 오지 못했어요. 인터넷을 확인해 주세요.' + (cache.at ? ' (' + kst(new Date(cache.at)).hm + '에 받은 내용)' : '') : cache.at ? kst(new Date(cache.at)).hm + '에 받아 왔어요.' : '') + '</p>' +
+    '<p class="tnote">' + twNote(cache) + '</p>' +
     '<div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn" id="tw-load"' + (twBusy ? ' disabled' : '') + '>새로 받아 오기</button></div>' +
     '</div>' +
     '<div class="sec ' + dayCls(tab[2]) + '" style="padding-top:0">' + got.map(([st, sec, when]) =>
@@ -2443,10 +2533,52 @@ function renderTWork() {
     '</div>' +
     '<p class="foot">조 명단에서 자기 이름을 고른 학생이 쓴 내용만 여기에 와요.</p>';
 }
+const twNote = (cache) => (twBusy ? '받아 오는 중…' : twErr ? '받아 오지 못했어요. 인터넷을 확인해 주세요.' + (cache.at ? ' (' + kst(new Date(cache.at)).hm + '에 받은 내용)' : '') : cache.at ? kst(new Date(cache.at)).hm + '에 받아 왔어요.' : '');
+const twGradeSeg = () => '<div class="seg three" id="tw-grade" role="group" aria-label="학년">' + [[0, '전체'], [1, '1학년'], [2, '2학년']].map(([g, l]) => '<button type="button" data-twg="' + g + '" aria-pressed="' + (g === twGrade) + '">' + l + '</button>').join('') + '</div>';
+/* 점심: 메뉴별 인원과 이름, 아직 안 고른 학생 (불참 학생은 뺀다) */
+function lunchStats(list, cache) {
+  const ab = absentList(), live = list.filter((st) => !ab.includes(st.n));
+  const by = LUNCH.menu.map((m) => ({ m: m, names: [] })), none = [], mild = [];
+  live.forEach((st) => {
+    const rec = cache.data[st.g + '|' + st.n], l = rec && rec.lunch, b = l && by.find((x) => x.m.id === l.m);
+    if (b) b.names.push(st.n); else none.push(st.n);
+    if (l && l.hot === 0) mild.push(st.n);
+  });
+  return { by: by, none: none, mild: mild, got: live.length - none.length, total: live.length, ab: list.length - live.length };
+}
+function lunchTHTML(list, cache) {
+  const st = lunchStats(list, cache);
+  return '<div class="sec d1">' +
+    '<h3>' + esc(LUNCH.title) + ' <span class="hint">' + esc(LUNCH.place) + '</span></h3>' + twGradeSeg() +
+    '<p class="tcount"><b>' + st.got + '</b>/ ' + st.total + '명 골랐어요</p>' +
+    '<div class="tally">' + st.by.map((x) => '<div><b>' + x.names.length + '</b><span' + (x.m.hot ? ' class="hot"' : '') + '>' + esc(x.m.name) + '</span></div>').join('') + '</div>' +
+    (st.none.length ? '<p class="tmiss">아직 ' + st.none.length + '명: ' + st.none.map(esc).join(', ') + '</p>' : '<p class="tmiss ok">모두 골랐어요.</p>') +
+    (st.ab ? '<p class="tnote">불참 ' + st.ab + '명은 빼고 셌어요.</p>' : '') +
+    '<p class="tnote">' + twNote(cache) + '</p>' +
+    '<div class="btn-row"><button type="button" class="btn day" id="tw-lunch-send">결과 보내기</button><button type="button" class="btn" id="tw-load"' + (twBusy ? ' disabled' : '') + '>새로 받아 오기</button></div>' +
+    '</div>' +
+    '<div class="sec d1" style="padding-top:0">' +
+    st.by.filter((x) => x.names.length).map((x) => '<div class="rgroup"><div class="rhead"><h4>' + esc(x.m.name) + '</h4><span class="rcount">' + x.names.length + '명</span></div><p class="names-line">' + x.names.map(esc).join(', ') + '</p></div>').join('') +
+    (st.mild.length ? '<div class="rgroup"><div class="rhead"><h4>매운 거 못 먹는 학생</h4><span class="rcount">' + st.mild.length + '명</span></div><p class="names-line">' + st.mild.map(esc).join(', ') + '</p></div>' : '') +
+    '</div>' +
+    '<p class="foot">조 명단에서 자기 이름을 고른 학생 것만 와요. 매운 거 못 먹는다고 한 학생은 짬뽕, 마라짬뽕을 고를 수 없어요.</p>';
+}
+function lunchTText() {
+  const list = roster().filter((st) => !twGrade || st.g === twGrade), st = lunchStats(list, store.get('twork', { at: 0, data: {} }));
+  const lines = ['[서울 나들이] ' + LUNCH.title + (twGrade ? ' ' + twGrade + '학년' : '') + ' (' + LUNCH.place + ')',
+    st.by.map((x) => x.m.name + ' ' + x.names.length).join(', ') + ' (합계 ' + st.got + '명)'];
+  st.by.forEach((x) => { if (x.names.length) lines.push('- ' + x.m.name + ': ' + x.names.join(', ')); });
+  if (st.none.length) lines.push('아직 안 고른 ' + st.none.length + '명: ' + st.none.join(', '));
+  if (st.ab) lines.push('(불참 ' + st.ab + '명 제외)');
+  lines.push('(' + kst(now()).hm + ' 기준)');
+  return lines.join('\n');
+}
 $('#tw-body').addEventListener('click', (e) => {
   const g = e.target.closest('button[data-twg]');
   if (g) { twGrade = +g.dataset.twg; renderTWork(); return; }
   if (e.target.closest('#tw-load')) loadTWork();
+  const ls = e.target.closest('#tw-lunch-send');
+  if (ls) sendOut(ls, lunchTText(), '점심 메뉴');
 });
 
 /* ── 화면 전환 ── */
@@ -2483,7 +2615,9 @@ $('#board').addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
   e.preventDefault();
+  if (a.dataset.tw) subSel.twork = a.dataset.tw;
   go(a.getAttribute('href').slice(1));
+  if (a.dataset.lunch) { showPane('now', 'lunch'); renderLunch(); }
   if (a.dataset.rule) showPane('rules', a.dataset.rule);
   if (a.dataset.sec && secOf(a.dataset.sec)) showPane('work', a.dataset.sec);
 });
@@ -2524,6 +2658,7 @@ function tick() {
   const wk = myGrade() + '/' + WORK.map((s) => (isOpen(s) ? 1 : 0)).join('');
   if (curPage === 'teacher' && tPick == null && autoCp() !== tShown && !$('#t-body').contains(document.activeElement)) renderTeacher();
   if (curPage === 'twork' && !twBusy && Date.now() - (store.get('twork', { at: 0 }).at || 0) > 60000 && navigator.onLine !== false) loadTWork();
+  if (!TEACHER && lunchShown !== lunchLocked() + '/' + !!teamOf() && !$('#lunch').contains(document.activeElement)) renderLunch();
   if (curPage === 'work' && wk !== workKey && !$('#work-list').contains(document.activeElement)) renderWork();
 }
 $('#foot-now').textContent = '안내 기준일 ' + UPDATED;
@@ -2540,6 +2675,7 @@ renderPack();
 renderMemo();
 renderMuseum();
 renderTeam();
+renderLunch();
 /* 명단이 바뀌어 다시 올라오면(방 배정 등) 저장해 둔 코드로 다시 푼다 */
 (() => {
   const old = store.get('teams', null);
