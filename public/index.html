@@ -2576,7 +2576,6 @@ function renderTWork() {
     '<h3>' + esc(tab[3]) + '</h3>' +
     twGradeSeg() +
     '<p class="tcount"><b>' + got.length + '</b>/ ' + list.length + '명 썼어요</p>' +
-    (none.length ? '<p class="tmiss">아직 ' + none.length + '명: ' + none.map(esc).join(', ') + '</p>' : '<p class="tmiss ok">모두 썼어요.</p>') +
     '<p class="tnote">' + twNote(cache) + '</p>' +
     '<div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn" id="tw-load"' + (twBusy ? ' disabled' : '') + '>새로 받아 오기</button></div>' +
     '</div>' +
@@ -2588,7 +2587,7 @@ function renderTWork() {
 }
 const twNote = (cache) => (twBusy ? '받아 오는 중…' : twErr ? '받아 오지 못했어요. 인터넷을 확인해 주세요.' + (cache.at ? ' (' + kst(new Date(cache.at)).hm + '에 받은 내용)' : '') : cache.at ? kst(new Date(cache.at)).hm + '에 받아 왔어요.' : '');
 const twGradeSeg = () => '<div class="seg three" id="tw-grade" role="group" aria-label="학년">' + [[0, '전체'], [1, '1학년'], [2, '2학년']].map(([g, l]) => '<button type="button" data-twg="' + g + '" aria-pressed="' + (g === twGrade) + '">' + l + '</button>').join('') + '</div>';
-/* 점심: 메뉴별 인원과 이름, 아직 안 고른 학생 (불참 학생은 뺀다) */
+/* 점심: 메뉴별 인원과 이름 (불참 학생은 뺀다) */
 function lunchStats(list, cache) {
   const ab = absentList(), live = list.filter((st) => !ab.includes(st.n));
   const by = LUNCH.menu.map((m) => ({ m: m, names: [] })), none = [], mild = [];
@@ -2605,7 +2604,6 @@ function lunchTHTML(list, cache) {
     '<h3>' + esc(LUNCH.title) + ' <span class="hint">' + esc(LUNCH.place) + '</span></h3>' + twGradeSeg() +
     '<p class="tcount"><b>' + st.got + '</b>/ ' + st.total + '명 골랐어요</p>' +
     '<div class="tally">' + st.by.map((x) => '<div><b>' + x.names.length + '</b><span' + (x.m.hot ? ' class="hot"' : '') + '>' + esc(x.m.name) + '</span></div>').join('') + '</div>' +
-    (st.none.length ? '<p class="tmiss">아직 ' + st.none.length + '명: ' + st.none.map(esc).join(', ') + '</p>' : '<p class="tmiss ok">모두 골랐어요.</p>') +
     (st.ab ? '<p class="tnote">불참 ' + st.ab + '명은 빼고 셌어요.</p>' : '') +
     '<p class="tnote">' + twNote(cache) + '</p>' +
     '<div class="btn-row"><button type="button" class="btn day" id="tw-lunch-send">결과 보내기</button><button type="button" class="btn" id="tw-load"' + (twBusy ? ' disabled' : '') + '>새로 받아 오기</button></div>' +
@@ -2621,7 +2619,6 @@ function lunchTText() {
   const lines = ['[서울 나들이] ' + LUNCH.title + (twGrade ? ' ' + twGrade + '학년' : '') + ' (' + LUNCH.place + ')',
     st.by.map((x) => x.m.name + ' ' + x.names.length).join(', ') + ' (합계 ' + st.got + '명)'];
   st.by.forEach((x) => { if (x.names.length) lines.push('- ' + x.m.name + ': ' + x.names.join(', ')); });
-  if (st.none.length) lines.push('아직 안 고른 ' + st.none.length + '명: ' + st.none.join(', '));
   if (st.ab) lines.push('(불참 ' + st.ab + '명 제외)');
   lines.push('(' + kst(now()).hm + ' 기준)');
   return lines.join('\n');
