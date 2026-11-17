@@ -50,7 +50,7 @@ if (/^\/teacher(\/|$)/.test(location.pathname)) {
   --red: #D93A1E;
   --red-ink: #C22F15;
   --navy: #0B1B36;
-  --gut: 20px;
+  --gut: 14px;
   --text: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
   --display: "Black Han Sans", system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
 }
@@ -114,7 +114,7 @@ button { font: inherit; color: inherit; }
   min-height: 100vh;
   min-height: 100dvh;
   background: var(--bg);
-  padding-bottom: calc(62px + env(safe-area-inset-bottom));
+  padding-bottom: calc(54px + env(safe-area-inset-bottom));
 }
 @media (min-width: 520px) {
   body { background: var(--bg2); }
@@ -127,18 +127,18 @@ button { font: inherit; color: inherit; }
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  padding: calc(12px + env(safe-area-inset-top)) var(--gut) 10px;
+  padding: calc(8px + env(safe-area-inset-top)) var(--gut) 6px;
 }
-.mark { font: 400 23px/1 var(--display); }
-.top-date { font-size: 14px; font-weight: 700; color: var(--ink2); white-space: nowrap; }
+.mark { font: 400 20px/1 var(--display); }
+.top-date { font-size: 12.5px; font-weight: 700; color: var(--ink2); white-space: nowrap; }
 
 .preview {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin: 0 var(--gut) 8px;
-  padding: 5px 10px;
+  margin: 0 var(--gut) 6px;
+  padding: 3px 10px;
   border-radius: 10px;
   background: var(--yellow);
   color: var(--navy);
@@ -151,9 +151,9 @@ button { font: inherit; color: inherit; }
 .board {
   background: var(--day);
   color: var(--on-day);
-  padding: 16px var(--gut) 18px;
+  padding: 12px var(--gut) 12px;
 }
-.board-day { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 700; }
+.board-day { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 13px; font-weight: 700; }
 .badge {
   display: inline-block;
   padding: 3px 9px;
@@ -165,11 +165,11 @@ button { font: inherit; color: inherit; }
   line-height: 1.4;
 }
 .board-label { font-size: 13px; font-weight: 800; margin-bottom: 2px; }
-.board-title { font: 400 30px/1.15 var(--display); margin-bottom: 6px; }
-.board-when { font: 400 18px/1.2 var(--display); margin-bottom: 4px; }
-.board-sub { font-size: 15px; font-weight: 600; line-height: 1.5; }
+.board-title { font: 400 25px/1.15 var(--display); margin-bottom: 4px; }
+.board-when { font: 400 16px/1.2 var(--display); margin-bottom: 2px; }
+.board-sub { font-size: 14px; font-weight: 600; line-height: 1.45; }
 
-.strip { position: relative; height: 30px; margin: 14px 15px 12px; }
+.strip { position: relative; height: 30px; margin: 8px 15px 8px; }
 .strip::before, .strip .fill {
   content: "";
   position: absolute;
@@ -200,43 +200,43 @@ button { font: inherit; color: inherit; }
   transition: left .9s cubic-bezier(.2, .7, .2, 1);
 }
 
-.next { border-top: 2px solid var(--on-day-soft); padding-top: 10px; }
+.next { border-top: 2px solid var(--on-day-soft); padding-top: 6px; }
 .next-row { display: flex; align-items: baseline; gap: 10px; }
-.next-time { font: 400 22px/1.1 var(--display); white-space: nowrap; }
-.next-title { font-size: 16px; font-weight: 800; line-height: 1.35; }
-.next-left { margin-top: 6px; }
+.next-time { font: 400 19px/1.1 var(--display); white-space: nowrap; }
+.next-title { font-size: 15px; font-weight: 800; line-height: 1.35; }
+.next-left { margin-top: 4px; }
 
-.meet { border-top: 2px solid var(--on-day-soft); margin-top: 10px; }
+.meet { border-top: 2px solid var(--on-day-soft); margin-top: 6px; }
 .meet li {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  padding: 7px 0;
+  padding: 5px 0;
   border-bottom: 1px solid var(--on-day-soft);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.4;
 }
-.meet b { font: 400 19px/1.1 var(--display); min-width: 54px; }
+.meet b { font: 400 17px/1.1 var(--display); min-width: 50px; }
 .board-link.here { margin-top: 10px; background: transparent; color: var(--on-day); border: 2px solid var(--on-day); }
 .board-link {
   display: inline-flex;
   align-items: center;
-  min-height: 38px;
-  margin-top: 10px;
-  padding: 0 12px;
-  border-radius: 9px;
+  min-height: 32px;
+  margin-top: 8px;
+  padding: 0 10px;
+  border-radius: 8px;
   background: var(--on-day);
   color: var(--day);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
   text-decoration: none;
 }
 
 /* 구역 */
-.sec { padding: 18px var(--gut) 2px; }
-.sec > h2, .sec > h3 { font-size: 17px; font-weight: 800; line-height: 1.3; margin-bottom: 6px; }
-.page-head { padding: 8px var(--gut) 0; }
+.sec { padding: 12px var(--gut) 2px; }
+.sec > h2, .sec > h3 { font-size: 16px; font-weight: 800; line-height: 1.3; margin-bottom: 6px; }
+.page-head { padding: 4px var(--gut) 0; }
 .pane > .sec:first-child, .pane.sec { padding-top: 6px; }
 
 /* 항목 단추: 화면 위에서 골라 한 항목씩 본다 */
@@ -245,19 +245,19 @@ button { font: inherit; color: inherit; }
   top: 0;
   z-index: 5;
   display: flex;
-  gap: 6px;
-  padding: 8px var(--gut);
+  gap: 5px;
+  padding: 6px var(--gut);
   background: var(--bg);
 }
 .sub button {
   flex: 1 1 auto;
   min-width: 0;
-  min-height: 38px;
-  padding: 0 6px;
+  min-height: 32px;
+  padding: 0 5px;
   border: 1.5px solid var(--line);
-  border-radius: 10px;
+  border-radius: 8px;
   background: var(--bg);
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 800;
   white-space: nowrap;
   cursor: pointer;
@@ -267,9 +267,9 @@ button { font: inherit; color: inherit; }
 .sub button.done::before { content: "✓ "; }
 .sub.wrap { position: static; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 #now > .sub { padding-top: 2px; }
-.page-title { font: 400 25px/1.15 var(--display); }
-.lead { margin-top: 4px; font-size: 14.5px; color: var(--ink2); }
-.foot { padding: 14px var(--gut) 18px; font-size: 13px; color: var(--ink2); }
+.page-title { font: 400 21px/1.15 var(--display); }
+.lead { margin-top: 2px; font-size: 13.5px; color: var(--ink2); }
+.foot { padding: 10px var(--gut) 12px; font-size: 12px; color: var(--ink2); }
 
 /* 버튼 */
 .btn {
@@ -277,27 +277,27 @@ button { font: inherit; color: inherit; }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 46px;
-  padding: 6px 14px;
-  border-radius: 12px;
+  min-height: 38px;
+  padding: 4px 12px;
+  border-radius: 10px;
   border: 2px solid var(--ink);
   background: transparent;
   color: var(--ink);
-  font: 800 15.5px/1.25 var(--text);
+  font: 800 14.5px/1.25 var(--text);
   text-align: center;
   text-decoration: none;
   cursor: pointer;
 }
 .btn.red { background: var(--red); border-color: var(--red); color: #FFFFFF; }
 .btn.day { background: var(--day); border-color: var(--day); color: var(--on-day); }
-.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
 .text-btn {
-  min-height: 44px;
+  min-height: 34px;
   padding: 0 4px;
   border: 0;
   background: none;
   color: var(--day-ink);
-  font-size: 14.5px;
+  font-size: 13.5px;
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -306,46 +306,46 @@ button { font: inherit; color: inherit; }
 
 /* 내 메모 */
 .memo-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-.memo-head h2 { font-size: 17px; font-weight: 800; }
+.memo-head h2 { font-size: 16px; font-weight: 800; }
 .memo-view { border-top: 2px solid var(--ink); }
-.memo-view div { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.memo-view div { display: flex; justify-content: space-between; gap: 16px; padding: 6px 0; border-bottom: 1px solid var(--line); }
 .memo-view dt { color: var(--ink2); font-size: 14.5px; font-weight: 600; white-space: nowrap; }
-.memo-view dd { margin: 0; font-size: 16px; font-weight: 800; text-align: right; }
-.memo-empty { padding: 10px 0 2px; border-top: 2px solid var(--ink); color: var(--ink2); font-size: 14.5px; }
-.memo-form { border-top: 2px solid var(--ink); padding-top: 16px; }
-.field { display: block; margin-bottom: 10px; }
-.field span { display: block; margin-bottom: 4px; font-size: 14px; font-weight: 700; }
+.memo-view dd { margin: 0; font-size: 15px; font-weight: 800; text-align: right; }
+.memo-empty { padding: 8px 0 2px; border-top: 2px solid var(--ink); color: var(--ink2); font-size: 13.5px; }
+.memo-form { border-top: 2px solid var(--ink); padding-top: 10px; }
+.field { display: block; margin-bottom: 8px; }
+.field span { display: block; margin-bottom: 2px; font-size: 13px; font-weight: 700; }
 .field input {
   width: 100%;
-  height: 46px;
-  padding: 0 12px;
+  height: 40px;
+  padding: 0 10px;
   border: 2px solid var(--line);
-  border-radius: 10px;
+  border-radius: 9px;
   background: var(--bg);
   color: var(--ink);
   font: 700 16px var(--text);
 }
 .field input::placeholder { color: var(--ink2); font-weight: 500; opacity: .75; }
 .field input:focus { border-color: var(--day-ink); outline: none; }
-.hint { font-size: 13px; color: var(--ink2); }
+.hint { font-size: 12.5px; color: var(--ink2); }
 
-.install { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: var(--bg2); font-size: 13.5px; }
+.install { margin-top: 8px; padding: 8px 10px; border-radius: 10px; background: var(--bg2); font-size: 13.5px; }
 .install b { display: block; font-size: 14.5px; font-weight: 800; margin-bottom: 2px; }
 .install .btn { margin-top: 8px; min-height: 40px; }
 
 /* 일정: 노선도 */
-.days { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px var(--gut) 0; }
+.days { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px var(--gut) 0; }
 .days button {
-  min-height: 48px;
-  padding: 6px 12px;
+  min-height: 40px;
+  padding: 4px 10px;
   border: 2px solid var(--line);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--bg);
   text-align: left;
   cursor: pointer;
 }
-.days b { display: block; font: 400 17px/1.2 var(--display); }
-.days span { display: block; font-size: 13px; font-weight: 700; color: var(--ink2); }
+.days b { display: block; font: 400 15px/1.2 var(--display); }
+.days span { display: block; font-size: 12px; font-weight: 700; color: var(--ink2); }
 .days button[aria-pressed="true"] { background: var(--day); border-color: var(--day); color: var(--on-day); }
 .days button[aria-pressed="true"] span { color: inherit; }
 .legend { margin: 10px var(--gut) 0; font-size: 13.5px; color: var(--ink2); }
@@ -354,7 +354,7 @@ button { font: inherit; color: inherit; }
 
 .route { margin: 8px var(--gut) 0; }
 .stop { display: grid; grid-template-columns: 54px 22px minmax(0, 1fr); column-gap: 8px; }
-.stop .t { padding-top: 11px; text-align: right; font: 400 18px/1.3 var(--display); white-space: nowrap; }
+.stop .t { padding-top: 8px; text-align: right; font: 400 16px/1.3 var(--display); white-space: nowrap; }
 .stop .t .plate { margin-right: -6px; }
 .stop .t small { display: block; font: 700 12px/1.3 var(--text); color: var(--ink2); }
 .rail { position: relative; }
@@ -368,15 +368,15 @@ button { font: inherit; color: inherit; }
   margin-left: -3px;
   background: var(--day);
 }
-.stop:first-child .rail::before { top: 22px; }
+.stop:first-child .rail::before { top: 18px; }
 .route.fold .stop.past { display: none; }
 .past-toggle { padding-left: 62px; }
 .past-toggle .text-btn { min-height: 36px; color: var(--ink2); font-size: 13.5px; }
-.stop:last-child .rail::before { bottom: auto; height: 22px; }
+.stop:last-child .rail::before { bottom: auto; height: 18px; }
 .dot {
   position: absolute;
   left: 50%;
-  top: 14px;
+  top: 10px;
   width: 16px;
   height: 16px;
   margin-left: -8px;
@@ -386,16 +386,16 @@ button { font: inherit; color: inherit; }
 }
 .stop.past .dot { background: var(--day); }
 .stop.cur .dot {
-  top: 12px;
+  top: 8px;
   width: 20px;
   height: 20px;
   margin-left: -10px;
   background: var(--yellow);
   border-color: var(--ink);
 }
-.stop .body { padding: 10px 0 12px; }
-.stop h3 { font-size: 16px; font-weight: 800; line-height: 1.4; }
-.stop .note { margin-top: 2px; font-size: 14.5px; line-height: 1.5; color: var(--ink2); }
+.stop .body { padding: 7px 0 8px; }
+.stop h3 { font-size: 15px; font-weight: 800; line-height: 1.4; }
+.stop .note { margin-top: 1px; font-size: 13.5px; line-height: 1.45; color: var(--ink2); }
 .stop.past .t, .stop.past h3 { color: var(--ink2); }
 .stop.past .t .plate { opacity: .55; }
 .stop.past .note { opacity: .8; }
@@ -410,17 +410,17 @@ button { font: inherit; color: inherit; }
   font-weight: 800;
   vertical-align: 2px;
 }
-.acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.acts { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
 .chip, .acts summary {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
-  padding: 0 11px;
+  min-height: 30px;
+  padding: 0 9px;
   border: 1.5px solid var(--line);
-  border-radius: 9px;
+  border-radius: 8px;
   background: var(--bg);
   color: var(--ink);
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 800;
   text-decoration: none;
   cursor: pointer;
@@ -436,24 +436,24 @@ button { font: inherit; color: inherit; }
 /* 지킬 것 */
 .rules li {
   position: relative;
-  padding: 7px 0 7px 18px;
+  padding: 5px 0 5px 16px;
   border-bottom: 1px solid var(--line);
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.45;
 }
 .rules li::before {
   content: "";
   position: absolute;
   left: 2px;
-  top: 15px;
-  width: 7px;
-  height: 7px;
+  top: 12px;
+  width: 6px;
+  height: 6px;
   border-radius: 2px;
   background: var(--day);
 }
 .rules b { font-weight: 800; }
 .rsec { margin: 0 var(--gut); padding-top: 8px; }
-.rsec h3 { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin-bottom: 4px; font-size: 17px; font-weight: 800; line-height: 1.3; }
+.rsec h3 { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; margin-bottom: 4px; font-size: 16px; font-weight: 800; line-height: 1.3; }
 .rsec .rules { border-top: 2px solid var(--ink); }
 .rsec .badge { background: var(--day); color: var(--on-day); }
 
@@ -466,10 +466,10 @@ button { font: inherit; color: inherit; }
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 46px;
-  padding: 4px 0;
+  min-height: 40px;
+  padding: 3px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -500,36 +500,36 @@ button { font: inherit; color: inherit; }
 .check input:checked::after { transform: translateY(-2px) rotate(-45deg) scale(1); }
 .check input:checked + span { color: var(--ink2); }
 .plain { border-top: 2px solid var(--ink); }
-.plain li { position: relative; padding: 7px 0 7px 22px; border-bottom: 1px solid var(--line); font-size: 15px; line-height: 1.5; }
-.plain li::before { position: absolute; left: 2px; top: 7px; font-weight: 800; }
+.plain li { position: relative; padding: 5px 0 5px 20px; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.45; }
+.plain li::before { position: absolute; left: 2px; top: 5px; font-weight: 800; }
 .plain.no li::before { content: "✕"; color: var(--red-ink); }
-.plain.tell li::before { content: ""; left: 4px; top: 15px; width: 7px; height: 7px; border-radius: 2px; background: var(--day); }
+.plain.tell li::before { content: ""; left: 4px; top: 12px; width: 7px; height: 7px; border-radius: 2px; background: var(--day); }
 .times { border-top: 2px solid var(--ink); }
-.times li { display: flex; align-items: baseline; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 15px; font-weight: 700; }
-.times b { font: 400 18px/1.1 var(--display); min-width: 52px; }
+.times li { display: flex; align-items: baseline; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 700; }
+.times b { font: 400 16px/1.1 var(--display); min-width: 48px; }
 
 /* 비상 */
-.calls { display: grid; gap: 8px; margin-top: 10px; }
+.calls { display: grid; gap: 6px; margin-top: 8px; }
 .pane > .sec > .calls:first-child { margin-top: 2px; }
 .call {
   display: grid;
   grid-template-columns: minmax(74px, auto) 1fr;
   align-items: center;
   column-gap: 12px;
-  min-height: 54px;
-  padding: 6px 14px;
+  min-height: 46px;
+  padding: 4px 12px;
   border: 2px solid var(--ink);
-  border-radius: 12px;
+  border-radius: 10px;
   color: var(--ink);
   text-align: left;
   text-decoration: none;
   cursor: pointer;
   background: transparent;
 }
-.call b { font: 400 25px/1 var(--display); }
-.call b.long { font-size: 18px; }
-.call span { font-size: 14px; font-weight: 700; line-height: 1.35; }
-.call span em { display: block; font-style: normal; font-weight: 800; font-size: 15.5px; }
+.call b { font: 400 22px/1 var(--display); }
+.call b.long { font-size: 16px; }
+.call span { font-size: 13px; font-weight: 700; line-height: 1.35; }
+.call span em { display: block; font-style: normal; font-weight: 800; font-size: 14.5px; }
 .call.red { background: var(--red); border-color: var(--red); color: #FFFFFF; }
 .call.fill { background: var(--ink); color: var(--bg); }
 .steps { counter-reset: s; border-top: 2px solid var(--ink); }
@@ -538,14 +538,14 @@ button { font: inherit; color: inherit; }
   display: flex;
   align-items: baseline;
   gap: 12px;
-  padding: 8px 0;
+  padding: 6px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 15.5px;
+  font-size: 14.5px;
   font-weight: 700;
   line-height: 1.45;
 }
 .steps li::before { content: counter(s); flex: none; width: 22px; text-align: center; font: 400 20px/1 var(--display); color: var(--red-ink); }
-.addr { border-top: 2px solid var(--ink); padding-top: 12px; }
+.addr { border-top: 2px solid var(--ink); padding-top: 8px; }
 .addr b { display: block; font-size: 16px; font-weight: 800; }
 .addr p { font-size: 14.5px; color: var(--ink2); }
 .addr .chip { margin: 10px 6px 0 0; }
@@ -553,34 +553,34 @@ button { font: inherit; color: inherit; }
 /* 박물관 견학 계획서 */
 .board-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .board-links .board-link { margin-top: 0; }
-.todo { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 10px; margin: 2px var(--gut) 4px; padding: 9px 12px; border-radius: 12px; background: var(--yellow); color: var(--navy); }
-.todo b { grid-column: 1; font-size: 15.5px; font-weight: 800; line-height: 1.3; }
-.todo span { grid-column: 1; font-size: 13px; font-weight: 700; line-height: 1.35; }
-.todo .btn { grid-column: 2; grid-row: 1 / span 2; min-height: 40px; padding: 4px 12px; border-color: var(--navy); background: var(--navy); color: #FFFFFF; font-size: 14.5px; white-space: nowrap; }
-.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+.todo { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 10px; margin: 2px var(--gut) 4px; padding: 6px 10px; border-radius: 10px; background: var(--yellow); color: var(--navy); }
+.todo b { grid-column: 1; font-size: 14.5px; font-weight: 800; line-height: 1.3; }
+.todo span { grid-column: 1; font-size: 12px; font-weight: 700; line-height: 1.35; }
+.todo .btn { grid-column: 2; grid-row: 1 / span 2; min-height: 32px; padding: 2px 10px; border-color: var(--navy); background: var(--navy); color: #FFFFFF; font-size: 13.5px; white-space: nowrap; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 8px; }
 .seg button {
-  min-height: 42px;
+  min-height: 36px;
   border: 2px solid var(--line);
-  border-radius: 10px;
+  border-radius: 9px;
   background: var(--bg);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 800;
   cursor: pointer;
 }
 .seg button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 .seg small { margin-left: 3px; font-size: 12.5px; font-weight: 700; opacity: .85; }
-.q { display: flex; align-items: baseline; gap: 8px; margin: 16px 0 6px; font-size: 15.5px; font-weight: 800; line-height: 1.4; }
+.q { display: flex; align-items: baseline; gap: 6px; margin: 12px 0 4px; font-size: 14.5px; font-weight: 800; line-height: 1.4; }
 .q .n { flex: none; font: 400 18px/1 var(--display); color: var(--day-ink); }
 .field textarea {
   display: block;
   width: 100%;
-  min-height: 64px;
-  padding: 9px 12px;
+  min-height: 54px;
+  padding: 7px 10px;
   border: 2px solid var(--line);
   border-radius: 10px;
   background: var(--bg);
   color: var(--ink);
-  font: 600 16px/1.45 var(--text);
+  font: 600 16px/1.4 var(--text);
   resize: vertical;
 }
 .field textarea::placeholder { color: var(--ink2); font-weight: 500; opacity: .75; }
@@ -588,25 +588,25 @@ button { font: inherit; color: inherit; }
 .floor { margin: 12px 0 0; padding: 4px 0; border-bottom: 2px solid var(--ink); font-size: 14.5px; font-weight: 800; }
 .floor span { margin-left: 8px; font-weight: 600; color: var(--ink2); }
 .pick { border-top: 0; }
-.pick label { align-items: flex-start; padding: 8px 0; font-weight: 400; }
+.pick label { align-items: flex-start; padding: 6px 0; font-weight: 400; }
 .pick input { margin-top: 2px; }
-.pick b { display: block; font-size: 16px; font-weight: 800; line-height: 1.35; }
+.pick b { display: block; font-size: 15px; font-weight: 800; line-height: 1.35; }
 .pick em { display: block; font-style: normal; font-size: 13px; font-weight: 800; color: var(--day-ink); }
-.pick small { display: block; margin-top: 1px; font-size: 14px; line-height: 1.45; color: var(--ink2); }
+.pick small { display: block; margin-top: 1px; font-size: 13px; line-height: 1.45; color: var(--ink2); }
 .pick input:checked + span { color: inherit; }
 .count { margin: 0 0 4px; font-size: 13.5px; font-weight: 700; color: var(--ink2); }
 .count.over { color: var(--red-ink); }
 
 /* 점심 고르기 */
 .seg button:disabled { opacity: .4; cursor: not-allowed; }
-.seg.menu button { min-height: 50px; line-height: 1.2; }
+.seg.menu button { min-height: 42px; line-height: 1.2; }
 .seg .hot { display: block; margin: 2px 0 0; font-size: 12px; color: var(--red-ink); opacity: 1; }
 .seg button[aria-pressed="true"] .hot { color: inherit; }
-.lunch-q { margin: 14px 0 6px; font-size: 15px; font-weight: 800; }
-.lunch-q:first-of-type { margin-top: 10px; }
+.lunch-q { margin: 10px 0 4px; font-size: 14px; font-weight: 800; }
+.lunch-q:first-of-type { margin-top: 6px; }
 .tally { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 8px 0 4px; }
 .tally div { padding: 6px 4px; border-radius: 10px; background: var(--bg2); text-align: center; }
-.tally b { display: block; font: 400 24px/1.1 var(--display); color: var(--day-ink); }
+.tally b { display: block; font: 400 21px/1.1 var(--display); color: var(--day-ink); }
 .tally span { display: block; font-size: 12.5px; font-weight: 800; line-height: 1.3; }
 .tally .hot { color: var(--red-ink); }
 .names-line { font-size: 15px; line-height: 1.5; }
@@ -618,17 +618,17 @@ button { font: inherit; color: inherit; }
 .team-lock .hint.bad { color: var(--red-ink); font-weight: 700; }
 .names { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 4px; }
 .names button { min-height: 42px; padding: 4px; border: 2px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 15px; font-weight: 800; cursor: pointer; }
-.team-card { padding: 12px 14px; border-radius: 12px; background: var(--day); color: var(--on-day); }
-.team-no { font: 400 22px/1.15 var(--display); }
-.team-card ul { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.team-card li { padding: 3px 10px; border: 2px solid var(--on-day); border-radius: 8px; font-size: 15px; font-weight: 800; }
+.team-card { padding: 9px 12px; border-radius: 10px; background: var(--day); color: var(--on-day); }
+.team-no { font: 400 19px/1.15 var(--display); }
+.team-card ul { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.team-card li { padding: 2px 9px; border: 2px solid var(--on-day); border-radius: 7px; font-size: 14px; font-weight: 800; }
 .team-card li.me { background: var(--on-day); color: var(--day); }
-.team-card .say { margin-top: 8px; font-size: 13.5px; font-weight: 700; line-height: 1.5; }
+.team-card .say { margin-top: 6px; font-size: 13.5px; font-weight: 700; line-height: 1.5; }
 .team-card.room { margin-top: 8px; background: var(--bg2); color: var(--ink); }
 .team-card.room li { border-color: var(--ink); }
 .team-card.room li.me { background: var(--ink); color: var(--bg); }
 .team-label { font-size: 12.5px; font-weight: 800; color: var(--ink2); }
-.room-wait { margin-top: 8px; padding: 9px 12px; border-radius: 10px; background: var(--bg2); color: var(--ink2); font-size: 13.5px; font-weight: 600; line-height: 1.5; }
+.room-wait { margin-top: 6px; padding: 7px 10px; border-radius: 10px; background: var(--bg2); color: var(--ink2); font-size: 13.5px; font-weight: 600; line-height: 1.5; }
 
 /* 선생님 화면 */
 .seg.three { grid-template-columns: repeat(3, 1fr); }
@@ -636,18 +636,18 @@ button { font: inherit; color: inherit; }
 .board-links button.board-link.here { background: transparent; color: var(--on-day); }
 .board .meet li { font-size: 14.5px; font-weight: 700; }
 .tcount { display: flex; align-items: baseline; gap: 6px; font-size: 15.5px; font-weight: 800; }
-.tcount b { font: 400 34px/1 var(--display); color: var(--day-ink); }
+.tcount b { font: 400 28px/1 var(--display); color: var(--day-ink); }
 .tmiss { margin-top: 4px; font-size: 14.5px; font-weight: 700; line-height: 1.5; }
 .tmiss.ok { color: var(--day-ink); }
 .tnote { margin-top: 4px; font-size: 13px; color: var(--ink2); }
-.rgroup { margin-top: 14px; }
+.rgroup { margin-top: 10px; }
 .rhead { display: flex; align-items: center; gap: 8px; padding-bottom: 2px; margin-bottom: 6px; border-bottom: 2px solid var(--ink); }
 .rhead h4 { margin: 0; font-size: 15.5px; font-weight: 800; }
 .rhead .rcount { font-size: 14.5px; font-weight: 800; color: var(--ink2); }
 .rhead .rcount.full { color: var(--day-ink); }
 .rhead .text-btn { margin-left: auto; }
 .roll { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-.roll button { min-height: 44px; padding: 2px; border: 2px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 15px; font-weight: 800; cursor: pointer; }
+.roll button { min-height: 38px; padding: 2px; border: 2px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 15px; font-weight: 800; cursor: pointer; }
 .roll button[aria-pressed="true"] { background: var(--day); border-color: var(--day); color: var(--on-day); }
 .roll button.off { color: var(--ink2); text-decoration: line-through; opacity: .6; }
 .roll.absent button[aria-pressed="true"] { background: var(--ink2); border-color: var(--ink2); color: var(--bg); text-decoration: line-through; }
@@ -659,7 +659,7 @@ button { font: inherit; color: inherit; }
 
 /* 뮤지컬 끝난 밤: 내일 박물관 미리 보기 */
 #tonight { padding-top: 20px; }
-.night { padding: 12px 14px; border-radius: 12px; background: var(--bg2); border-top: 6px solid var(--day); }
+.night { padding: 10px 12px; border-radius: 10px; background: var(--bg2); border-top: 6px solid var(--day); }
 .night-label { font: 400 16px/1.2 var(--display); color: var(--day-ink); }
 .night h2 { margin: 2px 0 6px; font-size: 17px; font-weight: 800; line-height: 1.3; }
 .night h3 { margin: 12px 0 2px; font-size: 14.5px; font-weight: 800; }
@@ -673,17 +673,17 @@ button { font: inherit; color: inherit; }
 /* 활동지 */
 .wsec { margin: 8px var(--gut) 0; }
 .wsec-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
-.wsec-head h3 { font-size: 17px; font-weight: 800; line-height: 1.3; }
+.wsec-head h3 { font-size: 16px; font-weight: 800; line-height: 1.3; }
 .wsec-head .badge { background: var(--day); color: var(--on-day); }
 .wsec-head .badge.wait { background: var(--bg2); color: var(--ink2); }
 .wsec-head .badge.done { padding: 1px 7px; border: 2px solid currentColor; background: transparent; color: var(--day-ink); }
 .wsec-when { flex-basis: 100%; font-size: 13px; font-weight: 700; color: var(--ink2); }
-.wsec .q { margin-top: 14px; }
+.wsec .q { margin-top: 10px; }
 .wsec.locked .q, .wsec.locked .field, .wsec.locked .btn-row, .wsec.locked .seen { opacity: .5; }
 .q .tag { flex: none; padding: 1px 8px; border-radius: 6px; background: var(--day); color: var(--on-day); font-size: 12.5px; font-weight: 800; line-height: 1.5; }
-.mine { margin: 0 0 6px; padding: 7px 10px; border-radius: 8px; background: var(--bg2); font-size: 13.5px; line-height: 1.5; }
+.mine { margin: 0 0 6px; padding: 5px 9px; border-radius: 8px; background: var(--bg2); font-size: 13.5px; line-height: 1.5; }
 .wsub { margin: 14px 0 2px; font-size: 14.5px; font-weight: 800; }
-.seen label { min-height: 42px; font-size: 15px; }
+.seen label { min-height: 36px; font-size: 15px; }
 .field textarea:disabled { background: var(--bg2); }
 
 /* 아래 메뉴 */
@@ -705,13 +705,13 @@ button { font: inherit; color: inherit; }
   align-items: center;
   justify-content: center;
   gap: 2px;
-  height: 56px;
+  height: 50px;
   color: var(--ink2);
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 700;
   text-decoration: none;
 }
-.tabs svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tabs svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .tabs a[aria-current="page"] { color: var(--ink); font-weight: 800; }
 .tabs a[aria-current="page"]::before {
   content: "";
@@ -731,7 +731,7 @@ button { font: inherit; color: inherit; }
   position: fixed;
   left: 12px;
   right: 12px;
-  bottom: calc(66px + env(safe-area-inset-bottom));
+  bottom: calc(58px + env(safe-area-inset-bottom));
   z-index: 20;
   display: flex;
   align-items: center;
@@ -758,8 +758,8 @@ button { font: inherit; color: inherit; }
 }
 
 @media (max-width: 359px) {
-  :root { --gut: 16px; }
-  .board-title { font-size: 26px; }
+  :root { --gut: 12px; }
+  .board-title { font-size: 22px; }
   .sub button { padding: 0 3px; font-size: 12.5px; }
   .tabs a { font-size: 11px; }
   .roll { grid-template-columns: repeat(3, 1fr); }
@@ -818,12 +818,10 @@ button { font: inherit; color: inherit; }
         <div class="sec">
           <h2>메모</h2>
           <label class="field"><textarea id="t-memo" aria-label="메모" placeholder="약 먹는 학생, 멀미하는 학생, 바뀐 일정처럼 기억할 것"></textarea></label>
-          <p class="hint">이 휴대전화에만 저장돼요.</p>
         </div>
         <div class="sec" id="t-scode-sec" hidden>
           <h2>학생 화면 코드</h2>
           <p class="tcode" id="t-scode"></p>
-          <p class="hint">학생이 ‘우리 조·방’을 열 때 넣는 코드예요.</p>
         </div>
       </div>
 
@@ -855,7 +853,6 @@ button { font: inherit; color: inherit; }
           <label class="field"><span>같은 방 친구</span><input name="mates" placeholder="이름"></label>
           <label class="field"><span>버스 자리</span><input name="seat" placeholder="예: 왼쪽 4번째 줄"></label>
           <label class="field"><span>박물관 집결 장소</span><input name="meet" placeholder="당일 선생님이 알려 줘요"></label>
-          <p class="hint">적은 내용은 이 휴대전화에만 저장돼요. 다른 사람에게는 보이지 않아요.</p>
           <div class="btn-row" style="grid-template-columns:1fr"><button type="submit" class="btn day">다 적었어요</button></div>
         </form>
       </div>
@@ -866,10 +863,8 @@ button { font: inherit; color: inherit; }
     <section class="page s-only" id="login" aria-label="학번으로 시작하기" hidden>
       <div class="page-head">
         <h2 class="page-title">학번으로 시작하기</h2>
-        <p class="lead">한 번 들어가면 점심, 계획서, 활동지가 내 이름으로 저장돼요.</p>
       </div>
       <div class="sec" id="login-box"></div>
-      <p class="foot">일정, 지킬 것, 비상 연락은 로그인하지 않아도 볼 수 있어요.</p>
     </section>
 
     <!-- 일정 -->
@@ -878,7 +873,6 @@ button { font: inherit; color: inherit; }
         <h2 class="page-title">일정</h2>
       </div>
       <div class="days" id="days"></div>
-      <p class="legend"><span class="plate">노란 시간</span>은 늦으면 안 되는 시간이에요.</p>
       <ol class="route" id="route"></ol>
     </section>
 
@@ -910,14 +904,14 @@ button { font: inherit; color: inherit; }
         <div class="prog" aria-hidden="true"><i id="work-bar"></i></div>
         <div class="btn-row" style="grid-template-columns:1fr;margin-top:0"><button type="button" class="btn" id="work-all">쓴 것 한꺼번에 보내기</button></div>
       </div>
-      <p class="foot">한두 줄이면 돼요. <span data-sync></span></p>
+      <p class="foot"><span data-sync></span></p>
     </section>
 
     <!-- 국립중앙박물관: 견학 계획서와 안내 -->
     <section class="page d2" id="museum" aria-label="국립중앙박물관" hidden>
       <div class="page-head">
         <h2 class="page-title">국립중앙박물관</h2>
-        <p class="lead">11월 20일 10:00부터 12:00까지, 우리 조끼리 함께 봐요.</p>
+        <p class="lead">11월 20일 10:00~12:00, 조별 관람</p>
         <p class="lead" id="meet-line" hidden></p>
       </div>
 
@@ -935,7 +929,7 @@ button { font: inherit; color: inherit; }
         <p class="count" id="pick-count"></p>
         <div class="seg three" id="floors" role="group" aria-label="층"></div>
         <div id="picks"></div>
-        <div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn day" data-to="write">다 골랐으면 계획 쓰기</button></div>
+        <div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn day" data-to="write">계획 쓰기</button></div>
       </div>
 
       <div class="pane sec" data-pane="write" hidden>
@@ -989,7 +983,6 @@ button { font: inherit; color: inherit; }
           <li><b>11:50</b>집결 장소로 이동</li>
         </ul>
       </div>
-      <p class="foot">전시품은 박물관 사정에 따라 자리가 바뀌거나 쉬는 날이 있을 수 있어요.</p>
       </div>
     </section>
 
@@ -1044,7 +1037,6 @@ button { font: inherit; color: inherit; }
       <div class="sec">
         <h3>연락처 적기</h3>
         <div id="t-contact"></div>
-        <p class="hint">적으면 ‘전화’에 전화 단추가 생겨요. 이 휴대전화에만 저장돼요.</p>
       </div>
       </div>
 
@@ -1574,7 +1566,7 @@ function renderMemo() {
   const rows = MEMO.filter(([k]) => k !== 'teacher' && m[k]).map(([k, label]) => '<div><dt>' + label + '</dt><dd>' + esc(m[k]) + '</dd></div>').join('');
   const filled = MEMO.some(([k]) => memo()[k]);
   $('#memo-view').innerHTML = rows ? '<dl class="memo-view">' + rows + '</dl>'
-    : '<p class="memo-empty">' + (filled ? '선생님 번호를 저장했어요. 방 번호와 짝 이름도 적어 두세요.' : '선생님 번호, 짝 이름, 방 번호를 적어 두면 급할 때 바로 찾을 수 있어요.') + '</p>';
+    : '<p class="memo-empty">' + (filled ? '선생님 번호 저장됨' : '아직 적은 것이 없어요') + '</p>';
   $('#memo-toggle').textContent = form.hidden ? (filled ? '고치기' : '적기') : '닫기';
   const tel = telOf(m.teacher);
   const a = $('#call-teacher'), b = $('#sos-teacher');
@@ -1773,7 +1765,7 @@ function renderTeam() {
     (!t ? '<p class="room-wait">조 명단에서 내 이름을 찾지 못했어요. 담임 선생님께 확인해요.</p>'
       : '<div class="team-card"><p class="team-no">' + t.g + '학년 ' + t.n + '조</p><ul>' + li(t.names) + '</ul>' +
         '<p class="say">' + (t.others.length ? '' : '짝은 담임 선생님께 확인해요.') + '</p></div>') +
-    (!r ? '<p class="room-wait">숙소 방은 배정되면 여기에 보여요.</p>'
+    (!r ? ''
       : !r.room ? '<p class="room-wait">방 배정 명단에서 내 이름을 찾지 못했어요. 담임 선생님께 확인해요.</p>'
       : '<div class="team-card room"><p class="team-label">서울유스호스텔</p><p class="team-no">' + esc(r.room) + '</p><ul>' + li(r.names) + '</ul></div>');
   fillMemo();
@@ -1871,7 +1863,7 @@ function renderLunch() {
   let html = '<h2>' + esc(LUNCH.title) + '</h2><p class="hint">' + esc(LUNCH.place) + '</p>';
   if (lunchLocked()) {
     html += '<div class="team-card" style="margin-top:10px"><p class="team-no">' + (m ? esc(m.name) : '고르지 않았어요') + '</p></div>' +
-      '<p class="hint" style="margin-top:8px">' + (m ? '이제 바꿀 수 없어요.' : '선생님께 먹을 메뉴를 말해요.') + '</p>';
+      (m ? '' : '<p class="hint" style="margin-top:6px">선생님께 메뉴를 말해요.</p>');
   } else if (!t) {
     html += '<p class="memo-empty" style="margin-top:8px">학번으로 먼저 들어와요.</p>';
   } else {
@@ -1880,9 +1872,7 @@ function renderLunch() {
       '<p class="lunch-q">메뉴 하나 고르기</p><div class="seg menu" role="group" aria-label="점심 메뉴">' +
       LUNCH.menu.map((x) => '<button type="button" data-menu="' + x.id + '" aria-pressed="' + (x.id === l.pick) + '"' +
         (l.hot == null || (x.hot && l.hot === 0) ? ' disabled' : '') + '>' + esc(x.name) + (x.hot ? '<small class="hot">매워요</small>' : '') + '</button>').join('') + '</div>' +
-      '<p class="hint">' + (l.hot == null ? '매운 음식을 먹을 수 있는지부터 골라요.' : l.hot === 0 ? '매운 메뉴는 고를 수 없어요.' : '') + '</p>' +
-      '<p class="hint" style="margin-top:6px" data-lunch-sync></p>' +
-      '<p class="hint">' + u.m + '월 ' + u.d + '일 ' + u.hm + '까지 바꿀 수 있어요.</p>';
+      '<p class="hint" style="margin-top:6px"><span data-lunch-sync></span> ' + u.m + '. ' + u.d + '. ' + u.hm + '까지 바꿀 수 있어요.</p>';
   }
   el.innerHTML = html;
   showSync();
@@ -2167,9 +2157,9 @@ function modeNow(c) {
   const m = tMode || c.mode;
   return m === 'room' && !roster().some((s) => s.room) ? 'grade' : m;
 }
-const LOCK = '<form class="sec team-lock t-lock" style="border:0"><p class="memo-empty" style="border:0">선생님 코드 일곱 자리를 넣어 주세요.</p>' +
+const LOCK = '<form class="sec team-lock t-lock" style="border:0">' +
   '<label class="field"><span>선생님 코드</span><input class="t-code" inputmode="numeric" maxlength="7" autocomplete="off" placeholder="숫자 일곱 자리"></label>' +
-  '<button type="submit" class="btn day" style="width:100%">열기</button><p class="hint t-msg">학생 명단이 들어 있어서 잠가 두었어요.</p></form>';
+  '<button type="submit" class="btn day" style="width:100%">열기</button><p class="hint t-msg"></p></form>';
 function renderTeacher() {
   const body = $('#t-body'), d = tData();
   $('#t-sub').hidden = !d;
@@ -2197,9 +2187,9 @@ function renderTeacher() {
     '</div>' +
     '<div class="sec d' + (c.day + 1) + '" style="padding-top:0" id="t-roll"></div>' +
     '</div>' +
-    '<div class="pane" data-pane="absent" hidden><div class="sec"><h3>불참 학생</h3><p class="hint" style="margin-bottom:10px">이틀 내내 오지 않는 학생을 눌러 두면 인원에서 빠져요.</p><div class="roll absent" id="t-absent">' +
+    '<div class="pane" data-pane="absent" hidden><div class="sec"><h3>불참 학생</h3><div class="roll absent" id="t-absent">' +
       roster().map((s) => '<button type="button" data-ab="' + esc(s.n) + '" aria-pressed="' + absentList().includes(s.n) + '">' + esc(s.n) + '</button>').join('') + '</div></div></div>' +
-    '<p class="foot">체크는 이 휴대전화에만 저장돼요.</p>';
+    '';
   showPane('teacher', subSel.teacher === 'absent' ? 'absent' : 'roll');
   renderRoll();
 }
@@ -2492,8 +2482,7 @@ function renderTWork() {
     '<div class="sec ' + dayCls(tab[2]) + '" style="padding-top:0">' + got.map(([st, sec, when]) =>
       '<div class="rgroup"><div class="rhead"><h4>' + st.g + '학년 ' + st.t + '조 ' + esc(st.n) + '</h4><span class="rcount' + (sec.n >= sec.of ? ' full' : '') + '">' + sec.n + '/' + sec.of + '칸</span></div>' +
       '<dl class="ans">' + sec.rows.map((r) => '<dt>' + esc(r[0]) + '</dt><dd' + (r[1] ? '' : ' class="none"') + '>' + esc(r[1] || '아직 안 썼어요') + '</dd>').join('') + '</dl></div>').join('') +
-    '</div>' +
-    '<p class="foot">학번으로 들어온 학생이 쓴 내용이 여기에 와요.</p>';
+    '</div>';
 }
 const twNote = (cache) => (twBusy ? '받아 오는 중…' : twErr ? '받아 오지 못했어요. 인터넷을 확인해 주세요.' + (cache.at ? ' (' + kst(new Date(cache.at)).hm + '에 받은 내용)' : '') : cache.at ? kst(new Date(cache.at)).hm + '에 받아 왔어요.' : '');
 const twGradeSeg = () => '<div class="seg three" id="tw-grade" role="group" aria-label="학년">' + [[0, '전체'], [1, '1학년'], [2, '2학년']].map(([g, l]) => '<button type="button" data-twg="' + g + '" aria-pressed="' + (g === twGrade) + '">' + l + '</button>').join('') + '</div>';
@@ -2521,8 +2510,7 @@ function lunchTHTML(list, cache) {
     '<div class="sec d1" style="padding-top:0">' +
     st.by.filter((x) => x.names.length).map((x) => '<div class="rgroup"><div class="rhead"><h4>' + esc(x.m.name) + '</h4><span class="rcount">' + x.names.length + '명</span></div><p class="names-line">' + x.names.map(esc).join(', ') + '</p></div>').join('') +
     (st.mild.length ? '<div class="rgroup"><div class="rhead"><h4>매운 거 못 먹는 학생</h4><span class="rcount">' + st.mild.length + '명</span></div><p class="names-line">' + st.mild.map(esc).join(', ') + '</p></div>' : '') +
-    '</div>' +
-    '<p class="foot">학번으로 들어온 학생이 고른 것이 와요. 매운 거 못 먹는다고 한 학생은 짬뽕, 마라짬뽕을 고를 수 없어요.</p>';
+    '</div>';
 }
 function lunchTText() {
   const list = roster().filter((st) => !twGrade || st.g === twGrade), st = lunchStats(list, store.get('twork', { at: 0, data: {} }));
