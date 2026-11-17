@@ -599,7 +599,9 @@ button { font: inherit; color: inherit; }
 
 /* 점심 고르기 */
 .seg button:disabled { opacity: .4; cursor: not-allowed; }
-.seg.menu button { min-height: 42px; line-height: 1.2; }
+.seg.menu { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.seg.menu button { min-height: 42px; padding: 0 2px; font-size: 13.5px; line-height: 1.2; }
+#lunch h2 small { margin-left: 6px; font-size: 12.5px; font-weight: 700; color: var(--ink2); }
 .seg .hot { display: block; margin: 2px 0 0; font-size: 12px; color: var(--red-ink); opacity: 1; }
 .seg button[aria-pressed="true"] .hot { color: inherit; }
 .lunch-q { margin: 10px 0 4px; font-size: 14px; font-weight: 800; }
@@ -787,7 +789,6 @@ button { font: inherit; color: inherit; }
       <div class="sub dn" role="group" aria-label="지금 화면에서 볼 것">
         <button type="button" data-pane="now" aria-pressed="true">지금</button>
         <button type="button" class="s-only" data-pane="team" aria-pressed="false">우리 조·방</button>
-        <button type="button" class="s-only" data-pane="lunch" aria-pressed="false">점심</button>
         <button type="button" class="s-only" data-pane="memo" aria-pressed="false">내 메모</button>
         <button type="button" class="t-only" data-pane="tmemo" aria-pressed="false">메모·코드</button>
       </div>
@@ -795,6 +796,7 @@ button { font: inherit; color: inherit; }
       <div class="pane" data-pane="now">
       <div class="board" id="board" aria-live="polite"></div>
       <div class="sec d2" id="tonight" hidden></div>
+      <div class="sec s-only" id="lunch" hidden></div>
 
       <div class="sec s-only" style="padding-top:4px">
         <div class="btn-row">
@@ -833,10 +835,6 @@ button { font: inherit; color: inherit; }
         </div>
         <div id="team-view"></div>
       </div>
-      </div>
-
-      <div class="pane s-only" data-pane="lunch" hidden>
-      <div class="sec" id="lunch"></div>
       </div>
 
       <div class="pane" data-pane="memo" hidden>
@@ -1353,7 +1351,6 @@ document.addEventListener('click', (e) => {
   const page = b.closest('.page').id, pane = b.dataset.pane || b.dataset.to;
   showPane(page, pane);
   if (page === 'now' && pane === 'memo') memoPane();
-  if (page === 'now' && pane === 'lunch') renderLunch();
   if (page === 'twork') renderTWork();
   window.scrollTo(0, 0);
 });
@@ -1430,8 +1427,7 @@ function renderBoard() {
       '<li><b>08:35</b>그 외 학생, 학교 집결</li>' +
       '<li><b>09:00</b>서울로 출발</li></ul>' +
       (TEACHER ? '<div class="board-links"><a class="board-link" href="#teacher">인원 체크</a><a class="board-link here" href="#twork" data-tw="lunch">점심 메뉴 보기</a><a class="board-link here" href="#twork" data-tw="plan">학생 계획서 보기</a></div>' : '') +
-      '<div class="board-links s-only"><a class="board-link" href="#now" data-lunch="1">' + (lp ? '점심: ' + esc(lp.name) : '11월 19일 점심 고르기') + '</a>' +
-      '<a class="board-link" href="#museum">' + (pn >= 5 ? '박물관 견학 계획서 다 썼어요' : pn ? '박물관 견학 계획서 이어 쓰기' : '박물관 견학 계획서 쓰기') + '</a></div>';
+      '<div class="board-links s-only"><a class="board-link" href="#museum">' + (pn >= 5 ? '박물관 견학 계획서 다 썼어요' : pn ? '박물관 견학 계획서 이어 쓰기' : '박물관 견학 계획서 쓰기') + '</a></div>';
   } else if (st.mode === 'post') {
     const wn = workNext();
     key = 'post/' + (wn ? wn.id : '');
@@ -1446,8 +1442,7 @@ function renderBoard() {
     const lunchSoon = c.day === LUNCH_STOP.day && c.idx <= LUNCH_STOP.idx, lp = menuOf(getLunch().pick);
     key = c.id + '/' + (wn ? wn.id : '') + '/' + (rm && rm.room ? rm.room : '') + '/' + (ruleOf(c) === 'museum' ? meetPlace() : '') + '/' + (lp ? lp.id : '');
     const links = TEACHER ? '<a class="board-link" href="#teacher">인원 체크</a>' + (lunchSoon ? '<a class="board-link here" href="#twork" data-tw="lunch">점심 메뉴 보기</a>' : '<a class="board-link here" href="#twork">학생 활동지 보기</a>')
-      : (lunchSoon && c !== LUNCH_STOP && !lp ? '<a class="board-link" href="#now" data-lunch="1">점심 고르기</a>' : '') +
-      (ruleOf(c) ? '<a class="board-link here" href="#rules" data-rule="' + ruleOf(c) + '">여기서 지킬 것 보기</a>' : '') +
+      : (ruleOf(c) ? '<a class="board-link here" href="#rules" data-rule="' + ruleOf(c) + '">여기서 지킬 것 보기</a>' : '') +
       (wn ? '<a class="board-link" href="#work" data-sec="' + wn.id + '">활동지 쓰기: ' + esc(wn.short) + '</a>' : '');
     let pos = c.idx;
     if (x && x.day === c.day) pos += Math.min(1, (n - c.start) / (x.start - c.start));
@@ -1859,23 +1854,17 @@ const lunchLocked = () => now() >= kt(LUNCH.until);
 const LUNCH_STOP = ALL.find((x) => DAYS[x.day].date === LUNCH.until.slice(0, 10) && x.t === LUNCH.until.slice(11));
 let lunchShown = '';
 function renderLunch() {
-  const el = $('#lunch'), l = getLunch(), t = who(), m = menuOf(l.pick), u = kst(kt(LUNCH.until));
+  const el = $('#lunch'), l = getLunch(), t = who(), u = kst(kt(LUNCH.until));
   lunchShown = lunchLocked() + '/' + !!t;
-  let html = '<h2>' + esc(LUNCH.title) + '</h2><p class="hint">' + esc(LUNCH.place) + '</p>';
-  if (lunchLocked()) {
-    html += '<div class="team-card" style="margin-top:10px"><p class="team-no">' + (m ? esc(m.name) : '고르지 않았어요') + '</p></div>' +
-      (m ? '' : '<p class="hint" style="margin-top:6px">선생님께 메뉴를 말해요.</p>');
-  } else if (!t) {
-    html += '<p class="memo-empty" style="margin-top:8px">학번으로 먼저 들어와요.</p>';
-  } else {
-    html += '<p class="lunch-q">매운 음식 먹을 수 있어요?</p><div class="seg" role="group" aria-label="매운 음식">' +
-      [[1, '먹을 수 있어요'], [0, '못 먹어요']].map(([v, label]) => '<button type="button" data-hot="' + v + '" aria-pressed="' + (l.hot === v) + '">' + label + '</button>').join('') + '</div>' +
-      '<p class="lunch-q">메뉴 하나 고르기</p><div class="seg menu" role="group" aria-label="점심 메뉴">' +
-      LUNCH.menu.map((x) => '<button type="button" data-menu="' + x.id + '" aria-pressed="' + (x.id === l.pick) + '"' +
-        (l.hot == null || (x.hot && l.hot === 0) ? ' disabled' : '') + '>' + esc(x.name) + (x.hot ? '<small class="hot">매워요</small>' : '') + '</button>').join('') + '</div>' +
-      '<p class="hint" style="margin-top:6px"><span data-lunch-sync></span> ' + u.m + '. ' + u.d + '. ' + u.hm + '까지 바꿀 수 있어요.</p>';
-  }
-  el.innerHTML = html;
+  el.hidden = TEACHER || !t || lunchLocked();
+  if (el.hidden) { el.innerHTML = ''; return; }
+  el.innerHTML = '<h2>' + esc(LUNCH.title) + '<small>' + esc(LUNCH.place) + '</small></h2>' +
+    '<div class="seg" role="group" aria-label="매운 음식">' +
+    [[1, '매운 거 먹어요'], [0, '매운 거 못 먹어요']].map(([v, label]) => '<button type="button" data-hot="' + v + '" aria-pressed="' + (l.hot === v) + '">' + label + '</button>').join('') + '</div>' +
+    '<div class="seg menu" role="group" aria-label="점심 메뉴">' +
+    LUNCH.menu.map((x) => '<button type="button" data-menu="' + x.id + '" aria-pressed="' + (x.id === l.pick) + '"' +
+      (l.hot == null || (x.hot && l.hot === 0) ? ' disabled' : '') + '>' + esc(x.name) + (x.hot ? '<small class="hot">매워요</small>' : '') + '</button>').join('') + '</div>' +
+    '<p class="hint" style="margin-top:-2px"><span data-lunch-sync></span> ' + u.hm + '까지 바꿀 수 있어요</p>';
   showSync();
 }
 $('#lunch').addEventListener('click', (e) => {
@@ -1895,9 +1884,9 @@ $('#lunch').addEventListener('click', (e) => {
 function lunchSyncText() {
   const l = getLunch();
   if (!l.pick || !who()) return '';
-  if (syncWait) return '아직 선생님께 전달되지 않았어요. 인터넷에 연결되면 다시 보내요.';
+  if (syncWait) return '아직 전달 안 됨 ·';
   const at = Math.max(store.get('sync', {}).at || 0, syncOk);
-  return at >= l.at ? '선생님께 전달했어요. (' + kst(new Date(at)).hm + ')' : '선생님께 보내는 중…';
+  return at >= l.at ? '전달됨 ' + kst(new Date(at)).hm + ' ·' : '보내는 중 ·';
 }
 
 function planText() {
@@ -2570,7 +2559,6 @@ $('#board').addEventListener('click', (e) => {
   e.preventDefault();
   if (a.dataset.tw) subSel.twork = a.dataset.tw;
   go(a.getAttribute('href').slice(1));
-  if (a.dataset.lunch) { showPane('now', 'lunch'); renderLunch(); }
   if (a.dataset.rule) showPane('rules', a.dataset.rule);
   if (a.dataset.sec && secOf(a.dataset.sec)) showPane('work', a.dataset.sec);
 });
