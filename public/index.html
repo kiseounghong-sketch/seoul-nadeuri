@@ -226,6 +226,36 @@ button { font: inherit; color: inherit; }
 .sec { padding: 18px var(--gut) 2px; }
 .sec > h2, .sec > h3 { font-size: 17px; font-weight: 800; line-height: 1.3; margin-bottom: 6px; }
 .page-head { padding: 8px var(--gut) 0; }
+.pane > .sec:first-child, .pane.sec { padding-top: 6px; }
+
+/* 항목 단추: 화면 위에서 골라 한 항목씩 본다 */
+.sub {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 6px;
+  padding: 8px var(--gut);
+  background: var(--bg);
+}
+.sub button {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 38px;
+  padding: 0 6px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  font-size: 13.5px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.sub button[aria-pressed="true"] { background: var(--day); border-color: var(--day); color: var(--on-day); }
+.sub button.lock:not([aria-pressed="true"]) { color: var(--ink2); }
+.sub button.done::before { content: "✓ "; }
+.sub.wrap { position: static; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+#now > .sub { padding-top: 2px; }
 .page-title { font: 400 25px/1.15 var(--display); }
 .lead { margin-top: 4px; font-size: 14.5px; color: var(--ink2); }
 .foot { padding: 14px var(--gut) 18px; font-size: 13px; color: var(--ink2); }
@@ -420,9 +450,7 @@ button { font: inherit; color: inherit; }
   background: var(--day);
 }
 .rules b { font-weight: 800; }
-.index { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px var(--gut) 0; }
-.index a { justify-content: center; padding: 0 4px; font-size: 13.5px; }
-.rsec { margin: 0 var(--gut); padding-top: 20px; scroll-margin-top: 8px; }
+.rsec { margin: 0 var(--gut); padding-top: 8px; }
 .rsec h3 { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin-bottom: 4px; font-size: 17px; font-weight: 800; line-height: 1.3; }
 .rsec .rules { border-top: 2px solid var(--ink); }
 .rsec .badge { background: var(--day); color: var(--on-day); }
@@ -480,6 +508,7 @@ button { font: inherit; color: inherit; }
 
 /* 비상 */
 .calls { display: grid; gap: 8px; margin-top: 10px; }
+.pane > .sec > .calls:first-child { margin-top: 2px; }
 .call {
   display: grid;
   grid-template-columns: minmax(74px, auto) 1fr;
@@ -517,15 +546,15 @@ button { font: inherit; color: inherit; }
 .addr { border-top: 2px solid var(--ink); padding-top: 12px; }
 .addr b { display: block; font-size: 16px; font-weight: 800; }
 .addr p { font-size: 14.5px; color: var(--ink2); }
-.addr .chip { margin-top: 10px; }
+.addr .chip { margin: 10px 6px 0 0; }
 
 /* 박물관 견학 계획서 */
 .board-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .board-links .board-link { margin-top: 0; }
-.todo { margin: 4px var(--gut) 12px; padding: 12px 14px; border-radius: 12px; background: var(--yellow); color: var(--navy); }
-.todo b { display: block; font-size: 16px; font-weight: 800; }
-.todo span { display: block; margin-top: 1px; font-size: 13.5px; font-weight: 700; }
-.todo .btn { margin-top: 8px; min-height: 42px; border-color: var(--navy); background: var(--navy); color: #FFFFFF; }
+.todo { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 10px; margin: 2px var(--gut) 4px; padding: 9px 12px; border-radius: 12px; background: var(--yellow); color: var(--navy); }
+.todo b { grid-column: 1; font-size: 15.5px; font-weight: 800; line-height: 1.3; }
+.todo span { grid-column: 1; font-size: 13px; font-weight: 700; line-height: 1.35; }
+.todo .btn { grid-column: 2; grid-row: 1 / span 2; min-height: 40px; padding: 4px 12px; border-color: var(--navy); background: var(--navy); color: #FFFFFF; font-size: 14.5px; white-space: nowrap; }
 .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
 .seg button {
   min-height: 42px;
@@ -537,6 +566,7 @@ button { font: inherit; color: inherit; }
   cursor: pointer;
 }
 .seg button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.seg small { margin-left: 3px; font-size: 12.5px; font-weight: 700; opacity: .85; }
 .q { display: flex; align-items: baseline; gap: 8px; margin: 16px 0 6px; font-size: 15.5px; font-weight: 800; line-height: 1.4; }
 .q .n { flex: none; font: 400 18px/1 var(--display); color: var(--day-ink); }
 .field textarea {
@@ -621,7 +651,7 @@ button { font: inherit; color: inherit; }
 .picked small { flex: none; font-size: 13px; font-weight: 700; color: var(--day-ink); }
 
 /* 활동지 */
-.wsec { margin: 22px var(--gut) 0; scroll-margin-top: 8px; }
+.wsec { margin: 8px var(--gut) 0; }
 .wsec-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
 .wsec-head h3 { font-size: 17px; font-weight: 800; line-height: 1.3; }
 .wsec-head .badge { background: var(--day); color: var(--on-day); }
@@ -710,7 +740,7 @@ button { font: inherit; color: inherit; }
 @media (max-width: 359px) {
   :root { --gut: 16px; }
   .board-title { font-size: 26px; }
-  .index { grid-template-columns: repeat(3, 1fr); }
+  .sub button { padding: 0 3px; font-size: 12.5px; }
   .tabs a { font-size: 11px; }
   .roll { grid-template-columns: repeat(3, 1fr); }
 }
@@ -733,6 +763,13 @@ button { font: inherit; color: inherit; }
 
     <!-- 지금 -->
     <section class="page" id="now" aria-label="지금">
+      <div class="sub dn" role="group" aria-label="지금 화면에서 볼 것">
+        <button type="button" data-pane="now" aria-pressed="true">지금</button>
+        <button type="button" data-pane="team" aria-pressed="false">우리 조·방</button>
+        <button type="button" data-pane="memo" aria-pressed="false">내 메모</button>
+      </div>
+
+      <div class="pane" data-pane="now">
       <div class="board" id="board" aria-live="polite"></div>
       <div class="sec d2" id="tonight" hidden></div>
 
@@ -743,8 +780,23 @@ button { font: inherit; color: inherit; }
           <li><span class="n">2</span>시간과 장소를 지킨다</li>
           <li><span class="n">3</span>이상하면 바로 말한다</li>
         </ol>
+        <div class="btn-row">
+          <a class="btn" id="call-teacher" href="#memo">선생님 번호 적기</a>
+          <a class="btn red" href="tel:119">119에 전화</a>
+        </div>
       </div>
 
+      <div class="sec" id="install" hidden>
+        <div class="install">
+          <b>홈 화면에 추가해 두세요</b>
+          <span id="install-text">앱처럼 바로 열리고, 인터넷이 끊겨도 볼 수 있어요.</span>
+          <button type="button" class="btn" id="install-btn" hidden>홈 화면에 추가</button>
+        </div>
+      </div>
+      <p class="foot"><span id="foot-now"></span> <a href="#teacher" data-go="teacher">선생님 화면</a></p>
+      </div>
+
+      <div class="pane" data-pane="team" hidden>
       <div class="sec" id="team">
         <div class="memo-head">
           <h2>우리 조와 방</h2>
@@ -752,7 +804,9 @@ button { font: inherit; color: inherit; }
         </div>
         <div id="team-view"></div>
       </div>
+      </div>
 
+      <div class="pane" data-pane="memo" hidden>
       <div class="sec" id="memo">
         <div class="memo-head">
           <h2>내 메모</h2>
@@ -769,20 +823,8 @@ button { font: inherit; color: inherit; }
           <p class="hint">적은 내용은 이 휴대전화에만 저장돼요. 다른 사람에게는 보이지 않아요.</p>
           <div class="btn-row" style="grid-template-columns:1fr"><button type="submit" class="btn day">다 적었어요</button></div>
         </form>
-        <div class="btn-row">
-          <a class="btn" id="call-teacher" href="#memo">선생님 번호 적기</a>
-          <a class="btn red" href="tel:119">119에 전화</a>
-        </div>
       </div>
-
-      <div class="sec" id="install" hidden>
-        <div class="install">
-          <b>홈 화면에 추가해 두세요</b>
-          <span id="install-text">앱처럼 바로 열리고, 인터넷이 끊겨도 볼 수 있어요.</span>
-          <button type="button" class="btn" id="install-btn" hidden>홈 화면에 추가</button>
-        </div>
       </div>
-      <p class="foot"><span id="foot-now"></span> <a href="#teacher" data-go="teacher">선생님 화면</a></p>
     </section>
 
     <!-- 일정 -->
@@ -800,71 +842,89 @@ button { font: inherit; color: inherit; }
       <div class="page-head">
         <h2 class="page-title">장소마다 지킬 것</h2>
       </div>
-      <nav class="index" id="rule-index" aria-label="장소 바로 가기"></nav>
+      <div class="sub wrap" id="rule-index" role="group" aria-label="장소 고르기"></div>
       <div id="rule-list"></div>
     </section>
 
     <!-- 준비물 -->
     <section class="page" id="pack" aria-label="준비물" hidden>
-      <div class="todo">
-        <b>박물관 견학 계획서</b>
-        <span id="plan-status"></span>
-        <a class="btn" href="#museum" data-go="museum">계획서 쓰기</a>
-      </div>
       <div class="page-head">
         <h2 class="page-title">준비물</h2>
-        <p class="prog-text" id="prog-text"></p>
-        <div class="prog" aria-hidden="true"><i id="prog-bar"></i></div>
       </div>
-      <div class="sec" style="padding-top:0">
-        <ul class="check" id="check"></ul>
+      <div class="sub dn" role="group" aria-label="준비물 화면에서 볼 것">
+        <button type="button" data-pane="bring" aria-pressed="true">챙길 것</button>
+        <button type="button" data-pane="leave" aria-pressed="false">두고 올 것</button>
+        <button type="button" data-pane="tell" aria-pressed="false">알릴 것</button>
+        <button type="button" data-pane="meet" aria-pressed="false">모이는 시간</button>
       </div>
-      <div class="sec">
-        <h3>가져오지 않기</h3>
-        <ul class="plain no">
-          <li>칼, 라이터, 전자담배, 담배, 술</li>
-          <li>비싼 물건</li>
-        </ul>
+
+      <div class="pane" data-pane="bring">
+        <div class="todo">
+          <b>박물관 견학 계획서</b>
+          <span id="plan-status"></span>
+          <a class="btn" href="#museum" data-go="museum">계획서 쓰기</a>
+        </div>
+        <div class="sec" style="padding-top:0">
+          <p class="prog-text" id="prog-text"></p>
+          <div class="prog" aria-hidden="true"><i id="prog-bar"></i></div>
+          <ul class="check" id="check"></ul>
+        </div>
       </div>
-      <div class="sec">
-        <h3>출발 전에 담임 선생님께 알리기</h3>
-        <ul class="plain tell">
-          <li>음식 알레르기</li>
-          <li>먹고 있는 약</li>
-          <li>그 밖에 건강에서 신경 쓸 점</li>
-        </ul>
-        <p class="hint" style="margin-top:10px">멀미약은 집에서 보호자와 상의해서 준비해요.</p>
+
+      <div class="pane" data-pane="leave" hidden>
+        <div class="sec">
+          <h3>가져오지 않기</h3>
+          <ul class="plain no">
+            <li>칼, 라이터, 전자담배, 담배, 술</li>
+            <li>비싼 물건</li>
+          </ul>
+        </div>
       </div>
-      <div class="sec">
-        <h3>11월 19일 아침에 모이는 시간</h3>
-        <ul class="times">
-          <li><b>06:20</b>수능 응원 가는 학생, 학교</li>
-          <li><b>08:35</b>그 외 학생, 학교</li>
-          <li><b>09:00</b>서울로 출발</li>
-        </ul>
+
+      <div class="pane" data-pane="tell" hidden>
+        <div class="sec">
+          <h3>출발 전에 담임 선생님께 알리기</h3>
+          <ul class="plain tell">
+            <li>음식 알레르기</li>
+            <li>먹고 있는 약</li>
+            <li>그 밖에 건강에서 신경 쓸 점</li>
+          </ul>
+          <p class="hint" style="margin-top:10px">멀미약은 집에서 보호자와 상의해서 준비해요.</p>
+        </div>
       </div>
-      <p class="foot">11월 19일 09:00에 출발하면 이 탭은 ‘활동지’로 바뀌어요.</p>
+
+      <div class="pane" data-pane="meet" hidden>
+        <div class="sec">
+          <h3>11월 19일 아침에 모이는 시간</h3>
+          <ul class="times">
+            <li><b>06:20</b>수능 응원 가는 학생, 학교</li>
+            <li><b>08:35</b>그 외 학생, 학교</li>
+            <li><b>09:00</b>서울로 출발</li>
+          </ul>
+        </div>
+        <p class="foot">11월 19일 09:00에 출발하면 이 탭은 ‘활동지’로 바뀌어요.</p>
+      </div>
     </section>
 
     <!-- 활동지: 출발 시각부터 준비물 탭 자리에 나온다 -->
     <section class="page" id="work" aria-label="활동지" hidden>
       <div class="page-head">
         <h2 class="page-title">활동지</h2>
-        <p class="lead">한두 줄이면 돼요. 이 휴대전화에만 저장되고, ‘선생님께 보내기’로 내요.</p>
-        <p class="prog-text" id="work-prog"></p>
-        <div class="prog" aria-hidden="true"><i id="work-bar"></i></div>
       </div>
-      <div class="sec" style="padding-top:8px">
+      <div class="sub" id="work-sub" role="group" aria-label="활동지 고르기"></div>
+      <div id="work-list"></div>
+      <div class="sec">
+        <h3>보내는 사람</h3>
         <div class="seg" id="work-grade" role="group" aria-label="학년">
           <button type="button" data-grade="1" aria-pressed="false">1학년</button>
           <button type="button" data-grade="2" aria-pressed="false">2학년</button>
         </div>
         <label class="field"><span>이름</span><input id="work-name" placeholder="내 이름" autocomplete="off"></label>
+        <p class="prog-text" id="work-prog"></p>
+        <div class="prog" aria-hidden="true"><i id="work-bar"></i></div>
+        <div class="btn-row" style="grid-template-columns:1fr;margin-top:0"><button type="button" class="btn" id="work-all">쓴 것 한꺼번에 보내기</button></div>
       </div>
-      <div id="work-list"></div>
-      <div class="sec">
-        <div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn" id="work-all">쓴 것 한꺼번에 보내기</button></div>
-      </div>
+      <p class="foot">한두 줄이면 돼요. 이 휴대전화에만 저장되고, ‘선생님께 보내기’로 내요.</p>
     </section>
 
     <!-- 국립중앙박물관: 견학 계획서와 안내 -->
@@ -874,17 +934,30 @@ button { font: inherit; color: inherit; }
         <p class="lead">11월 20일 10:00부터 12:00까지, 우리 조끼리 함께 봐요.</p>
       </div>
 
-      <form class="sec" id="plan-form" autocomplete="off">
+      <div class="sub" role="group" aria-label="박물관 화면에서 볼 것">
+        <button type="button" data-pane="pick" aria-pressed="true">고르기</button>
+        <button type="button" data-pane="write" aria-pressed="false">계획 쓰기</button>
+        <button type="button" data-pane="tips" aria-pressed="false">알아 둘 것</button>
+        <button type="button" data-pane="route" aria-pressed="false">도는 순서</button>
+      </div>
+
+      <form id="plan-form" autocomplete="off">
+      <div class="pane sec" data-pane="pick">
+        <h3>견학 계획서</h3>
+        <h4 class="q" style="margin-top:8px"><span class="n">1</span>꼭 보고 싶은 것을 다섯 개까지 골라요</h4>
+        <p class="count" id="pick-count"></p>
+        <div class="seg three" id="floors" role="group" aria-label="층"></div>
+        <div id="picks"></div>
+        <div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn day" data-to="write">다 골랐으면 계획 쓰기</button></div>
+      </div>
+
+      <div class="pane sec" data-pane="write" hidden>
         <h3>견학 계획서</h3>
         <div class="seg" id="grade" role="group" aria-label="학년">
           <button type="button" data-grade="1" aria-pressed="false">1학년</button>
           <button type="button" data-grade="2" aria-pressed="false">2학년</button>
         </div>
         <label class="field"><span>이름</span><input name="name" placeholder="내 이름"></label>
-
-        <h4 class="q"><span class="n">1</span>꼭 보고 싶은 것을 다섯 개까지 골라요</h4>
-        <p class="count" id="pick-count"></p>
-        <div id="picks"></div>
 
         <h4 class="q"><span class="n">2</span>가장 기대되는 것 한 가지와 그 이유</h4>
         <label class="field"><textarea name="hope" aria-label="가장 기대되는 것과 이유" placeholder="예: 반가사유상. 사진으로만 봤는데 실제 표정이 궁금해서"></textarea></label>
@@ -902,8 +975,10 @@ button { font: inherit; color: inherit; }
           <button type="button" class="btn day" id="plan-share">선생님께 보내기</button>
           <button type="button" class="btn" id="plan-copy">내용 복사</button>
         </div>
+      </div>
       </form>
 
+      <div class="pane" data-pane="tips" hidden>
       <div class="sec dn">
         <h3>알아 두면 좋은 것</h3>
         <ul class="rules" style="border-top:2px solid var(--ink)">
@@ -917,7 +992,9 @@ button { font: inherit; color: inherit; }
           <li>짝이 안 보이면 그 자리에서 기다리고 전화해요.</li>
         </ul>
       </div>
+      </div>
 
+      <div class="pane" data-pane="route" hidden>
       <div class="sec">
         <h3>두 시간, 이렇게 돌면 무리 없어요</h3>
         <ul class="times">
@@ -929,6 +1006,7 @@ button { font: inherit; color: inherit; }
         </ul>
       </div>
       <p class="foot">전시품은 박물관 사정에 따라 자리가 바뀌거나 쉬는 날이 있을 수 있어요.</p>
+      </div>
     </section>
 
     <!-- 선생님 화면: 주소 끝에 #teacher -->
@@ -937,6 +1015,12 @@ button { font: inherit; color: inherit; }
         <h2 class="page-title">선생님 화면</h2>
         <p class="lead">체크는 이 휴대전화에만 저장돼요.</p>
       </div>
+      <div class="sub dn" id="t-sub" role="group" aria-label="선생님 화면에서 볼 것" hidden>
+        <button type="button" data-pane="roll" aria-pressed="true">인원 확인</button>
+        <button type="button" data-pane="contact" aria-pressed="false">연락처</button>
+        <button type="button" data-pane="absent" aria-pressed="false">불참</button>
+        <button type="button" data-pane="memo" aria-pressed="false">메모·코드</button>
+      </div>
       <div id="t-body"></div>
     </section>
 
@@ -944,6 +1028,16 @@ button { font: inherit; color: inherit; }
     <section class="page" id="sos" aria-label="비상" hidden>
       <div class="page-head">
         <h2 class="page-title">길을 잃거나 위급할 때</h2>
+      </div>
+      <div class="sub dn" role="group" aria-label="비상 화면에서 볼 것">
+        <button type="button" data-pane="call" aria-pressed="true">전화</button>
+        <button type="button" data-pane="lost" aria-pressed="false">길 잃으면</button>
+        <button type="button" data-pane="stay" aria-pressed="false">숙소</button>
+        <button type="button" data-pane="app" aria-pressed="false">안전 앱</button>
+      </div>
+
+      <div class="pane" data-pane="call">
+      <div class="sec">
         <div class="calls">
           <a class="call red" href="tel:119"><b>119</b><span>다치거나 아플 때</span></a>
           <a class="call fill" href="tel:112"><b>112</b><span>위험한 사람을 만났거나 범죄를 봤을 때</span></a>
@@ -951,6 +1045,9 @@ button { font: inherit; color: inherit; }
           <a class="call" href="tel:023191318"><b class="long">숙소</b><span><em>02-319-1318</em>서울유스호스텔 프런트</span></a>
         </div>
       </div>
+      </div>
+
+      <div class="pane" data-pane="lost" hidden>
       <div class="sec">
         <h3>길을 잃었을 때</h3>
         <ol class="steps">
@@ -959,19 +1056,27 @@ button { font: inherit; color: inherit; }
           <li>휴대전화가 없으면 가까운 직원에게 도움 청하기</li>
         </ol>
       </div>
+      </div>
+
+      <div class="pane" data-pane="stay" hidden>
       <div class="sec">
         <h3>우리 숙소</h3>
         <div class="addr">
           <b>서울유스호스텔</b>
           <p>서울 중구 퇴계로26가길 6 (남산)</p>
           <a class="chip" href="https://place.map.kakao.com/7934954" target="_blank" rel="noopener">지도에서 보기</a>
+          <a class="chip" href="tel:023191318">프런트 02-319-1318</a>
         </div>
       </div>
+      </div>
+
+      <div class="pane" data-pane="app" hidden>
       <div class="sec">
         <h3>미리 깔아 두기</h3>
         <ul class="plain tell">
           <li>앱 스토어에서 <b>안전디딤돌</b>을 검색해 설치해요. 재난 문자, 가까운 대피소, 응급처치 방법을 볼 수 있어요.</li>
         </ul>
+      </div>
       </div>
       <p class="foot" id="foot-sos"></p>
     </section>
@@ -1133,11 +1238,12 @@ const MUSEUM = [
 const PICK_MAX = 5;
 
 /* 활동지: WORK_FROM(출발 시각)부터 준비물 탭 자리에 나온다.
+   - tab: 화면 위 항목 단추에 쓰는 짧은 이름
    - open: 그 칸이 열리는 시각, qs: [질문, 예시] (셋째 값 'ask'면 계획서의 '알아 오고 싶은 것'을 같이 보여 줌)
    - grades: 학년마다 질문이 다를 때, seen: 계획서에서 고른 유물 중 본 것 표시 */
 const WORK_FROM = '2026-11-19T09:00';
 const WORK = [
-  { id: 'lg', title: 'LG디스커버리랩 AI 교육', short: 'LG디스커버리랩', day: 1, open: '2026-11-19T15:30', when: '11월 19일 13:30~15:30',
+  { id: 'lg', title: 'LG디스커버리랩 AI 교육', short: 'LG디스커버리랩', tab: 'LG', day: 1, open: '2026-11-19T15:30', when: '11월 19일 13:30~15:30',
     grades: {
       1: { topic: '스마트팩토리 양불판정', qs: [
         ['AI가 좋은 제품과 불량품을 가려내게 하려고 먼저 무엇을 했나요?', '예: 좋은 제품과 불량품 사진을 나눠서 보여 주고 이름을 붙였다'],
@@ -1151,21 +1257,21 @@ const WORK = [
       ] }
     },
     feel: '오늘 교육에서 새로 알게 된 것, 느낀 점' },
-  { id: 'show', title: '뮤지컬 ‘연의 편지’', short: '뮤지컬', day: 1, open: '2026-11-19T21:40', when: '11월 19일 20:00~21:40, 공연이 끝나면 열려요',
+  { id: 'show', title: '뮤지컬 ‘연의 편지’', short: '뮤지컬', tab: '뮤지컬', day: 1, open: '2026-11-19T21:40', when: '11월 19일 20:00~21:40, 공연이 끝나면 열려요',
     qs: [
       ['가장 기억에 남는 장면과 그 이유', '예: 편지를 처음 발견하는 장면. 보는 나도 두근거렸다'],
       ['이야기에서 편지는 어떤 역할을 했나요?', '예: 주인공이 혼자가 아니라고 느끼게 해 줬다'],
       ['나라면 누구에게 어떤 편지를 남기고 싶나요? 한 줄로', '예: 내년에 우리 교실을 쓸 후배에게, 창가 자리는 겨울에 추워']
     ],
     feel: '공연을 보고 느낀 점' },
-  { id: 'museum', title: '국립중앙박물관', short: '박물관', day: 2, open: '2026-11-20T10:00', when: '11월 20일 10:00~12:00', seen: true,
+  { id: 'museum', title: '국립중앙박물관', short: '박물관', tab: '박물관', day: 2, open: '2026-11-20T10:00', when: '11월 20일 10:00~12:00', seen: true,
     qs: [
       ['가장 인상 깊었던 유물 하나와 그 이유', '예: 반가사유상. 어두운 방에서 보니 표정이 더 또렷했다'],
       ['계획서에 쓴 ‘알아 오고 싶은 것’의 답', '설명문이나 전시 안내에서 찾은 답을 적어요', 'ask'],
       ['사진으로 볼 때와 직접 볼 때 달랐던 점', '예: 달항아리가 생각보다 크고, 완전히 둥글지 않았다']
     ],
     feel: '박물관을 보고 느낀 점' },
-  { id: 'trip', title: '이틀을 돌아보며', short: '돌아보기', day: 0, open: '2026-11-20T13:30', when: '11월 20일, 학교로 가는 버스에서',
+  { id: 'trip', title: '이틀을 돌아보며', short: '돌아보기', tab: '돌아보기', day: 0, open: '2026-11-20T13:30', when: '11월 20일, 학교로 가는 버스에서',
     qs: [
       ['이틀 동안 가장 좋았던 것 하나와 그 이유', '예: LG디스커버리랩. 직접 AI를 학습시켜 봐서'],
       ['다음 체험학습에서 바뀌면 좋겠는 점', '예: 박물관 관람 시간이 조금 더 길었으면']
@@ -1205,6 +1311,24 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('nadeuri:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('nadeuri:' + k, JSON.stringify(v)); } catch (e) { /* 저장이 막힌 브라우저에서는 그냥 넘어간다 */ } }
 };
+
+/* ── 항목 단추: 화면 위 단추(.sub)를 누르면 그 항목(.pane)만 보인다 ── */
+const subSel = {};
+function showPane(page, pane) {
+  const root = document.getElementById(page);
+  subSel[page] = pane;
+  root.querySelectorAll('.sub button[data-pane]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.pane === pane)));
+  root.querySelectorAll('.pane').forEach((p) => { p.hidden = p.dataset.pane !== pane; });
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('.sub button[data-pane], button[data-to]');
+  if (!b) return;
+  const page = b.closest('.page').id, pane = b.dataset.pane || b.dataset.to;
+  showPane(page, pane);
+  if (page === 'now' && pane === 'memo') memoPane();
+  window.scrollTo(0, 0);
+});
+const dayCls = (day) => (day ? 'd' + day : 'dn');
 
 const at = (date, t) => new Date(date + 'T' + t + ':00+09:00');
 const ALL = [];
@@ -1372,24 +1496,24 @@ $('#days').addEventListener('click', (e) => {
   if (!b) return;
   planDay = +b.dataset.day;
   renderPlan(getState(now()));
+  window.scrollTo(0, 0);
 });
 
 /* ── 지킬 것 ── */
 function renderRules() {
   const badge = (day) => day ? '<span class="badge">' + DAYS[day - 1].name + '</span>' : '<span class="badge">이틀 내내</span>';
-  $('#rule-index').innerHTML = RULE_ORDER.map((k) => '<a class="chip" href="#rule-' + k + '" data-jump="rule-' + k + '">' + esc(RULES[k].tag) + '</a>').join('');
+  $('#rule-index').innerHTML = RULE_ORDER.map((k) => '<button type="button" class="' + dayCls(RULES[k].day) + '" data-pane="' + k + '" aria-pressed="false">' + esc(RULES[k].tag) + '</button>').join('');
   $('#rule-list').innerHTML = RULE_ORDER.map((k) => {
     const r = RULES[k];
-    return '<section class="rsec ' + (r.day ? 'd' + r.day : 'dn') + '" id="rule-' + k + '"><h3>' + esc(r.name) + badge(r.day) + '</h3>' +
+    return '<section class="rsec pane ' + dayCls(r.day) + '" data-pane="' + k + '" id="rule-' + k + '" hidden><h3>' + esc(r.name) + badge(r.day) + '</h3>' +
       '<ul class="rules">' + r.items.map((t) => '<li>' + rich(t) + '</li>').join('') + '</ul></section>';
   }).join('');
 }
-$('#rule-index').addEventListener('click', (e) => {
-  const a = e.target.closest('a[data-jump]');
-  if (!a) return;
-  e.preventDefault();
-  document.getElementById(a.dataset.jump).scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
-});
+/* 처음 보여 줄 묶음: 지금 있는 곳의 것, 없으면 첫째 */
+function ruleAuto() {
+  const st = getState(now());
+  return (st.mode === 'trip' && ruleOf(st.cur)) || RULE_ORDER[0];
+}
 
 /* ── 준비물 ── */
 function renderPack() {
@@ -1440,10 +1564,13 @@ function openMemo(focusName) {
   MEMO.forEach(([k]) => { form.elements[k].value = m[k] || ''; });
   form.hidden = false;
   renderMemo();
+  showPane('now', 'memo');
   if (focusName) form.elements[focusName].focus({ preventScroll: true });
-  $('#memo').scrollIntoView({ block: 'start' });
+  window.scrollTo(0, 0);
 }
 function closeMemo() { form.hidden = true; renderMemo(); }
+/* 아직 아무것도 안 적었으면 '내 메모'를 열 때 적는 칸부터 보여 준다 */
+function memoPane() { if (form.hidden && !MEMO.some(([k]) => memo()[k])) openMemo(); }
 form.addEventListener('input', () => {
   const m = {};
   MEMO.forEach(([k]) => { const v = form.elements[k].value.trim(); if (v) m[k] = v.slice(0, 40); });
@@ -1478,12 +1605,29 @@ function planStatus() {
   c.textContent = PICK_MAX + '개 중 ' + p.picks.length + '개 골랐어요';
   return n;
 }
+/* 고르는 목록은 층 단추로 한 층씩 본다. 단추에는 그 층에서 고른 개수를 같이 보여 준다 */
+let floorSel = 0;
+function showFloor() {
+  const p = getPlan();
+  $('#floors').innerHTML = MUSEUM.map((f, i) => {
+    const n = f.items.filter((it) => p.picks.includes(it.id)).length;
+    return '<button type="button" data-floor="' + i + '" aria-pressed="' + (i === floorSel) + '">' + esc(f.floor) + (n ? '<small>' + n + '개</small>' : '') + '</button>';
+  }).join('');
+  document.querySelectorAll('#picks [data-floor]').forEach((el) => { el.hidden = +el.dataset.floor !== floorSel; });
+}
+$('#floors').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-floor]');
+  if (!b) return;
+  floorSel = +b.dataset.floor;
+  showFloor();
+});
 function renderMuseum() {
   const p = getPlan(), me = getMe();
-  $('#picks').innerHTML = MUSEUM.map((f) =>
-    '<h5 class="floor">' + f.floor + '<span>' + esc(f.name) + '</span></h5><ul class="check pick">' +
+  $('#picks').innerHTML = MUSEUM.map((f, i) =>
+    '<div data-floor="' + i + '"><h5 class="floor">' + f.floor + '<span>' + esc(f.name) + '</span></h5><ul class="check pick">' +
     f.items.map((it) => '<li><label><input type="checkbox" data-id="' + it.id + '"' + (p.picks.includes(it.id) ? ' checked' : '') + '>' +
-      '<span><b>' + esc(it.name) + '</b><em>' + esc(it.where) + '</em><small>' + esc(it.note) + '</small></span></label></li>').join('') + '</ul>').join('');
+      '<span><b>' + esc(it.name) + '</b><em>' + esc(it.where) + '</em><small>' + esc(it.note) + '</small></span></label></li>').join('') + '</ul></div>').join('');
+  showFloor();
   PLAN_TEXT.forEach((k) => { planForm.elements[k].value = p[k]; });
   planForm.elements.name.value = me.name;
   document.querySelectorAll('#grade button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.grade === me.grade)));
@@ -1508,6 +1652,7 @@ $('#picks').addEventListener('change', (e) => {
   p.picks = picks;
   store.set('plan', p);
   planStatus();
+  showFloor();
   boardKey = '';
   renderBoard();
 });
@@ -1742,18 +1887,24 @@ function workNext() {
   for (let i = open.length - 1; i >= 0; i--) if (stateOf(open[i], g) !== 'done') return open[i];
   return null;
 }
+/* 활동지 탭을 열 때 처음 보여 줄 칸: 쓸 차례인 것, 없으면 가장 최근에 열린 것 */
+function workAuto() {
+  const open = WORK.filter(isOpen);
+  return (workNext() || open[open.length - 1] || WORK[0]).id;
+}
 let workKey = '';
 function renderWork() {
   const g = myGrade(), p = getPlan();
   $('#work-name').value = getMe().name;
   document.querySelectorAll('#work-grade button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.grade === g)));
   workKey = g + '/' + WORK.map((s) => (isOpen(s) ? 1 : 0)).join('');
+  $('#work-sub').innerHTML = WORK.map((s) => '<button type="button" class="' + dayCls(s.day) + '" data-pane="' + s.id + '" aria-pressed="false">' + esc(s.tab) + '</button>').join('');
   $('#work-list').innerHTML = WORK.map((s) => {
     const st = stateOf(s, g), qs = qsOf(s, g), v = ansOf(s, g), k = wkey(s, g), lock = st === 'lock', dis = lock ? ' disabled' : '';
     const sub = s.grades && s.grades[g] ? ', ' + g + '학년 ' + s.grades[g].topic : '';
     let body = '';
     if (!qs) {
-      body = '<p class="mine" style="margin-top:14px">위에서 학년을 고르면 질문이 나와요.</p>';
+      body = '<p class="mine" style="margin-top:14px">아래 ‘보내는 사람’에서 학년을 고르면 질문이 나와요.</p>';
     } else {
       if (s.seen) {
         const items = p.picks.map(itemOf).filter(Boolean);
@@ -1769,10 +1920,11 @@ function renderWork() {
         '<label class="field"><textarea data-k="' + k + '" data-i="feel" aria-label="' + esc(s.feel) + '" placeholder="느낀 대로 두세 줄"' + dis + '>' + esc(v.feel) + '</textarea></label>' +
         '<div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn day" data-send="' + s.id + '"' + dis + '>선생님께 보내기</button></div>';
     }
-    return '<section class="wsec ' + (s.day ? 'd' + s.day : 'dn') + (lock ? ' locked' : '') + '" id="w-' + s.id + '">' +
+    return '<section class="wsec pane ' + dayCls(s.day) + (lock ? ' locked' : '') + '" data-pane="' + s.id + '" id="w-' + s.id + '" hidden>' +
       '<div class="wsec-head"><h3>' + esc(s.title) + '</h3><span data-badge>' + badgeOf(s, st) + '</span><p class="wsec-when">' + esc(s.when + sub) + '</p></div>' + body + '</section>';
   }).join('');
   workStatus();
+  showPane('work', secOf(subSel.work) ? subSel.work : workAuto());
 }
 function workStatus() {
   const g = myGrade();
@@ -1782,6 +1934,8 @@ function workStatus() {
     if (st === 'done') done++;
     const b = document.querySelector('#w-' + s.id + ' [data-badge]');
     if (b) b.innerHTML = badgeOf(s, st);
+    const t = document.querySelector('#work-sub [data-pane="' + s.id + '"]');
+    if (t) { t.classList.toggle('lock', st === 'lock'); t.classList.toggle('done', st === 'done'); }
   });
   $('#work-prog').textContent = done === WORK.length ? '다 썼어요. 수고했어요.' : WORK.length + '개 중 ' + done + '개 다 썼어요';
   $('#work-bar').style.width = (done / WORK.length * 100) + '%';
@@ -1903,6 +2057,7 @@ function modeNow(c) {
 }
 function renderTeacher() {
   const body = $('#t-body'), d = tData();
+  $('#t-sub').hidden = !d;
   if (!d) {
     body.innerHTML = '<form class="sec team-lock" id="t-form" style="border:0"><p class="memo-empty" style="border:0">선생님 코드 일곱 자리를 넣어 주세요.</p>' +
       '<label class="field"><span>선생님 코드</span><input id="t-code" inputmode="numeric" maxlength="7" autocomplete="off" placeholder="숫자 일곱 자리"></label>' +
@@ -1914,7 +2069,8 @@ function renderTeacher() {
   const auto = tPick == null || tPick === autoCp();
   const ct = store.get('tcontact', {});
   body.innerHTML =
-    '<div class="board d' + (c.day + 1) + '" style="margin-top:14px">' +
+    '<div class="pane" data-pane="roll">' +
+    '<div class="board d' + (c.day + 1) + '" style="margin-top:2px">' +
       '<p class="board-day"><span class="badge">' + dd.name + '</span>' + dd.long + '</p>' +
       '<p class="board-label">' + (auto ? '지금 확인할 때' : '인원 확인') + ' (' + (i + 1) + '/' + CHECKS.length + ')</p>' +
       '<p class="board-title">' + esc(c.title) + '</p>' +
@@ -1931,14 +2087,16 @@ function renderTeacher() {
       '<div id="t-sum"></div>' +
     '</div>' +
     '<div class="sec d' + (c.day + 1) + '" style="padding-top:0" id="t-roll"></div>' +
-    '<div class="sec"><h3>연락처</h3><div class="calls" id="t-calls"></div>' +
+    '</div>' +
+    '<div class="pane" data-pane="contact" hidden><div class="sec"><h3>연락처</h3><div class="calls" id="t-calls"></div>' +
       '<div class="acts"><details><summary>연락처 적기</summary><div style="padding-top:12px" id="t-contact">' +
         CONTACTS.map(([k, label]) => '<label class="field"><span>' + label + '</span><input data-ct="' + k + '" value="' + esc(ct[k] || '') + '" placeholder="이름 010-0000-0000" autocomplete="off"></label>').join('') +
-        '<p class="hint">적으면 위에 전화 단추가 생겨요. 이 휴대전화에만 저장돼요.</p></div></details></div></div>' +
-    '<div class="sec"><h3>불참 학생</h3><p class="hint" style="margin-bottom:10px">이틀 내내 오지 않는 학생을 눌러 두면 인원에서 빠져요.</p><div class="roll absent" id="t-absent">' +
-      roster().map((s) => '<button type="button" data-ab="' + esc(s.n) + '" aria-pressed="' + absentList().includes(s.n) + '">' + esc(s.n) + '</button>').join('') + '</div></div>' +
-    '<div class="sec"><h3>메모</h3><label class="field"><textarea id="t-memo" aria-label="메모" placeholder="약 먹는 학생, 멀미하는 학생, 바뀐 일정처럼 기억할 것">' + esc(store.get('tmemo', '')) + '</textarea></label><p class="hint">이 휴대전화에만 저장돼요.</p></div>' +
-    '<div class="sec"><h3>학생 화면 코드</h3><p class="tcode">' + esc(d.scode || '') + '</p><p class="hint">학생이 ‘우리 조와 방’을 열 때 넣는 코드예요.</p></div>';
+        '<p class="hint">적으면 위에 전화 단추가 생겨요. 이 휴대전화에만 저장돼요.</p></div></details></div></div></div>' +
+    '<div class="pane" data-pane="absent" hidden><div class="sec"><h3>불참 학생</h3><p class="hint" style="margin-bottom:10px">이틀 내내 오지 않는 학생을 눌러 두면 인원에서 빠져요.</p><div class="roll absent" id="t-absent">' +
+      roster().map((s) => '<button type="button" data-ab="' + esc(s.n) + '" aria-pressed="' + absentList().includes(s.n) + '">' + esc(s.n) + '</button>').join('') + '</div></div></div>' +
+    '<div class="pane" data-pane="memo" hidden><div class="sec"><h3>메모</h3><label class="field"><textarea id="t-memo" aria-label="메모" placeholder="약 먹는 학생, 멀미하는 학생, 바뀐 일정처럼 기억할 것">' + esc(store.get('tmemo', '')) + '</textarea></label><p class="hint">이 휴대전화에만 저장돼요.</p></div>' +
+    '<div class="sec"><h3>학생 화면 코드</h3><p class="tcode">' + esc(d.scode || '') + '</p><p class="hint">학생이 ‘우리 조와 방’을 열 때 넣는 코드예요.</p></div></div>';
+  showPane('teacher', subSel.teacher || 'roll');
   renderRoll();
   renderCalls();
 }
@@ -2043,11 +2201,15 @@ $('#t-body').addEventListener('input', (e) => {
 
 /* ── 화면 전환 ── */
 const PAGES = ['now', 'plan', 'rules', 'pack', 'work', 'museum', 'sos', 'teacher'];
+/* 아래 메뉴로 들어오면 그 화면의 첫 항목부터 보여 준다 (박물관은 쓰던 자리를 그대로 둔다) */
+const SUB_HOME = { now: 'now', pack: 'bring', sos: 'call', teacher: 'roll' };
 function go(id, push) {
   if (!PAGES.includes(id)) id = 'now';
   PAGES.forEach((p) => { document.getElementById(p).hidden = p !== id; });
   curPage = id;
-  if (id === 'work') renderWork();
+  if (SUB_HOME[id]) showPane(id, SUB_HOME[id]);
+  if (id === 'rules') showPane('rules', ruleAuto());
+  if (id === 'work') { subSel.work = ''; renderWork(); }
   if (id === 'museum') renderMuseum();
   if (id === 'now') renderNight();
   if (id === 'teacher') { tPick = null; tMode = null; renderTeacher(); }
@@ -2068,8 +2230,8 @@ $('#board').addEventListener('click', (e) => {
   if (!a) return;
   e.preventDefault();
   go(a.getAttribute('href').slice(1));
-  if (a.dataset.rule) document.getElementById('rule-' + a.dataset.rule).scrollIntoView({ block: 'start' });
-  if (a.dataset.sec) { const w = document.getElementById('w-' + a.dataset.sec); if (w) w.scrollIntoView({ block: 'start' }); }
+  if (a.dataset.rule) showPane('rules', a.dataset.rule);
+  if (a.dataset.sec && secOf(a.dataset.sec)) showPane('work', a.dataset.sec);
 });
 window.addEventListener('hashchange', () => go(location.hash.slice(1), false));
 
