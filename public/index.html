@@ -260,18 +260,6 @@ button { font: inherit; color: inherit; }
 .lead { margin-top: 4px; font-size: 14.5px; color: var(--ink2); }
 .foot { padding: 14px var(--gut) 18px; font-size: 13px; color: var(--ink2); }
 
-.promise { border-top: 2px solid var(--ink); }
-.promise li {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--line);
-  font-size: 16px;
-  font-weight: 700;
-}
-.promise .n { font: 400 20px/1 var(--display); color: var(--day-ink); width: 22px; text-align: center; }
-
 /* 버튼 */
 .btn {
   display: flex;
@@ -773,13 +761,7 @@ button { font: inherit; color: inherit; }
       <div class="board" id="board" aria-live="polite"></div>
       <div class="sec d2" id="tonight" hidden></div>
 
-      <div class="sec">
-        <h2>세 가지 약속</h2>
-        <ol class="promise">
-          <li><span class="n">1</span>짝과 함께 다닌다</li>
-          <li><span class="n">2</span>시간과 장소를 지킨다</li>
-          <li><span class="n">3</span>이상하면 바로 말한다</li>
-        </ol>
+      <div class="sec" style="padding-top:4px">
         <div class="btn-row">
           <a class="btn" id="call-teacher" href="#memo">선생님 번호 적기</a>
           <a class="btn red" href="tel:119">119에 전화</a>
@@ -1392,12 +1374,10 @@ function renderBoard() {
   let key, html;
   if (st.mode === 'pre') {
     const done = store.get('pack', []).length;
-    const title = st.days <= 0 ? '오늘 출발' : st.days === 1 ? '내일 출발' : '출발 ' + st.days + '일 전';
     const pn = planDone();
     key = 'pre' + st.days + '/' + done + '/' + pn;
-    html = '<p class="board-day"><span class="badge">출발 전</span>' + DAYS[0].long + '에 떠나요</p>' +
-      '<p class="board-title">' + title + '</p>' +
-      '<ul class="meet">' +
+    html = '<p class="board-label">' + DAYS[0].short + '</p>' +
+      '<ul class="meet" style="margin-top:6px">' +
       '<li><b>06:20</b>수능 응원 가는 학생, 학교 집결</li>' +
       '<li><b>08:35</b>그 외 학생, 학교 집결</li>' +
       '<li><b>09:00</b>서울로 출발</li></ul>' +
