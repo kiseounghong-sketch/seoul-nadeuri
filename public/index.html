@@ -565,6 +565,20 @@ button { font: inherit; color: inherit; }
 .count { margin: 0 0 4px; font-size: 15px; font-weight: 700; color: var(--ink2); }
 .count.over { color: var(--red-ink); }
 
+/* 우리 조 */
+.team-lock { border-top: 2px solid var(--ink); }
+.team-lock .field { margin-top: 14px; }
+.team-lock .hint { margin-top: 8px; }
+.team-lock .hint.bad { color: var(--red-ink); font-weight: 700; }
+.names { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 4px; }
+.names button { min-height: 50px; padding: 4px; border: 2px solid var(--line); border-radius: 12px; background: var(--bg); font-size: 17px; font-weight: 800; cursor: pointer; }
+.team-card { padding: 16px; border-radius: 16px; background: var(--day); color: var(--on-day); }
+.team-no { font: 400 30px/1.15 var(--display); }
+.team-card ul { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.team-card li { padding: 6px 12px; border: 2px solid var(--on-day); border-radius: 10px; font-size: 18px; font-weight: 800; }
+.team-card li.me { background: var(--on-day); color: var(--day); }
+.team-card .say { margin-top: 12px; font-size: 15px; font-weight: 700; line-height: 1.5; }
+
 /* 뮤지컬 끝난 밤: 내일 박물관 미리 보기 */
 #tonight { padding-top: 20px; }
 .night { padding: 18px 16px 16px; border-radius: 16px; background: var(--bg2); border-top: 6px solid var(--day); }
@@ -702,6 +716,14 @@ button { font: inherit; color: inherit; }
         </ol>
       </div>
 
+      <div class="sec" id="team">
+        <div class="memo-head">
+          <h2>우리 조</h2>
+          <button type="button" class="text-btn" id="team-change" hidden>다시 고르기</button>
+        </div>
+        <div id="team-view"></div>
+      </div>
+
       <div class="sec" id="memo">
         <div class="memo-head">
           <h2>내 메모</h2>
@@ -824,7 +846,7 @@ button { font: inherit; color: inherit; }
     <section class="page d2" id="museum" aria-label="국립중앙박물관" hidden>
       <div class="page-head">
         <h2 class="page-title">국립중앙박물관</h2>
-        <p class="lead">11월 20일 10:00부터 12:00까지, 짝과 둘이서 봐요.</p>
+        <p class="lead">11월 20일 10:00부터 12:00까지, 우리 조끼리 함께 봐요.</p>
       </div>
 
       <form class="sec" id="plan-form" autocomplete="off">
@@ -977,7 +999,7 @@ const DAYS = [
       { t: '07:30', title: '아침 식사, 퇴실', note: '숙소 식당에서 먹고, 방과 두고 가는 물건이 없는지 확인한 뒤 나와요.', here: 'health' },
       { t: '09:00', title: '숙소 출발', note: '버스로 국립중앙박물관까지 가요.', rules: ['bus'] },
       { t: '09:40', title: '국립중앙박물관 도착', note: '입구에서 가방 보안검색을 해요.', map: 'https://place.map.kakao.com/8830150', here: 'museum', guide: true },
-      { t: '10:00', end: '12:00', title: '상설전시 관람', note: '2인 1조로 탐험 활동지를 하면서 봐요.', rules: ['museum'] },
+      { t: '10:00', end: '12:00', title: '상설전시 관람', note: '조별로(2~3명) 탐험 활동지를 하면서 봐요.', rules: ['museum'] },
       { t: '12:00', title: '집결, 점심', note: '인원을 확인하고 박물관 안 식당에서 먹어요.', key: true, here: 'health' },
       { t: '13:30', title: '학교로 출발', note: '중간에 휴게소에서 쉬어 가요.', here: 'bus' },
       { t: '17:00', title: '학교 도착', note: '17시쯤 도착해요. 종례를 하고 집에 갑니다.' }
@@ -1025,7 +1047,7 @@ const RULES = {
   ] },
   museum: { name: '국립중앙박물관', tag: '박물관', day: 2, items: [
     '입구에서 **가방 X-ray 보안검색**, 음식물과 칼은 가지고 들어갈 수 없음',
-    '**2인 1조**로 탐험 활동지를 하며 보고, 짝과 떨어지지 않기',
+    '**조별**(2~3명)로 탐험 활동지를 하며 보고, 조원과 떨어지지 않기',
     '전시실에서 뛰지 않기, 전시물 만지지 않기',
     '‘사유의 방’은 조명이 어두우니 천천히 걷기',
     '**12:00** 집결 장소에 늦지 않기, 모인 뒤에 함께 점심'
@@ -1450,9 +1472,84 @@ $('#grade').addEventListener('click', (e) => {
   document.querySelectorAll('#grade button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
 });
 function whoLine() {
-  const me = getMe(), m = memo();
+  const me = getMe(), m = memo(), t = teamOf();
+  if (t) return [t.g + '학년 ' + t.n + '조', me.name, (t.others.length ? '(짝: ' + t.others.join(', ') + ')' : '')].filter(Boolean).join(' ');
   return [(me.grade ? me.grade + '학년' : ''), me.name, (m.buddy ? '(짝: ' + m.buddy + ')' : '')].filter(Boolean).join(' ');
 }
+
+/* ── 우리 조: 명단은 암호로 잠가 두고, 선생님이 알려 준 코드를 넣은 휴대전화에서만 푼다 ── */
+const TEAMS_SEALED = {"it": 300000, "salt": "aI7XLUSojyYD7RJ3qOXqgA==", "iv": "Lrwjz6Inr3gw5l0A", "ct": "jaG9sS4A84rZX2f6pvKm/+GsFvmF+ryX5bwVlnGq6jXEdM7SDg4cmvDSKeAr5VafokZx1LwMp/z4ozRujnDh+jwm/Dk3H/HhgKV7E6ojb6dt3QcIF4uD5uMLHccUdtfWfQPvmSyoo9f59AiYMH53BQBq/q/uGpz1paJeMlL9NtfvvkUPS0owCLOdtWtpwQP+DxoE1UJUMDC0qXqFiWJHfon1rlIh1GsS6ZWqNj0TylRQCrArNxJiYC7xYUurSNtg9MWbGc3gtzuapI9wEakc9WBqWQp/jADe2qXqYJqyVEts7ZkD5P/FneHDDGf0+NpHPjiW9JsTmH/QMmLgHBEhUqSXwGmsTQV6KqDnrpM8wgPEC4VHNFYof5F7GVOAGf+YN+h36SnGrIpxbMbfe0phHoqh8aUoi3P7h9fOKsghogG8vDfLlavV3J6S9Pi2c84vtt5NMDtYp5zyNSd2fVEmzdJZeJ5eX1LfjQQib73cB4CnrwWMDA0ucrBAZx2RXHAlyS1gVPU0Fw=="};
+async function unseal(code) {
+  const b = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(code), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b(TEAMS_SEALED.salt), iterations: TEAMS_SEALED.it, hash: 'SHA-256' },
+    base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b(TEAMS_SEALED.iv) }, key, b(TEAMS_SEALED.ct));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+const sealKey = TEAMS_SEALED.salt.slice(0, 8);
+const getTeams = () => { const t = store.get('teams', null); return t && t.k === sealKey ? t.list : null; };
+function teamOf() {
+  const list = getTeams(), me = getMe();
+  if (!list || !me.team) return null;
+  const names = (list[me.team.g] || [])[me.team.i];
+  if (!names || !names.includes(me.name)) return null;
+  return { g: me.team.g, n: me.team.i + 1, names: names, others: names.filter((x) => x !== me.name) };
+}
+let teamGrade = 0;
+function renderTeam() {
+  const list = getTeams(), t = teamOf(), me = getMe(), v = $('#team-view');
+  $('#team-change').hidden = !t;
+  if (!list) {
+    v.innerHTML = '<form class="team-lock" id="team-form"><p class="memo-empty" style="border:0">선생님이 알려 준 여섯 자리 코드를 넣으면 조 명단이 열려요.</p>' +
+      '<label class="field"><span>코드</span><input id="team-code" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="숫자 여섯 자리"></label>' +
+      '<button type="submit" class="btn day" style="width:100%">조 명단 열기</button><p class="hint" id="team-msg">명단은 코드를 넣은 휴대전화에서만 보여요.</p></form>';
+    return;
+  }
+  if (t) {
+    v.innerHTML = '<div class="team-card"><p class="team-no">' + t.g + '학년 ' + t.n + '조</p><ul>' +
+      t.names.map((x) => '<li' + (x === me.name ? ' class="me"' : '') + '>' + esc(x) + '</li>').join('') + '</ul>' +
+      '<p class="say">' + (t.others.length ? '박물관에서도, 휴게소에서도 우리 조끼리 함께 다녀요.' : '짝은 선생님과 함께 정해요. 출발 전에 담임 선생님께 확인해요.') + '</p></div>';
+    return;
+  }
+  const g = teamGrade || me.grade || 0;
+  v.innerHTML = '<div class="seg" role="group" aria-label="학년">' + [1, 2].map((x) => '<button type="button" data-tg="' + x + '" aria-pressed="' + (x === g) + '">' + x + '학년</button>').join('') + '</div>' +
+    (g ? '<p class="count">내 이름을 눌러요</p><div class="names">' +
+      (list[g] || []).map((names, i) => names.map((x) => '<button type="button" data-ti="' + i + '" data-tn="' + esc(x) + '">' + esc(x) + '</button>').join('')).join('') + '</div>'
+      : '<p class="count">학년을 먼저 골라요</p>');
+}
+$('#team-view').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const code = $('#team-code').value.replace(/\D/g, ''), msg = $('#team-msg'), btn = e.target.querySelector('button');
+  if (code.length !== 6) { msg.textContent = '숫자 여섯 자리를 넣어 주세요.'; msg.className = 'hint bad'; return; }
+  btn.disabled = true; btn.textContent = '여는 중…';
+  unseal(code).then((list) => {
+    store.set('teams', { k: sealKey, list: list });
+    renderTeam();
+  }, () => {
+    btn.disabled = false; btn.textContent = '조 명단 열기';
+    msg.textContent = '코드가 맞지 않아요. 다시 확인해 주세요.'; msg.className = 'hint bad';
+  });
+});
+$('#team-view').addEventListener('click', (e) => {
+  const g = e.target.closest('button[data-tg]');
+  if (g) { teamGrade = +g.dataset.tg; renderTeam(); return; }
+  const n = e.target.closest('button[data-tn]');
+  if (!n) return;
+  const grade = teamGrade || getMe().grade, i = +n.dataset.ti, me = getMe();
+  me.grade = grade; me.name = n.dataset.tn; me.team = { g: grade, i: i };
+  store.set('me', me);
+  const t = teamOf(), m = memo();
+  if (t && t.others.length && !m.buddy) { m.buddy = t.others.join(', '); store.set('memo', m); }
+  renderTeam(); renderMemo(); renderNight();
+});
+$('#team-change').addEventListener('click', () => {
+  const me = getMe();
+  delete me.team;
+  store.set('me', me);
+  teamGrade = me.grade;
+  renderTeam();
+});
 function planText() {
   const p = getPlan();
   const picks = p.picks.map((id) => itemOf(id)).filter(Boolean).map((it) => it.name + '(' + it.floor + ' ' + it.where + ')');
@@ -1505,8 +1602,8 @@ function renderNight() {
   const n = now(), el = $('#tonight');
   const on = n >= NIGHT_FROM && n < NIGHT_TO;
   const today = kst(n).ymd === DAYS[1].date;
-  const p = getPlan(), m = memo();
-  const key = on ? (today ? 'today' : 'eve') + JSON.stringify([p, m.meet || '']) : '';
+  const p = getPlan(), m = memo(), t = teamOf();
+  const key = on ? (today ? 'today' : 'eve') + JSON.stringify([p, m.meet || '', t]) : '';
   if (key === nightKey) return;
   nightKey = key;
   el.hidden = !on;
@@ -1518,7 +1615,7 @@ function renderNight() {
     '<p class="night-label">' + (today ? '오늘' : '내일') + ' 10:00~12:00</p>' +
     '<h2>' + (today ? '박물관에 들어가기 전에' : '자기 전에 박물관 미리 보기') + '</h2>' +
     '<ul class="rules">' +
-    '<li><b>짝과 둘이서</b> 봐요. <b>12:00</b>까지 집결 장소로 와요.</li>' +
+    '<li><b>우리 조끼리</b> 함께 봐요' + (t && t.others.length ? '(' + t.names.map(esc).join(', ') + ')' : '') + '. <b>12:00</b>까지 집결 장소로 와요.</li>' +
     '<li>' + (m.meet ? '집결 장소: <b>' + esc(m.meet) + '</b>' : '집결 장소는 선생님이 알려 줘요. ‘내 메모’에 적어 두세요.') + '</li>' +
     '<li>입구에서 <b>가방 보안검색</b>을 해요. 음식물은 가지고 들어갈 수 없으니 가방은 가볍게.</li>' +
     '<li>탐험 활동지에 쓸 <b>필기도구</b>를 챙겨요.</li>' +
@@ -1763,6 +1860,7 @@ renderRules();
 renderPack();
 renderMemo();
 renderMuseum();
+renderTeam();
 setTabs();
 go(location.hash.slice(1), false);
 tick();
