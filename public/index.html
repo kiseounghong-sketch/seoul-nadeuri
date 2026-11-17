@@ -86,7 +86,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font: 17px/1.55 var(--text);
+  font: 16px/1.5 var(--text);
   word-break: keep-all;
   overflow-wrap: anywhere;
   -webkit-tap-highlight-color: transparent;
@@ -103,7 +103,7 @@ button { font: inherit; color: inherit; }
   min-height: 100vh;
   min-height: 100dvh;
   background: var(--bg);
-  padding-bottom: calc(70px + env(safe-area-inset-bottom));
+  padding-bottom: calc(62px + env(safe-area-inset-bottom));
 }
 @media (min-width: 520px) {
   body { background: var(--bg2); }
@@ -116,9 +116,9 @@ button { font: inherit; color: inherit; }
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  padding: calc(16px + env(safe-area-inset-top)) var(--gut) 12px;
+  padding: calc(12px + env(safe-area-inset-top)) var(--gut) 10px;
 }
-.mark { font: 400 27px/1 var(--display); }
+.mark { font: 400 23px/1 var(--display); }
 .top-date { font-size: 14px; font-weight: 700; color: var(--ink2); white-space: nowrap; }
 
 .preview {
@@ -126,12 +126,12 @@ button { font: inherit; color: inherit; }
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin: 0 var(--gut) 10px;
-  padding: 8px 12px;
+  margin: 0 var(--gut) 8px;
+  padding: 5px 10px;
   border-radius: 10px;
   background: var(--yellow);
   color: var(--navy);
-  font-size: 14px;
+  font-size: 12.5px;
   font-weight: 700;
 }
 .preview a { font-weight: 800; white-space: nowrap; }
@@ -140,25 +140,25 @@ button { font: inherit; color: inherit; }
 .board {
   background: var(--day);
   color: var(--on-day);
-  padding: 20px var(--gut) 22px;
+  padding: 16px var(--gut) 18px;
 }
-.board-day { display: flex; align-items: center; gap: 9px; margin-bottom: 16px; font-size: 15px; font-weight: 700; }
+.board-day { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 700; }
 .badge {
   display: inline-block;
   padding: 3px 9px;
   border-radius: 6px;
   background: var(--on-day);
   color: var(--day);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
   line-height: 1.4;
 }
-.board-label { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
-.board-title { font: 400 36px/1.14 var(--display); margin-bottom: 10px; }
-.board-when { font: 400 21px/1.2 var(--display); margin-bottom: 4px; }
-.board-sub { font-size: 17px; font-weight: 600; line-height: 1.5; }
+.board-label { font-size: 13px; font-weight: 800; margin-bottom: 2px; }
+.board-title { font: 400 30px/1.15 var(--display); margin-bottom: 6px; }
+.board-when { font: 400 18px/1.2 var(--display); margin-bottom: 4px; }
+.board-sub { font-size: 15px; font-weight: 600; line-height: 1.5; }
 
-.strip { position: relative; height: 30px; margin: 22px 15px 16px; }
+.strip { position: relative; height: 30px; margin: 14px 15px 12px; }
 .strip::before, .strip .fill {
   content: "";
   position: absolute;
@@ -189,58 +189,58 @@ button { font: inherit; color: inherit; }
   transition: left .9s cubic-bezier(.2, .7, .2, 1);
 }
 
-.next { border-top: 2px solid var(--on-day-soft); padding-top: 14px; }
+.next { border-top: 2px solid var(--on-day-soft); padding-top: 10px; }
 .next-row { display: flex; align-items: baseline; gap: 10px; }
-.next-time { font: 400 27px/1.1 var(--display); white-space: nowrap; }
-.next-title { font-size: 19px; font-weight: 800; line-height: 1.35; }
-.next-left { margin-top: 10px; }
+.next-time { font: 400 22px/1.1 var(--display); white-space: nowrap; }
+.next-title { font-size: 16px; font-weight: 800; line-height: 1.35; }
+.next-left { margin-top: 6px; }
 
-.meet { border-top: 2px solid var(--on-day-soft); margin-top: 16px; }
+.meet { border-top: 2px solid var(--on-day-soft); margin-top: 10px; }
 .meet li {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  padding: 10px 0;
+  padding: 7px 0;
   border-bottom: 1px solid var(--on-day-soft);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
   line-height: 1.4;
 }
-.meet b { font: 400 24px/1.1 var(--display); min-width: 66px; }
-.board-link.here { margin-top: 14px; background: transparent; color: var(--on-day); border: 2px solid var(--on-day); }
+.meet b { font: 400 19px/1.1 var(--display); min-width: 54px; }
+.board-link.here { margin-top: 10px; background: transparent; color: var(--on-day); border: 2px solid var(--on-day); }
 .board-link {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  margin-top: 14px;
-  padding: 0 14px;
-  border-radius: 10px;
+  min-height: 38px;
+  margin-top: 10px;
+  padding: 0 12px;
+  border-radius: 9px;
   background: var(--on-day);
   color: var(--day);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
   text-decoration: none;
 }
 
 /* 구역 */
-.sec { padding: 26px var(--gut) 4px; }
-.sec > h2, .sec > h3 { font-size: 21px; font-weight: 800; line-height: 1.3; margin-bottom: 10px; }
+.sec { padding: 18px var(--gut) 2px; }
+.sec > h2, .sec > h3 { font-size: 17px; font-weight: 800; line-height: 1.3; margin-bottom: 6px; }
 .page-head { padding: 8px var(--gut) 0; }
-.page-title { font: 400 31px/1.15 var(--display); }
-.lead { margin-top: 6px; font-size: 16px; color: var(--ink2); }
-.foot { padding: 20px var(--gut) 26px; font-size: 14px; color: var(--ink2); }
+.page-title { font: 400 25px/1.15 var(--display); }
+.lead { margin-top: 4px; font-size: 14.5px; color: var(--ink2); }
+.foot { padding: 14px var(--gut) 18px; font-size: 13px; color: var(--ink2); }
 
 .promise { border-top: 2px solid var(--ink); }
 .promise li {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 13px 0;
+  padding: 8px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 19px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 700;
 }
-.promise .n { font: 400 27px/1 var(--display); color: var(--day-ink); width: 22px; text-align: center; }
+.promise .n { font: 400 20px/1 var(--display); color: var(--day-ink); width: 22px; text-align: center; }
 
 /* 버튼 */
 .btn {
@@ -248,27 +248,27 @@ button { font: inherit; color: inherit; }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 54px;
-  padding: 8px 18px;
-  border-radius: 14px;
+  min-height: 46px;
+  padding: 6px 14px;
+  border-radius: 12px;
   border: 2px solid var(--ink);
   background: transparent;
   color: var(--ink);
-  font: 800 17px/1.25 var(--text);
+  font: 800 15.5px/1.25 var(--text);
   text-align: center;
   text-decoration: none;
   cursor: pointer;
 }
 .btn.red { background: var(--red); border-color: var(--red); color: #FFFFFF; }
 .btn.day { background: var(--day); border-color: var(--day); color: var(--on-day); }
-.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
 .text-btn {
   min-height: 44px;
   padding: 0 4px;
   border: 0;
   background: none;
   color: var(--day-ink);
-  font-size: 16px;
+  font-size: 14.5px;
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -277,57 +277,57 @@ button { font: inherit; color: inherit; }
 
 /* 내 메모 */
 .memo-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-.memo-head h2 { font-size: 21px; font-weight: 800; }
+.memo-head h2 { font-size: 17px; font-weight: 800; }
 .memo-view { border-top: 2px solid var(--ink); }
-.memo-view div { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); }
-.memo-view dt { color: var(--ink2); font-size: 16px; font-weight: 600; white-space: nowrap; }
-.memo-view dd { margin: 0; font-size: 18px; font-weight: 800; text-align: right; }
-.memo-empty { padding: 14px 0 4px; border-top: 2px solid var(--ink); color: var(--ink2); font-size: 16px; }
+.memo-view div { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.memo-view dt { color: var(--ink2); font-size: 14.5px; font-weight: 600; white-space: nowrap; }
+.memo-view dd { margin: 0; font-size: 16px; font-weight: 800; text-align: right; }
+.memo-empty { padding: 10px 0 2px; border-top: 2px solid var(--ink); color: var(--ink2); font-size: 14.5px; }
 .memo-form { border-top: 2px solid var(--ink); padding-top: 16px; }
-.field { display: block; margin-bottom: 14px; }
-.field span { display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; }
+.field { display: block; margin-bottom: 10px; }
+.field span { display: block; margin-bottom: 4px; font-size: 14px; font-weight: 700; }
 .field input {
   width: 100%;
-  height: 52px;
-  padding: 0 14px;
+  height: 46px;
+  padding: 0 12px;
   border: 2px solid var(--line);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--bg);
   color: var(--ink);
-  font: 700 18px var(--text);
+  font: 700 16px var(--text);
 }
 .field input::placeholder { color: var(--ink2); font-weight: 500; opacity: .75; }
 .field input:focus { border-color: var(--day-ink); outline: none; }
-.hint { font-size: 14px; color: var(--ink2); }
+.hint { font-size: 13px; color: var(--ink2); }
 
-.install { margin-top: 26px; padding: 14px 16px; border-radius: 14px; background: var(--bg2); font-size: 15px; }
-.install b { display: block; font-size: 16px; font-weight: 800; margin-bottom: 2px; }
-.install .btn { margin-top: 10px; min-height: 48px; }
+.install { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: var(--bg2); font-size: 13.5px; }
+.install b { display: block; font-size: 14.5px; font-weight: 800; margin-bottom: 2px; }
+.install .btn { margin-top: 8px; min-height: 40px; }
 
 /* 일정: 노선도 */
 .days { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px var(--gut) 0; }
 .days button {
-  min-height: 60px;
-  padding: 8px 14px;
+  min-height: 48px;
+  padding: 6px 12px;
   border: 2px solid var(--line);
-  border-radius: 14px;
+  border-radius: 12px;
   background: var(--bg);
   text-align: left;
   cursor: pointer;
 }
-.days b { display: block; font: 400 21px/1.2 var(--display); }
-.days span { display: block; font-size: 14px; font-weight: 700; color: var(--ink2); }
+.days b { display: block; font: 400 17px/1.2 var(--display); }
+.days span { display: block; font-size: 13px; font-weight: 700; color: var(--ink2); }
 .days button[aria-pressed="true"] { background: var(--day); border-color: var(--day); color: var(--on-day); }
 .days button[aria-pressed="true"] span { color: inherit; }
-.legend { margin: 14px var(--gut) 0; font-size: 15px; color: var(--ink2); }
+.legend { margin: 10px var(--gut) 0; font-size: 13.5px; color: var(--ink2); }
 .plate { display: inline-block; padding: 0 6px; border-radius: 5px; background: var(--yellow); color: var(--navy); }
 .legend .plate { font-weight: 800; }
 
 .route { margin: 8px var(--gut) 0; }
-.stop { display: grid; grid-template-columns: 62px 26px minmax(0, 1fr); column-gap: 9px; }
-.stop .t { padding-top: 13px; text-align: right; font: 400 21px/1.3 var(--display); white-space: nowrap; }
+.stop { display: grid; grid-template-columns: 54px 22px minmax(0, 1fr); column-gap: 8px; }
+.stop .t { padding-top: 11px; text-align: right; font: 400 18px/1.3 var(--display); white-space: nowrap; }
 .stop .t .plate { margin-right: -6px; }
-.stop .t small { display: block; font: 700 13px/1.3 var(--text); color: var(--ink2); }
+.stop .t small { display: block; font: 700 12px/1.3 var(--text); color: var(--ink2); }
 .rail { position: relative; }
 .rail::before {
   content: "";
@@ -339,31 +339,31 @@ button { font: inherit; color: inherit; }
   margin-left: -3px;
   background: var(--day);
 }
-.stop:first-child .rail::before { top: 27px; }
-.stop:last-child .rail::before { bottom: auto; height: 27px; }
+.stop:first-child .rail::before { top: 22px; }
+.stop:last-child .rail::before { bottom: auto; height: 22px; }
 .dot {
   position: absolute;
   left: 50%;
-  top: 18px;
-  width: 18px;
-  height: 18px;
-  margin-left: -9px;
+  top: 14px;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
   border-radius: 50%;
   background: var(--bg);
   border: 4px solid var(--day);
 }
 .stop.past .dot { background: var(--day); }
 .stop.cur .dot {
-  top: 15px;
-  width: 24px;
-  height: 24px;
-  margin-left: -12px;
+  top: 12px;
+  width: 20px;
+  height: 20px;
+  margin-left: -10px;
   background: var(--yellow);
   border-color: var(--ink);
 }
-.stop .body { padding: 12px 0 18px; }
-.stop h3 { font-size: 18px; font-weight: 800; line-height: 1.4; }
-.stop .note { margin-top: 3px; font-size: 16px; line-height: 1.5; color: var(--ink2); }
+.stop .body { padding: 10px 0 12px; }
+.stop h3 { font-size: 16px; font-weight: 800; line-height: 1.4; }
+.stop .note { margin-top: 2px; font-size: 14.5px; line-height: 1.5; color: var(--ink2); }
 .stop.past .t, .stop.past h3 { color: var(--ink2); }
 .stop.past .t .plate { opacity: .55; }
 .stop.past .note { opacity: .8; }
@@ -378,17 +378,17 @@ button { font: inherit; color: inherit; }
   font-weight: 800;
   vertical-align: 2px;
 }
-.acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .chip, .acts summary {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  padding: 0 14px;
-  border: 2px solid var(--line);
-  border-radius: 12px;
+  min-height: 36px;
+  padding: 0 11px;
+  border: 1.5px solid var(--line);
+  border-radius: 9px;
   background: var(--bg);
   color: var(--ink);
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 800;
   text-decoration: none;
   cursor: pointer;
@@ -404,42 +404,42 @@ button { font: inherit; color: inherit; }
 /* 지킬 것 */
 .rules li {
   position: relative;
-  padding: 10px 0 10px 20px;
+  padding: 7px 0 7px 18px;
   border-bottom: 1px solid var(--line);
-  font-size: 17px;
+  font-size: 15px;
   line-height: 1.5;
 }
 .rules li::before {
   content: "";
   position: absolute;
   left: 2px;
-  top: 19px;
-  width: 8px;
-  height: 8px;
+  top: 15px;
+  width: 7px;
+  height: 7px;
   border-radius: 2px;
   background: var(--day);
 }
 .rules b { font-weight: 800; }
-.index { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 16px var(--gut) 0; }
-.index a { justify-content: center; padding: 0 4px; font-size: 15px; }
-.rsec { margin: 0 var(--gut); padding-top: 28px; scroll-margin-top: 8px; }
-.rsec h3 { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin-bottom: 4px; font-size: 21px; font-weight: 800; line-height: 1.3; }
+.index { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px var(--gut) 0; }
+.index a { justify-content: center; padding: 0 4px; font-size: 13.5px; }
+.rsec { margin: 0 var(--gut); padding-top: 20px; scroll-margin-top: 8px; }
+.rsec h3 { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin-bottom: 4px; font-size: 17px; font-weight: 800; line-height: 1.3; }
 .rsec .rules { border-top: 2px solid var(--ink); }
 .rsec .badge { background: var(--day); color: var(--on-day); }
 
 /* 준비물 */
-.prog-text { margin-top: 12px; font-size: 16px; font-weight: 700; }
-.prog { height: 10px; margin: 8px 0 14px; border-radius: 5px; background: var(--bg2); overflow: hidden; }
+.prog-text { margin-top: 8px; font-size: 14.5px; font-weight: 700; }
+.prog { height: 8px; margin: 6px 0 10px; border-radius: 5px; background: var(--bg2); overflow: hidden; }
 .prog i { display: block; height: 100%; border-radius: 5px; background: var(--day); transition: width .2s; }
 .check { border-top: 2px solid var(--ink); }
 .check label {
   display: flex;
   align-items: center;
-  gap: 14px;
-  min-height: 58px;
-  padding: 6px 0;
+  gap: 12px;
+  min-height: 46px;
+  padding: 4px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -449,20 +449,20 @@ button { font: inherit; color: inherit; }
   flex: none;
   display: grid;
   place-content: center;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   margin: 0;
-  border: 2.5px solid var(--ink);
-  border-radius: 8px;
+  border: 2px solid var(--ink);
+  border-radius: 7px;
   background: var(--bg);
   cursor: pointer;
 }
 .check input::after {
   content: "";
-  width: 14px;
-  height: 8px;
-  border-left: 3.5px solid var(--on-day);
-  border-bottom: 3.5px solid var(--on-day);
+  width: 11px;
+  height: 6px;
+  border-left: 3px solid var(--on-day);
+  border-bottom: 3px solid var(--on-day);
   transform: translateY(-2px) rotate(-45deg) scale(0);
   transition: transform .12s;
 }
@@ -470,35 +470,35 @@ button { font: inherit; color: inherit; }
 .check input:checked::after { transform: translateY(-2px) rotate(-45deg) scale(1); }
 .check input:checked + span { color: var(--ink2); }
 .plain { border-top: 2px solid var(--ink); }
-.plain li { position: relative; padding: 11px 0 11px 26px; border-bottom: 1px solid var(--line); font-size: 17px; line-height: 1.5; }
-.plain li::before { position: absolute; left: 2px; top: 10px; font-weight: 800; }
+.plain li { position: relative; padding: 7px 0 7px 22px; border-bottom: 1px solid var(--line); font-size: 15px; line-height: 1.5; }
+.plain li::before { position: absolute; left: 2px; top: 7px; font-weight: 800; }
 .plain.no li::before { content: "✕"; color: var(--red-ink); }
-.plain.tell li::before { content: ""; left: 4px; top: 21px; width: 8px; height: 8px; border-radius: 2px; background: var(--day); }
+.plain.tell li::before { content: ""; left: 4px; top: 15px; width: 7px; height: 7px; border-radius: 2px; background: var(--day); }
 .times { border-top: 2px solid var(--ink); }
-.times li { display: flex; align-items: baseline; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 17px; font-weight: 700; }
-.times b { font: 400 23px/1.1 var(--display); min-width: 64px; }
+.times li { display: flex; align-items: baseline; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 15px; font-weight: 700; }
+.times b { font: 400 18px/1.1 var(--display); min-width: 52px; }
 
 /* 비상 */
-.calls { display: grid; gap: 10px; margin-top: 14px; }
+.calls { display: grid; gap: 8px; margin-top: 10px; }
 .call {
   display: grid;
   grid-template-columns: minmax(74px, auto) 1fr;
   align-items: center;
-  column-gap: 14px;
-  min-height: 70px;
-  padding: 10px 18px;
+  column-gap: 12px;
+  min-height: 54px;
+  padding: 6px 14px;
   border: 2px solid var(--ink);
-  border-radius: 16px;
+  border-radius: 12px;
   color: var(--ink);
   text-align: left;
   text-decoration: none;
   cursor: pointer;
   background: transparent;
 }
-.call b { font: 400 32px/1 var(--display); }
-.call b.long { font-size: 23px; }
-.call span { font-size: 16px; font-weight: 700; line-height: 1.35; }
-.call span em { display: block; font-style: normal; font-weight: 800; font-size: 18px; }
+.call b { font: 400 25px/1 var(--display); }
+.call b.long { font-size: 18px; }
+.call span { font-size: 14px; font-weight: 700; line-height: 1.35; }
+.call span em { display: block; font-style: normal; font-weight: 800; font-size: 15.5px; }
 .call.red { background: var(--red); border-color: var(--red); color: #FFFFFF; }
 .call.fill { background: var(--ink); color: var(--bg); }
 .steps { counter-reset: s; border-top: 2px solid var(--ink); }
@@ -506,63 +506,63 @@ button { font: inherit; color: inherit; }
   counter-increment: s;
   display: flex;
   align-items: baseline;
-  gap: 14px;
-  padding: 12px 0;
+  gap: 12px;
+  padding: 8px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 18px;
+  font-size: 15.5px;
   font-weight: 700;
   line-height: 1.45;
 }
-.steps li::before { content: counter(s); flex: none; width: 22px; text-align: center; font: 400 26px/1 var(--display); color: var(--red-ink); }
+.steps li::before { content: counter(s); flex: none; width: 22px; text-align: center; font: 400 20px/1 var(--display); color: var(--red-ink); }
 .addr { border-top: 2px solid var(--ink); padding-top: 12px; }
-.addr b { display: block; font-size: 19px; font-weight: 800; }
-.addr p { font-size: 16px; color: var(--ink2); }
+.addr b { display: block; font-size: 16px; font-weight: 800; }
+.addr p { font-size: 14.5px; color: var(--ink2); }
 .addr .chip { margin-top: 10px; }
 
 /* 박물관 견학 계획서 */
 .board-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .board-links .board-link { margin-top: 0; }
-.todo { margin: 6px var(--gut) 18px; padding: 16px; border-radius: 16px; background: var(--yellow); color: var(--navy); }
-.todo b { display: block; font-size: 19px; font-weight: 800; }
-.todo span { display: block; margin-top: 2px; font-size: 15px; font-weight: 700; }
-.todo .btn { margin-top: 12px; min-height: 50px; border-color: var(--navy); background: var(--navy); color: #FFFFFF; }
-.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.todo { margin: 4px var(--gut) 12px; padding: 12px 14px; border-radius: 12px; background: var(--yellow); color: var(--navy); }
+.todo b { display: block; font-size: 16px; font-weight: 800; }
+.todo span { display: block; margin-top: 1px; font-size: 13.5px; font-weight: 700; }
+.todo .btn { margin-top: 8px; min-height: 42px; border-color: var(--navy); background: var(--navy); color: #FFFFFF; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
 .seg button {
-  min-height: 50px;
+  min-height: 42px;
   border: 2px solid var(--line);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--bg);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 800;
   cursor: pointer;
 }
 .seg button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
-.q { display: flex; align-items: baseline; gap: 10px; margin: 26px 0 8px; font-size: 18px; font-weight: 800; line-height: 1.4; }
-.q .n { flex: none; font: 400 24px/1 var(--display); color: var(--day-ink); }
+.q { display: flex; align-items: baseline; gap: 8px; margin: 16px 0 6px; font-size: 15.5px; font-weight: 800; line-height: 1.4; }
+.q .n { flex: none; font: 400 18px/1 var(--display); color: var(--day-ink); }
 .field textarea {
   display: block;
   width: 100%;
-  min-height: 92px;
-  padding: 12px 14px;
+  min-height: 64px;
+  padding: 9px 12px;
   border: 2px solid var(--line);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--bg);
   color: var(--ink);
-  font: 600 17px/1.5 var(--text);
+  font: 600 16px/1.45 var(--text);
   resize: vertical;
 }
 .field textarea::placeholder { color: var(--ink2); font-weight: 500; opacity: .75; }
 .field textarea:focus { border-color: var(--day-ink); outline: none; }
-.floor { margin: 18px 0 0; padding: 6px 0; border-bottom: 2px solid var(--ink); font-size: 16px; font-weight: 800; }
+.floor { margin: 12px 0 0; padding: 4px 0; border-bottom: 2px solid var(--ink); font-size: 14.5px; font-weight: 800; }
 .floor span { margin-left: 8px; font-weight: 600; color: var(--ink2); }
 .pick { border-top: 0; }
-.pick label { align-items: flex-start; padding: 12px 0; font-weight: 400; }
+.pick label { align-items: flex-start; padding: 8px 0; font-weight: 400; }
 .pick input { margin-top: 2px; }
-.pick b { display: block; font-size: 18px; font-weight: 800; line-height: 1.35; }
-.pick em { display: block; font-style: normal; font-size: 14px; font-weight: 800; color: var(--day-ink); }
-.pick small { display: block; margin-top: 2px; font-size: 15.5px; line-height: 1.5; color: var(--ink2); }
+.pick b { display: block; font-size: 16px; font-weight: 800; line-height: 1.35; }
+.pick em { display: block; font-style: normal; font-size: 13px; font-weight: 800; color: var(--day-ink); }
+.pick small { display: block; margin-top: 1px; font-size: 14px; line-height: 1.45; color: var(--ink2); }
 .pick input:checked + span { color: inherit; }
-.count { margin: 0 0 4px; font-size: 15px; font-weight: 700; color: var(--ink2); }
+.count { margin: 0 0 4px; font-size: 13.5px; font-weight: 700; color: var(--ink2); }
 .count.over { color: var(--red-ink); }
 
 /* 우리 조 */
@@ -571,69 +571,69 @@ button { font: inherit; color: inherit; }
 .team-lock .hint { margin-top: 8px; }
 .team-lock .hint.bad { color: var(--red-ink); font-weight: 700; }
 .names { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 4px; }
-.names button { min-height: 50px; padding: 4px; border: 2px solid var(--line); border-radius: 12px; background: var(--bg); font-size: 17px; font-weight: 800; cursor: pointer; }
-.team-card { padding: 16px; border-radius: 16px; background: var(--day); color: var(--on-day); }
-.team-no { font: 400 30px/1.15 var(--display); }
-.team-card ul { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.team-card li { padding: 6px 12px; border: 2px solid var(--on-day); border-radius: 10px; font-size: 18px; font-weight: 800; }
+.names button { min-height: 42px; padding: 4px; border: 2px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 15px; font-weight: 800; cursor: pointer; }
+.team-card { padding: 12px 14px; border-radius: 12px; background: var(--day); color: var(--on-day); }
+.team-no { font: 400 22px/1.15 var(--display); }
+.team-card ul { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.team-card li { padding: 3px 10px; border: 2px solid var(--on-day); border-radius: 8px; font-size: 15px; font-weight: 800; }
 .team-card li.me { background: var(--on-day); color: var(--day); }
-.team-card .say { margin-top: 12px; font-size: 15px; font-weight: 700; line-height: 1.5; }
-.team-card.room { margin-top: 10px; background: var(--bg2); color: var(--ink); }
+.team-card .say { margin-top: 8px; font-size: 13.5px; font-weight: 700; line-height: 1.5; }
+.team-card.room { margin-top: 8px; background: var(--bg2); color: var(--ink); }
 .team-card.room li { border-color: var(--ink); }
 .team-card.room li.me { background: var(--ink); color: var(--bg); }
-.team-label { font-size: 14px; font-weight: 800; color: var(--ink2); }
-.room-wait { margin-top: 10px; padding: 12px 14px; border-radius: 12px; background: var(--bg2); color: var(--ink2); font-size: 15.5px; font-weight: 700; line-height: 1.5; }
+.team-label { font-size: 12.5px; font-weight: 800; color: var(--ink2); }
+.room-wait { margin-top: 8px; padding: 9px 12px; border-radius: 10px; background: var(--bg2); color: var(--ink2); font-size: 13.5px; font-weight: 600; line-height: 1.5; }
 
 /* 선생님 화면 */
 .seg.three { grid-template-columns: repeat(3, 1fr); }
 .board-links button.board-link { border: 2px solid var(--on-day); cursor: pointer; font-family: inherit; }
 .board-links button.board-link.here { background: transparent; color: var(--on-day); }
-.board .meet li { font-size: 16px; font-weight: 700; }
-.tcount { display: flex; align-items: baseline; gap: 8px; font-size: 18px; font-weight: 800; }
-.tcount b { font: 400 44px/1 var(--display); color: var(--day-ink); }
-.tmiss { margin-top: 6px; font-size: 16px; font-weight: 700; line-height: 1.5; }
+.board .meet li { font-size: 14.5px; font-weight: 700; }
+.tcount { display: flex; align-items: baseline; gap: 6px; font-size: 15.5px; font-weight: 800; }
+.tcount b { font: 400 34px/1 var(--display); color: var(--day-ink); }
+.tmiss { margin-top: 4px; font-size: 14.5px; font-weight: 700; line-height: 1.5; }
 .tmiss.ok { color: var(--day-ink); }
-.tnote { margin-top: 8px; font-size: 14.5px; color: var(--ink2); }
-.rgroup { margin-top: 22px; }
-.rhead { display: flex; align-items: center; gap: 10px; padding-bottom: 6px; margin-bottom: 8px; border-bottom: 2px solid var(--ink); }
-.rhead h4 { margin: 0; font-size: 18px; font-weight: 800; }
-.rhead .rcount { font-size: 16px; font-weight: 800; color: var(--ink2); }
+.tnote { margin-top: 4px; font-size: 13px; color: var(--ink2); }
+.rgroup { margin-top: 14px; }
+.rhead { display: flex; align-items: center; gap: 8px; padding-bottom: 2px; margin-bottom: 6px; border-bottom: 2px solid var(--ink); }
+.rhead h4 { margin: 0; font-size: 15.5px; font-weight: 800; }
+.rhead .rcount { font-size: 14.5px; font-weight: 800; color: var(--ink2); }
 .rhead .rcount.full { color: var(--day-ink); }
 .rhead .text-btn { margin-left: auto; }
-.roll { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.roll button { min-height: 52px; padding: 4px; border: 2px solid var(--line); border-radius: 12px; background: var(--bg); font-size: 17px; font-weight: 800; cursor: pointer; }
+.roll { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.roll button { min-height: 44px; padding: 2px; border: 2px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 15px; font-weight: 800; cursor: pointer; }
 .roll button[aria-pressed="true"] { background: var(--day); border-color: var(--day); color: var(--on-day); }
 .roll button.off { color: var(--ink2); text-decoration: line-through; opacity: .6; }
 .roll.absent button[aria-pressed="true"] { background: var(--ink2); border-color: var(--ink2); color: var(--bg); text-decoration: line-through; }
-.tcode { font: 400 30px/1.2 var(--display); letter-spacing: .06em; }
+.tcode { font: 400 22px/1.2 var(--display); letter-spacing: .06em; }
 
 /* 뮤지컬 끝난 밤: 내일 박물관 미리 보기 */
 #tonight { padding-top: 20px; }
-.night { padding: 18px 16px 16px; border-radius: 16px; background: var(--bg2); border-top: 6px solid var(--day); }
-.night-label { font: 400 21px/1.2 var(--display); color: var(--day-ink); }
-.night h2 { margin: 4px 0 10px; font-size: 22px; font-weight: 800; line-height: 1.3; }
-.night h3 { margin: 18px 0 4px; font-size: 17px; font-weight: 800; }
+.night { padding: 12px 14px; border-radius: 12px; background: var(--bg2); border-top: 6px solid var(--day); }
+.night-label { font: 400 16px/1.2 var(--display); color: var(--day-ink); }
+.night h2 { margin: 2px 0 6px; font-size: 17px; font-weight: 800; line-height: 1.3; }
+.night h3 { margin: 12px 0 2px; font-size: 14.5px; font-weight: 800; }
 .night .rules { border-top: 2px solid var(--ink); }
-.night .say { font-size: 16px; line-height: 1.5; color: var(--ink2); }
-.night .btn { margin-top: 16px; }
+.night .say { font-size: 14.5px; line-height: 1.5; color: var(--ink2); }
+.night .btn { margin-top: 10px; }
 .picked { border-top: 2px solid var(--ink); }
-.picked li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 17px; font-weight: 800; line-height: 1.4; }
-.picked small { flex: none; font-size: 14px; font-weight: 700; color: var(--day-ink); }
+.picked li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 15px; font-weight: 800; line-height: 1.4; }
+.picked small { flex: none; font-size: 13px; font-weight: 700; color: var(--day-ink); }
 
 /* 활동지 */
-.wsec { margin: 30px var(--gut) 0; scroll-margin-top: 8px; }
-.wsec-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
-.wsec-head h3 { font-size: 21px; font-weight: 800; line-height: 1.3; }
+.wsec { margin: 22px var(--gut) 0; scroll-margin-top: 8px; }
+.wsec-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
+.wsec-head h3 { font-size: 17px; font-weight: 800; line-height: 1.3; }
 .wsec-head .badge { background: var(--day); color: var(--on-day); }
 .wsec-head .badge.wait { background: var(--bg2); color: var(--ink2); }
 .wsec-head .badge.done { padding: 1px 7px; border: 2px solid currentColor; background: transparent; color: var(--day-ink); }
-.wsec-when { flex-basis: 100%; font-size: 15px; font-weight: 700; color: var(--ink2); }
-.wsec .q { margin-top: 20px; }
+.wsec-when { flex-basis: 100%; font-size: 13px; font-weight: 700; color: var(--ink2); }
+.wsec .q { margin-top: 14px; }
 .wsec.locked .q, .wsec.locked .field, .wsec.locked .btn-row, .wsec.locked .seen { opacity: .5; }
-.q .tag { flex: none; padding: 1px 8px; border-radius: 6px; background: var(--day); color: var(--on-day); font-size: 14px; font-weight: 800; line-height: 1.5; }
-.mine { margin: 0 0 8px; padding: 10px 12px; border-radius: 10px; background: var(--bg2); font-size: 15.5px; line-height: 1.5; }
-.wsub { margin: 18px 0 4px; font-size: 17px; font-weight: 800; }
-.seen label { min-height: 50px; font-size: 17px; }
+.q .tag { flex: none; padding: 1px 8px; border-radius: 6px; background: var(--day); color: var(--on-day); font-size: 12.5px; font-weight: 800; line-height: 1.5; }
+.mine { margin: 0 0 6px; padding: 7px 10px; border-radius: 8px; background: var(--bg2); font-size: 13.5px; line-height: 1.5; }
+.wsub { margin: 14px 0 2px; font-size: 14.5px; font-weight: 800; }
+.seen label { min-height: 42px; font-size: 15px; }
 .field textarea:disabled { background: var(--bg2); }
 
 /* 아래 메뉴 */
@@ -654,14 +654,14 @@ button { font: inherit; color: inherit; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  height: 64px;
+  gap: 2px;
+  height: 56px;
   color: var(--ink2);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   text-decoration: none;
 }
-.tabs svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tabs svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .tabs a[aria-current="page"] { color: var(--ink); font-weight: 800; }
 .tabs a[aria-current="page"]::before {
   content: "";
@@ -681,7 +681,7 @@ button { font: inherit; color: inherit; }
   position: fixed;
   left: 12px;
   right: 12px;
-  bottom: calc(76px + env(safe-area-inset-bottom));
+  bottom: calc(66px + env(safe-area-inset-bottom));
   z-index: 20;
   display: flex;
   align-items: center;
@@ -693,11 +693,11 @@ button { font: inherit; color: inherit; }
   border-radius: 14px;
   background: var(--ink);
   color: var(--bg);
-  font-size: 16px;
+  font-size: 14.5px;
   font-weight: 700;
 }
 .toast button {
-  min-height: 44px;
+  min-height: 38px;
   padding: 0 14px;
   border: 0;
   border-radius: 10px;
@@ -709,9 +709,10 @@ button { font: inherit; color: inherit; }
 
 @media (max-width: 359px) {
   :root { --gut: 16px; }
-  .board-title { font-size: 31px; }
+  .board-title { font-size: 26px; }
   .index { grid-template-columns: repeat(3, 1fr); }
-  .tabs a { font-size: 12px; }
+  .tabs a { font-size: 11px; }
+  .roll { grid-template-columns: repeat(3, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
@@ -792,7 +793,6 @@ button { font: inherit; color: inherit; }
       <div class="days" id="days"></div>
       <p class="legend"><span class="plate">노란 시간</span>은 늦으면 안 되는 시간이에요.</p>
       <ol class="route" id="route"></ol>
-      <p class="foot">시간은 교통 상황에 따라 조금 달라질 수 있어요. 바뀌면 선생님이 바로 알려 줍니다.</p>
     </section>
 
     <!-- 지킬 것 -->
@@ -802,7 +802,6 @@ button { font: inherit; color: inherit; }
       </div>
       <nav class="index" id="rule-index" aria-label="장소 바로 가기"></nav>
       <div id="rule-list"></div>
-      <p class="foot">잘 모르겠으면 혼자 판단하지 말고 선생님께 먼저 물어보세요.</p>
     </section>
 
     <!-- 준비물 -->
@@ -844,14 +843,14 @@ button { font: inherit; color: inherit; }
           <li><b>09:00</b>서울로 출발</li>
         </ul>
       </div>
-      <p class="foot">늦을 것 같으면 담임 선생님께 바로 연락하세요. 11월 19일 09:00에 출발하면 이 탭은 ‘활동지’로 바뀌어요.</p>
+      <p class="foot">11월 19일 09:00에 출발하면 이 탭은 ‘활동지’로 바뀌어요.</p>
     </section>
 
     <!-- 활동지: 출발 시각부터 준비물 탭 자리에 나온다 -->
     <section class="page" id="work" aria-label="활동지" hidden>
       <div class="page-head">
         <h2 class="page-title">활동지</h2>
-        <p class="lead">칸마다 열리는 시간이 있어요. 한두 줄로 짧게 써도 괜찮아요.</p>
+        <p class="lead">한두 줄이면 돼요. 이 휴대전화에만 저장되고, ‘선생님께 보내기’로 내요.</p>
         <p class="prog-text" id="work-prog"></p>
         <div class="prog" aria-hidden="true"><i id="work-bar"></i></div>
       </div>
@@ -865,9 +864,7 @@ button { font: inherit; color: inherit; }
       <div id="work-list"></div>
       <div class="sec">
         <div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn" id="work-all">쓴 것 한꺼번에 보내기</button></div>
-        <p class="hint" style="margin-top:10px">적는 대로 이 휴대전화에만 저장돼요. ‘선생님께 보내기’를 누르면 카카오톡 같은 앱으로 보낼 수 있어요.</p>
       </div>
-      <p class="foot">무엇을 써야 할지 모르겠으면 짝과 먼저 이야기해 보고 써요.</p>
     </section>
 
     <!-- 국립중앙박물관: 견학 계획서와 안내 -->
@@ -905,7 +902,6 @@ button { font: inherit; color: inherit; }
           <button type="button" class="btn day" id="plan-share">선생님께 보내기</button>
           <button type="button" class="btn" id="plan-copy">내용 복사</button>
         </div>
-        <p class="hint" style="margin-top:10px">적는 대로 이 휴대전화에 저장돼요. ‘선생님께 보내기’를 누르면 카카오톡 같은 앱으로 보낼 수 있어요.</p>
       </form>
 
       <div class="sec dn">
@@ -939,10 +935,9 @@ button { font: inherit; color: inherit; }
     <section class="page" id="teacher" aria-label="선생님 화면" hidden>
       <div class="page-head">
         <h2 class="page-title">선생님 화면</h2>
-        <p class="lead">체크한 내용은 이 휴대전화에만 저장돼요. 다른 선생님께는 ‘결과 보내기’로 알려요.</p>
+        <p class="lead">체크는 이 휴대전화에만 저장돼요.</p>
       </div>
       <div id="t-body"></div>
-      <p class="foot">학생 화면으로 돌아가려면 아래 메뉴를 누르세요.</p>
     </section>
 
     <!-- 비상 -->
@@ -1583,19 +1578,17 @@ function renderTeam() {
   const list = getTeams(), t = teamOf(), me = getMe(), v = $('#team-view');
   $('#team-change').hidden = !t;
   if (!list) {
-    v.innerHTML = '<form class="team-lock" id="team-form"><p class="memo-empty" style="border:0">선생님이 알려 준 여섯 자리 코드를 넣으면 조 명단이 열려요.</p>' +
-      '<label class="field"><span>코드</span><input id="team-code" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="숫자 여섯 자리"></label>' +
-      '<button type="submit" class="btn day" style="width:100%">조 명단 열기</button><p class="hint" id="team-msg">명단은 코드를 넣은 휴대전화에서만 보여요.</p></form>';
+    v.innerHTML = '<form class="team-lock" id="team-form"><label class="field"><span>선생님이 알려 준 코드</span><input id="team-code" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="숫자 여섯 자리"></label>' +
+      '<button type="submit" class="btn day" style="width:100%">조 명단 열기</button><p class="hint" id="team-msg"></p></form>';
     return;
   }
   if (t) {
     const r = roomOf(), li = (names) => names.map((x) => '<li' + (x === me.name ? ' class="me"' : '') + '>' + esc(x) + '</li>').join('');
     v.innerHTML = '<div class="team-card"><p class="team-no">' + t.g + '학년 ' + t.n + '조</p><ul>' + li(t.names) + '</ul>' +
-      '<p class="say">' + (t.others.length ? '박물관에서도, 휴게소에서도 우리 조끼리 함께 다녀요.' : '짝은 선생님과 함께 정해요. 출발 전에 담임 선생님께 확인해요.') + '</p></div>' +
-      (!r ? '<p class="room-wait">숙소 방 배정은 아직 나오지 않았어요. 나오면 여기에 바로 보여요.</p>'
+      '<p class="say">' + (t.others.length ? '' : '짝은 담임 선생님께 확인해요.') + '</p></div>' +
+      (!r ? '<p class="room-wait">숙소 방은 배정되면 여기에 보여요.</p>'
         : !r.room ? '<p class="room-wait">방 배정 명단에서 내 이름을 찾지 못했어요. 담임 선생님께 확인해요.</p>'
-        : '<div class="team-card room"><p class="team-label">서울유스호스텔</p><p class="team-no">' + esc(r.room) + '</p><ul>' + li(r.names) + '</ul>' +
-          '<p class="say">방에 들어가면 문에 붙은 피난안내도부터 확인해요.</p></div>');
+        : '<div class="team-card room"><p class="team-label">서울유스호스텔</p><p class="team-no">' + esc(r.room) + '</p><ul>' + li(r.names) + '</ul></div>');
     fillMemo();
     return;
   }
@@ -1774,7 +1767,7 @@ function renderWork() {
         '<label class="field"><textarea data-k="' + k + '" data-i="' + i + '" aria-label="' + esc(q[0]) + '" placeholder="' + esc(q[1]) + '"' + dis + '>' + esc(v.a[i] || '') + '</textarea></label>').join('') +
         '<h4 class="q"><span class="tag">소감</span>' + esc(s.feel) + '</h4>' +
         '<label class="field"><textarea data-k="' + k + '" data-i="feel" aria-label="' + esc(s.feel) + '" placeholder="느낀 대로 두세 줄"' + dis + '>' + esc(v.feel) + '</textarea></label>' +
-        '<div class="btn-row"><button type="button" class="btn day" data-send="' + s.id + '"' + dis + '>선생님께 보내기</button><button type="button" class="btn" data-copy="' + s.id + '"' + dis + '>내용 복사</button></div>';
+        '<div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn day" data-send="' + s.id + '"' + dis + '>선생님께 보내기</button></div>';
     }
     return '<section class="wsec ' + (s.day ? 'd' + s.day : 'dn') + (lock ? ' locked' : '') + '" id="w-' + s.id + '">' +
       '<div class="wsec-head"><h3>' + esc(s.title) + '</h3><span data-badge>' + badgeOf(s, st) + '</span><p class="wsec-when">' + esc(s.when + sub) + '</p></div>' + body + '</section>';
