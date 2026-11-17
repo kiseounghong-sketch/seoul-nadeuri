@@ -584,6 +584,29 @@ button { font: inherit; color: inherit; }
 .team-label { font-size: 14px; font-weight: 800; color: var(--ink2); }
 .room-wait { margin-top: 10px; padding: 12px 14px; border-radius: 12px; background: var(--bg2); color: var(--ink2); font-size: 15.5px; font-weight: 700; line-height: 1.5; }
 
+/* 선생님 화면 */
+.seg.three { grid-template-columns: repeat(3, 1fr); }
+.board-links button.board-link { border: 2px solid var(--on-day); cursor: pointer; font-family: inherit; }
+.board-links button.board-link.here { background: transparent; color: var(--on-day); }
+.board .meet li { font-size: 16px; font-weight: 700; }
+.tcount { display: flex; align-items: baseline; gap: 8px; font-size: 18px; font-weight: 800; }
+.tcount b { font: 400 44px/1 var(--display); color: var(--day-ink); }
+.tmiss { margin-top: 6px; font-size: 16px; font-weight: 700; line-height: 1.5; }
+.tmiss.ok { color: var(--day-ink); }
+.tnote { margin-top: 8px; font-size: 14.5px; color: var(--ink2); }
+.rgroup { margin-top: 22px; }
+.rhead { display: flex; align-items: center; gap: 10px; padding-bottom: 6px; margin-bottom: 8px; border-bottom: 2px solid var(--ink); }
+.rhead h4 { margin: 0; font-size: 18px; font-weight: 800; }
+.rhead .rcount { font-size: 16px; font-weight: 800; color: var(--ink2); }
+.rhead .rcount.full { color: var(--day-ink); }
+.rhead .text-btn { margin-left: auto; }
+.roll { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.roll button { min-height: 52px; padding: 4px; border: 2px solid var(--line); border-radius: 12px; background: var(--bg); font-size: 17px; font-weight: 800; cursor: pointer; }
+.roll button[aria-pressed="true"] { background: var(--day); border-color: var(--day); color: var(--on-day); }
+.roll button.off { color: var(--ink2); text-decoration: line-through; opacity: .6; }
+.roll.absent button[aria-pressed="true"] { background: var(--ink2); border-color: var(--ink2); color: var(--bg); text-decoration: line-through; }
+.tcode { font: 400 30px/1.2 var(--display); letter-spacing: .06em; }
+
 /* 뮤지컬 끝난 밤: 내일 박물관 미리 보기 */
 #tonight { padding-top: 20px; }
 .night { padding: 18px 16px 16px; border-radius: 16px; background: var(--bg2); border-top: 6px solid var(--day); }
@@ -758,7 +781,7 @@ button { font: inherit; color: inherit; }
           <button type="button" class="btn" id="install-btn" hidden>홈 화면에 추가</button>
         </div>
       </div>
-      <p class="foot" id="foot-now"></p>
+      <p class="foot"><span id="foot-now"></span> <a href="#teacher" data-go="teacher">선생님 화면</a></p>
     </section>
 
     <!-- 일정 -->
@@ -910,6 +933,16 @@ button { font: inherit; color: inherit; }
         </ul>
       </div>
       <p class="foot">전시품은 박물관 사정에 따라 자리가 바뀌거나 쉬는 날이 있을 수 있어요.</p>
+    </section>
+
+    <!-- 선생님 화면: 주소 끝에 #teacher -->
+    <section class="page" id="teacher" aria-label="선생님 화면" hidden>
+      <div class="page-head">
+        <h2 class="page-title">선생님 화면</h2>
+        <p class="lead">체크한 내용은 이 휴대전화에만 저장돼요. 다른 선생님께는 ‘결과 보내기’로 알려요.</p>
+      </div>
+      <div id="t-body"></div>
+      <p class="foot">학생 화면으로 돌아가려면 아래 메뉴를 누르세요.</p>
     </section>
 
     <!-- 비상 -->
@@ -1144,6 +1177,29 @@ const WORK = [
     ],
     feel: '이틀 전체 소감' }
 ];
+
+/* 선생님 화면의 인원 확인 시점. at이 없으면 시간을 정할 수 없는 때(휴게소)라 앞뒤 단추로만 간다.
+   mode: grade(학년별) | team(조별) | room(방별) */
+const CHECKS = [
+  { at: '2026-11-19T08:35', title: '학교 집결', mode: 'grade', todo: ['출결을 확인하고, 오지 않은 학생은 보호자에게 연락', '수능 응원 학생(06:20 집결)도 함께 확인'] },
+  { at: '2026-11-19T09:00', title: '서울로 출발, 버스 탑승', mode: 'grade', todo: ['운전기사 음주감지 결과 확인', '안전벨트 착용 확인'] },
+  { title: '휴게소에서 다시 출발', mode: 'grade', todo: ['버스에 오르면 바로 인원 확인'] },
+  { at: '2026-11-19T12:30', title: 'LG아트센터 도착, 점심', mode: 'grade', todo: ['식당 ‘차알’에 들어가기 전 인원 확인'] },
+  { at: '2026-11-19T13:15', title: '교육장 입장', mode: 'grade', todo: ['1학년은 2층 LAB3, 2학년은 1층 OPENLAB으로 인솔', '비상구(엘리베이터 쪽) 위치 안내'] },
+  { at: '2026-11-19T15:30', title: '숙소로 이동, 버스 탑승', mode: 'grade', todo: ['안전벨트 착용 확인'] },
+  { at: '2026-11-19T17:30', title: '숙소 도착, 입실', mode: 'room', todo: ['방마다 피난안내도와 비상계단 위치 안내', '22:00 이후 방 밖 이동 금지, 22:30 점호 안내'] },
+  { at: '2026-11-19T19:00', title: '대학로로 이동, 버스 탑승', mode: 'grade', todo: ['내린 뒤 극장까지 한 줄로 이동'] },
+  { at: '2026-11-19T21:40', title: '공연 끝, 집결', mode: 'grade', todo: ['학년별로 모여 확인한 뒤 버스로 이동'] },
+  { at: '2026-11-19T22:30', title: '점호, 소등', mode: 'room', todo: ['방별로 확인한 뒤 소등', '야간 순찰'] },
+  { at: '2026-11-20T06:30', title: '기상', mode: 'room', todo: ['방별 기상 확인, 아픈 학생 확인'] },
+  { at: '2026-11-20T09:00', title: '퇴실, 숙소 출발', mode: 'grade', todo: ['방 상태와 두고 가는 물건 확인', '운전기사 음주감지 결과 확인', '안전벨트 착용 확인'] },
+  { at: '2026-11-20T09:40', title: '박물관 도착, 관람 시작', mode: 'team', todo: ['보안검색을 마치면 조별로 출발', '12:00 집결 장소를 학생들에게 안내'] },
+  { at: '2026-11-20T12:00', title: '박물관 집결', mode: 'team', todo: ['조별로 확인한 뒤 박물관 안 식당으로'] },
+  { at: '2026-11-20T13:30', title: '학교로 출발, 버스 탑승', mode: 'grade', todo: ['안전벨트 착용 확인'] },
+  { title: '휴게소에서 다시 출발', mode: 'grade', todo: ['버스에 오르면 바로 인원 확인'] },
+  { at: '2026-11-20T17:00', title: '학교 도착', mode: 'grade', todo: ['종례 후 귀가 확인'] }
+];
+const CONTACTS = [['driver', '버스 기사님'], ['agency', '업체 담당자'], ['hostel', '숙소 담당자'], ['t1', '인솔 선생님'], ['t2', '인솔 선생님'], ['t3', '인솔 선생님']];
 
 /* ───────────── 여기부터는 동작 ───────────── */
 const $ = (s, r = document) => r.querySelector(s);
@@ -1486,12 +1542,13 @@ function whoLine() {
 
 /* ── 우리 조: 명단은 암호로 잠가 두고, 선생님이 알려 준 코드를 넣은 휴대전화에서만 푼다 ── */
 const TEAMS_SEALED = {"it": 300000, "salt": "uE7OgHzAHWwVD/jV0UI17A==", "iv": "aSoMoivASHWX3rcM", "ct": "lzPmkbOl+VuYJNtWyv9wQXFSn6OnGVhyPJ/JfWQv3+4S6N10NgPRCVVszfgQPZ6k5Hj8i1HtNVb9wIAhxeNNgIqUbLmKjYnaDsgGMqBWF0XBv4bzhn3Z1X8VEcf1YAM9pqAWjuf3gvxAWoJy/eN98MDWqOq3zQLLva8Aw3qSM55ulUgsHWTuUXIJ5GL0omQwWP3w0zwoJPQac1uhZYYiXTQjfRC9y+tfp26o2DKlWFmvhxVxVUTueWQ9CsL24v6RkOfb8IF/JreUA3IP4gQ3iMyXuZELSER9g/di6OeKTILeUEzBBh5sJr4hoSm2S0jXiRAmW8lPvfdbfUlrVFqYQyGt9D3SnN7LAUW/rGTBBdKb4qsjsoWUCToDbaERaRpCber4sz8zC1omWEkSyzKcsfwRk2ULugGJpKN4J6Ivc5xaU0ihrLv+r2GFOXyjfAo4N6L8PA8iN3dbHtH6TgdSE7PYhWJkeXO6bWb+P3B7XLAB67r7rqJa9rdMMF/h41keu9wDsKNjhNX5UtzsMQmhi8a/mlA/2GbAF3A="};
-async function unseal(code) {
+async function unseal(code, box) {
+  box = box || TEAMS_SEALED;
   const b = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
   const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(code), 'PBKDF2', false, ['deriveKey']);
-  const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b(TEAMS_SEALED.salt), iterations: TEAMS_SEALED.it, hash: 'SHA-256' },
+  const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b(box.salt), iterations: box.it, hash: 'SHA-256' },
     base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
-  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b(TEAMS_SEALED.iv) }, key, b(TEAMS_SEALED.ct));
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b(box.iv) }, key, b(box.ct));
   return JSON.parse(new TextDecoder().decode(plain));
 }
 const sealKey = TEAMS_SEALED.salt.slice(0, 8);
@@ -1811,8 +1868,188 @@ function markTab(id) {
   });
 }
 
+/* ── 선생님 화면: 인원 확인 ── */
+const TEACH_SEALED = {"it": 300000, "salt": "eCuYx8ylgNq3W9Duw2eciw==", "iv": "P0EfAfpnCs+GhouK", "ct": "HVLAR5P8XzA82Qqz3r0NkzCsUS0EMKjRO8sxZO9IrQgWhVvbF6YVleRDYLQiSDup4nV8qzRaHbWdzElBp97cI2KQtb9exJx1JT9QWHATTrzVT94mha0c0jwM3P/j7u+SbuVTCU6d899TsuCdd/M8/Cd/BEQ68771h3wUqkHSx+/d2WN4HEj8HZyPgA/D7vPhnTP+vi2kZ/LxqTIlzYSvdxrXnbu6f1jTWr4x83/U2A70A/CncojwGa8thuKrnglDb3Y50v55GElf+j5b6PHNW5vHGWAPajdAhqGaB1qe5VrNqF0Gihty/0aGfxjrkUYKGrtKtm90ceuRWWNMbe6nlN5I4TN2GXi+N7kzpzq+swzHLQe1mR6xyKIq0su79JH58yySGJShuPpMsIoQL1BQEckA9qZwSxhKqzxYCFnIoC1er04sqecoLBSVUI6Th9Cof4ooVjuHUmqNGmP/pryzTH9n4dP476/SkeJkB0on37bJpbmkJfROr/2+VD/clW6ZV/R/CmSknF7fwl77s4kBnwhfraFiUJHShAkRB6lW/AAufKOKKvSjp81Ldg=="};
+const tKey = TEACH_SEALED.salt.slice(0, 8);
+const tData = () => { const t = store.get('teacher', null); return t && t.k === tKey && t.data ? t.data : null; };
+CHECKS.forEach((c, i) => {
+  c.id = 'c' + i;
+  if (c.at) { c.start = kt(c.at); c.t = c.at.slice(11); c.day = c.at.slice(0, 10) === DAYS[1].date ? 1 : 0; }
+  else c.day = i ? CHECKS[i - 1].day : 0;
+});
+function roster() {
+  const d = tData();
+  if (!d) return [];
+  const out = [];
+  Object.keys(d.teams).forEach((g) => d.teams[g].forEach((names, i) => names.forEach((n) => out.push({ n: n, g: +g, t: i + 1, room: '' }))));
+  (d.rooms || []).forEach((r) => r.names.forEach((n) => { const s = out.find((x) => x.n === n); if (s) s.room = roomName(r.room); }));
+  return out;
+}
+const absentList = () => store.get('tabsent', []);
+const presentOf = (c) => (store.get('tcheck', {})[c.id] || []);
+function autoCp() {
+  const n = now();
+  let k = 0;
+  CHECKS.forEach((c, i) => { if (c.start && c.start <= n) k = i; });
+  return k;
+}
+let tPick = null, tMode = null, tShown = -1;
+const cpIdx = () => (tPick == null ? autoCp() : tPick);
+function groupsFor(mode, list) {
+  const out = [], add = (label, s) => { let g = out.find((x) => x.label === label); if (!g) { g = { label: label, names: [] }; out.push(g); } g.names.push(s.n); };
+  if (mode === 'room') {
+    list.filter((s) => s.room).sort((a, b) => a.room.localeCompare(b.room, 'ko', { numeric: true })).forEach((s) => add(s.room, s));
+    list.filter((s) => !s.room).forEach((s) => add('방 미배정', s));
+  } else if (mode === 'team') list.forEach((s) => add(s.g + '학년 ' + s.t + '조', s));
+  else list.forEach((s) => add(s.g + '학년', s));
+  return out;
+}
+function modeNow(c) {
+  const m = tMode || c.mode;
+  return m === 'room' && !roster().some((s) => s.room) ? 'grade' : m;
+}
+function renderTeacher() {
+  const body = $('#t-body'), d = tData();
+  if (!d) {
+    body.innerHTML = '<form class="sec team-lock" id="t-form" style="border:0"><p class="memo-empty" style="border:0">선생님 코드 여덟 자리를 넣어 주세요.</p>' +
+      '<label class="field"><span>선생님 코드</span><input id="t-code" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="숫자 여덟 자리"></label>' +
+      '<button type="submit" class="btn day" style="width:100%">열기</button><p class="hint" id="t-msg">학생 명단이 들어 있어서 잠가 두었어요.</p></form>';
+    return;
+  }
+  const i = cpIdx(), c = CHECKS[i], dd = DAYS[c.day], mode = modeNow(c);
+  tShown = i;
+  const auto = tPick == null || tPick === autoCp();
+  const ct = store.get('tcontact', {});
+  body.innerHTML =
+    '<div class="board d' + (c.day + 1) + '" style="margin-top:14px">' +
+      '<p class="board-day"><span class="badge">' + dd.name + '</span>' + dd.long + '</p>' +
+      '<p class="board-label">' + (auto ? '지금 확인할 때' : '인원 확인') + ' (' + (i + 1) + '/' + CHECKS.length + ')</p>' +
+      '<p class="board-title">' + esc(c.title) + '</p>' +
+      (c.t ? '<p class="board-when">' + c.t + '</p>' : '') +
+      '<ul class="meet">' + c.todo.map((t) => '<li>' + esc(t) + '</li>').join('') + '</ul>' +
+      '<div class="board-links"><button type="button" class="board-link here" data-step="-1"' + (i ? '' : ' disabled') + '>이전</button>' +
+      '<button type="button" class="board-link here" data-step="1"' + (i < CHECKS.length - 1 ? '' : ' disabled') + '>다음</button>' +
+      (auto ? '' : '<button type="button" class="board-link" data-step="0">지금으로</button>') + '</div>' +
+    '</div>' +
+    '<div class="sec d' + (c.day + 1) + '">' +
+      '<div class="seg three" id="t-mode" role="group" aria-label="나눠 보기">' +
+        [['grade', '학년별'], ['team', '조별'], ['room', '방별']].map(([k, l]) => '<button type="button" data-mode="' + k + '" aria-pressed="' + (k === mode) + '">' + l + '</button>').join('') + '</div>' +
+      ((tMode || c.mode) === 'room' && mode !== 'room' ? '<p class="tnote" style="margin:-4px 0 10px">방 배정이 아직 없어서 학년별로 보여 줘요.</p>' : '') +
+      '<div id="t-sum"></div>' +
+    '</div>' +
+    '<div class="sec d' + (c.day + 1) + '" style="padding-top:0" id="t-roll"></div>' +
+    '<div class="sec"><h3>연락처</h3><div class="calls" id="t-calls"></div>' +
+      '<div class="acts"><details><summary>연락처 적기</summary><div style="padding-top:12px" id="t-contact">' +
+        CONTACTS.map(([k, label]) => '<label class="field"><span>' + label + '</span><input data-ct="' + k + '" value="' + esc(ct[k] || '') + '" placeholder="이름 010-0000-0000" autocomplete="off"></label>').join('') +
+        '<p class="hint">적으면 위에 전화 단추가 생겨요. 이 휴대전화에만 저장돼요.</p></div></details></div></div>' +
+    '<div class="sec"><h3>불참 학생</h3><p class="hint" style="margin-bottom:10px">이틀 내내 오지 않는 학생을 눌러 두면 인원에서 빠져요.</p><div class="roll absent" id="t-absent">' +
+      roster().map((s) => '<button type="button" data-ab="' + esc(s.n) + '" aria-pressed="' + absentList().includes(s.n) + '">' + esc(s.n) + '</button>').join('') + '</div></div>' +
+    '<div class="sec"><h3>메모</h3><label class="field"><textarea id="t-memo" aria-label="메모" placeholder="약 먹는 학생, 멀미하는 학생, 바뀐 일정처럼 기억할 것">' + esc(store.get('tmemo', '')) + '</textarea></label><p class="hint">이 휴대전화에만 저장돼요.</p></div>' +
+    '<div class="sec"><h3>학생 화면 코드</h3><p class="tcode">' + esc(d.scode || '') + '</p><p class="hint">학생이 ‘우리 조와 방’을 열 때 넣는 코드예요.</p></div>';
+  renderRoll();
+  renderCalls();
+}
+function renderCalls() {
+  const ct = store.get('tcontact', {});
+  $('#t-calls').innerHTML = CONTACTS.filter(([k]) => telOf(ct[k])).map(([k, label]) => '<a class="call" href="tel:' + telOf(ct[k]) + '"><b class="long">' + label + '</b><span><em>' + esc(ct[k]) + '</em>전화 걸기</span></a>').join('') +
+    '<a class="call" href="tel:023191318"><b class="long">숙소</b><span><em>02-319-1318</em>서울유스호스텔 프런트</span></a>' +
+    '<a class="call red" href="tel:119"><b>119</b><span>다치거나 아플 때</span></a>';
+}
+function rollStats(c, mode) {
+  const ab = absentList(), list = roster().filter((s) => !ab.includes(s.n)), pres = presentOf(c);
+  const groups = groupsFor(mode, list).map((g) => ({ label: g.label, names: g.names, here: g.names.filter((n) => pres.includes(n)) }));
+  const here = groups.reduce((a, g) => a + g.here.length, 0);
+  return { groups: groups, here: here, total: list.length, ab: ab.length, missing: list.filter((s) => !pres.includes(s.n)).map((s) => s.n) };
+}
+function renderRoll() {
+  const c = CHECKS[cpIdx()], mode = modeNow(c), st = rollStats(c, mode), pres = presentOf(c);
+  $('#t-sum').innerHTML = '<p class="tcount"><b>' + st.here + '</b>/ ' + st.total + '명 확인</p>' +
+    (st.missing.length === 0 ? '<p class="tmiss ok">모두 확인했어요.</p>' : '<p class="tmiss">아직 ' + st.missing.length + '명: ' + st.missing.map(esc).join(', ') + '</p>') +
+    (st.ab ? '<p class="tnote">불참 ' + st.ab + '명은 빼고 셌어요.</p>' : '') +
+    '<div class="btn-row"><button type="button" class="btn day" id="t-send">결과 보내기</button><button type="button" class="btn" id="t-reset">처음부터</button></div>';
+  $('#t-roll').innerHTML = st.groups.map((g, gi) => {
+    const full = g.here.length === g.names.length;
+    return '<div class="rgroup"><div class="rhead"><h4>' + esc(g.label) + '</h4><span class="rcount' + (full ? ' full' : '') + '">' + g.here.length + '/' + g.names.length + '</span>' +
+      '<button type="button" class="text-btn" data-all="' + gi + '">' + (full ? '모두 지우기' : '모두 확인') + '</button></div>' +
+      '<div class="roll">' + g.names.map((n) => '<button type="button" data-n="' + esc(n) + '" aria-pressed="' + pres.includes(n) + '">' + esc(n) + '</button>').join('') + '</div></div>';
+  }).join('');
+}
+function setPresent(c, names, on) {
+  const all = store.get('tcheck', {});
+  let p = (all[c.id] || []).filter((n) => !names.includes(n));
+  if (on) p = p.concat(names);
+  all[c.id] = p;
+  store.set('tcheck', all);
+}
+function teacherText() {
+  const i = cpIdx(), c = CHECKS[i], mode = modeNow(c), st = rollStats(c, mode), k = kst(now());
+  const lines = ['[서울 나들이 인원 확인] ' + DAYS[c.day].short.replace(/ [^ ]+$/, '') + (c.t ? ' ' + c.t : '') + ' ' + c.title,
+    st.here + '명 / ' + st.total + '명 확인' + (st.ab ? ' (불참 ' + st.ab + '명 제외)' : '')];
+  st.groups.forEach((g) => {
+    const miss = g.names.filter((n) => !g.here.includes(n));
+    lines.push('- ' + g.label + ' ' + g.here.length + '/' + g.names.length + (miss.length ? ', 아직: ' + miss.join(', ') : ''));
+  });
+  if (!st.missing.length) lines.push('빠진 학생 없어요.');
+  lines.push('(' + k.hm + ' 기준)');
+  return lines.join('\n');
+}
+let resetArm = 0;
+$('#t-body').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const code = $('#t-code').value.replace(/\D/g, ''), msg = $('#t-msg'), btn = e.target.querySelector('button');
+  if (code.length !== 8) { msg.textContent = '숫자 여덟 자리를 넣어 주세요.'; msg.className = 'hint bad'; return; }
+  btn.disabled = true; btn.textContent = '여는 중…';
+  unseal(code, TEACH_SEALED).then((data) => { store.set('teacher', { k: tKey, code: code, data: data }); renderTeacher(); }, () => {
+    btn.disabled = false; btn.textContent = '열기';
+    msg.textContent = '코드가 맞지 않아요. 다시 확인해 주세요.'; msg.className = 'hint bad';
+  });
+});
+$('#t-body').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  const c = CHECKS[cpIdx()];
+  if (b.dataset.step != null) {
+    const step = +b.dataset.step;
+    tPick = step === 0 ? null : Math.max(0, Math.min(CHECKS.length - 1, cpIdx() + step));
+    if (tPick === autoCp()) tPick = null;
+    tMode = null;
+    renderTeacher();
+    window.scrollTo(0, 0);
+  } else if (b.dataset.mode) {
+    tMode = b.dataset.mode === c.mode ? null : b.dataset.mode;
+    renderTeacher();
+  } else if (b.dataset.n != null) {
+    setPresent(c, [b.dataset.n], b.getAttribute('aria-pressed') !== 'true');
+    renderRoll();
+  } else if (b.dataset.all != null) {
+    const g = rollStats(c, modeNow(c)).groups[+b.dataset.all];
+    setPresent(c, g.names, g.here.length !== g.names.length);
+    renderRoll();
+  } else if (b.dataset.ab != null) {
+    const n = b.dataset.ab, ab = absentList().filter((x) => x !== n);
+    if (b.getAttribute('aria-pressed') !== 'true') ab.push(n);
+    store.set('tabsent', ab);
+    b.setAttribute('aria-pressed', String(ab.includes(n)));
+    renderRoll();
+  } else if (b.id === 't-send') {
+    sendOut(b, teacherText(), '인원 확인');
+  } else if (b.id === 't-reset') {
+    if (Date.now() - resetArm > 3000) { resetArm = Date.now(); flash(b, '한 번 더 누르면 지워져요'); return; }
+    resetArm = 0;
+    const all = store.get('tcheck', {});
+    delete all[c.id];
+    store.set('tcheck', all);
+    renderRoll();
+  }
+});
+$('#t-body').addEventListener('input', (e) => {
+  const t = e.target;
+  if (t.dataset.ct) { const ct = store.get('tcontact', {}); ct[t.dataset.ct] = t.value.slice(0, 40); store.set('tcontact', ct); renderCalls(); }
+  if (t.id === 't-memo') store.set('tmemo', t.value.slice(0, 2000));
+});
+
 /* ── 화면 전환 ── */
-const PAGES = ['now', 'plan', 'rules', 'pack', 'work', 'museum', 'sos'];
+const PAGES = ['now', 'plan', 'rules', 'pack', 'work', 'museum', 'sos', 'teacher'];
 function go(id, push) {
   if (!PAGES.includes(id)) id = 'now';
   PAGES.forEach((p) => { document.getElementById(p).hidden = p !== id; });
@@ -1820,6 +2057,7 @@ function go(id, push) {
   if (id === 'work') renderWork();
   if (id === 'museum') renderMuseum();
   if (id === 'now') renderNight();
+  if (id === 'teacher') { tPick = null; tMode = null; renderTeacher(); }
   markTab(id);
   if (push !== false && location.hash !== '#' + id) {
     try { history.replaceState(null, '', location.pathname + location.search + '#' + id); } catch (e) { /* 미리 보기 창에서는 주소를 못 바꿔도 된다 */ }
@@ -1875,6 +2113,7 @@ function tick() {
   renderNight();
   /* 새 칸이 열리면 활동지를 다시 그린다 (쓰는 중이면 다 쓴 뒤에) */
   const wk = myGrade() + '/' + WORK.map((s) => (isOpen(s) ? 1 : 0)).join('');
+  if (curPage === 'teacher' && tPick == null && autoCp() !== tShown && !$('#t-body').contains(document.activeElement)) renderTeacher();
   if (curPage === 'work' && wk !== workKey && !$('#work-list').contains(document.activeElement)) renderWork();
 }
 $('#foot-now').textContent = '안내 기준일 ' + UPDATED;
@@ -1896,6 +2135,14 @@ renderTeam();
   unseal(old.code).then((data) => {
     store.set('teams', { k: sealKey, code: old.code, data: data });
     renderTeam(); renderNight(); boardKey = ''; tick();
+  }, () => {});
+})();
+(() => {
+  const old = store.get('teacher', null);
+  if (!old || old.k === tKey || !old.code) return;
+  unseal(old.code, TEACH_SEALED).then((data) => {
+    store.set('teacher', { k: tKey, code: old.code, data: data });
+    if (curPage === 'teacher') renderTeacher();
   }, () => {});
 })();
 setTabs();
