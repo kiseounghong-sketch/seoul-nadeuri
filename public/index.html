@@ -1175,7 +1175,7 @@ const DAYS = [
       { t: '13:30', end: '15:30', title: 'LG디스커버리랩 AI 교육', note: '1학년은 2층 LAB3에서 스마트팩토리 양불판정, 2학년은 1층 OPENLAB에서 자율주행과 SLAM을 배워요.', rules: ['lg'] },
       { t: '15:30', title: '숙소로 이동', note: '버스로 서울유스호스텔까지 가요. 퇴근 시간이라 길이 막힐 수 있어요.', here: 'bus' },
       { t: '17:30', title: '숙소 도착, 저녁 식사', note: '숙소 식당에서 먹어요. 방에 들어가면 문에 붙은 피난안내도부터 확인해요.', rules: ['hostel', 'fire'], map: 'https://place.map.kakao.com/7934954' },
-      { t: '19:00', title: '대학로로 이동', note: '방송통신대 열린관 앞에서 내려 극장까지 걸어가요. 극장 화장실이 좁으니 혜화역이나 아르코예술극장에서 미리 다녀와요.', here: 'show' },
+      { t: '18:45', title: '대학로로 이동', note: '방송통신대 열린관 앞에서 내려 극장까지 걸어가요. 극장 화장실이 좁으니 혜화역이나 아르코예술극장에서 미리 다녀와요.', here: 'show' },
       { t: '19:30', title: '극장 도착, 티켓 받기', note: '공연 30분 전까지 들어가야 해요. 시작한 뒤에는 들어갈 수 없어요.', key: true, here: 'show' },
       { t: '20:00', end: '21:40', title: '뮤지컬 연의 편지', note: '플러스씨어터에서 약 100분 동안 봐요.', rules: ['show'], map: 'https://place.map.kakao.com/2115601133' },
       { t: '21:40', title: '숙소로 복귀', note: '버스로 돌아와서 씻어요.', here: 'hostel' },
@@ -1344,7 +1344,7 @@ const CHECKS = [
   { at: '2026-11-19T13:15', title: '교육장 입장', mode: 'grade', todo: ['1학년은 2층 LAB3, 2학년은 1층 OPENLAB으로 인솔', '비상구(엘리베이터 쪽) 위치 안내'] },
   { at: '2026-11-19T15:30', title: '숙소로 이동, 버스 탑승', mode: 'grade', todo: ['안전벨트 착용 확인'] },
   { at: '2026-11-19T17:30', title: '숙소 도착, 입실', mode: 'room', todo: ['방마다 피난안내도와 비상계단 위치 안내', '22:00 이후 방 밖 이동 금지, 22:30 점호 안내'] },
-  { at: '2026-11-19T19:00', title: '대학로로 이동, 버스 탑승', mode: 'grade', todo: ['내린 뒤 극장까지 한 줄로 이동', '화장실은 혜화역이나 아르코예술극장에서 미리'] },
+  { at: '2026-11-19T18:45', title: '대학로로 이동, 버스 탑승', mode: 'grade', todo: ['내린 뒤 극장까지 한 줄로 이동', '화장실은 혜화역이나 아르코예술극장에서 미리'] },
   { at: '2026-11-19T19:30', title: '극장 도착, 티켓 수령', mode: 'grade', todo: ['공연 30분 전까지 티켓 받고 입장', '생수 말고 음식·음료는 버스에 두고 내리기'] },
   { at: '2026-11-19T21:40', title: '공연 끝, 집결', mode: 'grade', todo: ['학년별로 모여 확인한 뒤 버스로 이동'] },
   { at: '2026-11-19T22:30', title: '점호, 소등', mode: 'room', todo: ['방별로 확인한 뒤 소등', '야간 순찰'] },
@@ -1775,7 +1775,7 @@ function whoLine() {
 }
 
 /* ── 우리 조: 명단은 암호로 잠가 두고, 선생님이 알려 준 코드를 넣은 휴대전화에서만 푼다 ── */
-const TEAMS_SEALED = {"it": 300000, "salt": "uE7OgHzAHWwVD/jV0UI17A==", "iv": "aSoMoivASHWX3rcM", "ct": "lzPmkbOl+VuYJNtWyv9wQXFSn6OnGVhyPJ/JfWQv3+4S6N10NgPRCVVszfgQPZ6k5Hj8i1HtNVb9wIAhxeNNgIqUbLmKjYnaDsgGMqBWF0XBv4bzhn3Z1X8VEcf1YAM9pqAWjuf3gvxAWoJy/eN98MDWqOq3zQLLva8Aw3qSM55ulUgsHWTuUXIJ5GL0omQwWP3w0zwoJPQac1uhZYYiXTQjfRC9y+tfp26o2DKlWFmvhxVxVUTueWQ9CsL24v6RkOfb8IF/JreUA3IP4gQ3iMyXuZELSER9g/di6OeKTILeUEzBBh5sJr4hoSm2S0jXiRAmW8lPvfdbfUlrVFqYQyGt9D3SnN7LAUW/rGTBBdKb4qsjsoWUCToDbaERaRpCber4sz8zC1omWEkSyzKcsfwRk2ULugGJpKN4J6Ivc5xaU0ihrLv+r2GFOXyjfAo4N6L8PA8iN3dbHtH6TgdSE7PYhWJkeXO6bWb+P3B7XLAB67r7rqJa9rdMMF/h41keu9wDsKNjhNX5UtzsMQmhi8a/mlA/2GbAF3A="};
+const TEAMS_SEALED = {"it": 300000, "salt": "s8KmLOrCxCWyGoOuS4uR5g==", "iv": "e4XsDhUers12CMme", "ct": "ZAoSxbQMJGjvx/rtf8sTpvDcXT2gVpN3ZAJZQVuehdmxNF41aJZnfYrlp3ElcLwLHwkW9onU3VVZJJlTUCvvV2OUMqZgTM1ZY8GAtjdoS963aDpokKpkRdAmMPqbfM5grt0M/C2WGXRaw7srebF5gTDaTVFz+R3GiWid+YjNK8eVonB7/H+jkfmOIKFcoxFqFP4PQsJooMK2JbIh8wcHPgODP4cGMg88wUFzDSmGBBGdczUMxGAPvMzQeHmWS2T7exP2pIUUP8APGI7ZM2xrDTJU3Ee17Q7LFs0wNFm0KOD3HLhJSEOLL67IuT5FFh4Oe2kGjYuCSWQT5gt2fqTbsNfkWff26mc6UewGzv6DfIPjMopg+/C3BakeCGu5xrVcqZuIbKilZpAM2pnEiIC8JJE5B8z4ixI19eYftyC6Dnsg5ePF0WKoBtZqpiJrn18gkbEN4RCdvrzBZ1spNcUiV21dvNiXwPIgvADw+fHJ2n+dwXpdApRxaM3Rzs1JBwrOd73ucA1WC6/sKKLWrjXJBRwz2Q7v0fzD4pmyayftX7pjkvRvwy21t1yQD0nf9W08EKAUyGNDmkL6QgM+QVpXiW6/+6s5v1EPsLPmIN8noIpj0bVExT2dJanS"};
 async function unseal(code, box) {
   box = box || TEAMS_SEALED;
   const b = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
@@ -2112,7 +2112,7 @@ function markTab(id) {
 }
 
 /* ── 선생님 화면: 인원 확인 ── */
-const TEACH_SEALED = {"it": 300000, "salt": "eP7CEubmf+OvngcI1QsA+g==", "iv": "nD5fZ5Q4k8g2i66u", "ct": "B0X/xe3fyX/GxYgYxRHOCZmd8YNod6lLFw+OtcDccg0RQfmTYQ9ELDRP9uOGSNDeX1PfN5637XC9kwkJzESpvMN8J8fcuyGGaRTgKTiOw6bJvesGrK8Xx3mLilhTAHamvcV/fgHDOO9iSaxP0JGNR1RP36yArrcUdOxvQLResJDH6JcMDIPq+NSQ8jIdjxOnqnRY434H+122mYIOo/PcS7c5weafFZXuE31G9hCrwux4LldfZCPK2JQLDyM/2a+OxjP4pdB7PCU1MnkfBeoqhVkbcRpUjb8r4J/WWkvN/gJFqZGTPlO+2VC35uV0TiHk7oE4eer5qobnm9LId0ZpARJdwUsrxC2kGRrejh8x0OJ2g/uKnodTpAOYZA4QZMfVxe5Jh1dR6V8XKr6gfcMA2FQFWiBdO5aoHoLqn8tg0OcuKkTK5PceQ+lJRRaUozQ2tOJDngRCX84yun1A9hzRG3n6GRTk1NgRQpiU/J+AFmw7yXp1nuZxIWwNGoeUCS6v9hjRZMKLSpV7cGMemV/fGbAuLbaEDZHjgfEjULAUmaryf16swHpdeZh68A=="};
+const TEACH_SEALED = {"it": 300000, "salt": "hUOTrkg8OuO/GOsQZ7XpyA==", "iv": "DIVsF/LzAzedAJUH", "ct": "Zxf02U3JdQk8v/FbkcvFUKdgUGT6FLLil75jU+4n48cPNWXIx1LlqNpMvlbaw7JM/NN8gEaU30FToXRKg91R7NgEwubH9FnDNk1itbqXrJZWXoXMkEN7ufjq6Wkeg/Ez8VBC4l3k5bPWfiaOXHd58NKU6S8iiQRejq93ebgBQqq6lTrC1IMzQF5OW5ToDFxhxWOeWRVEBy8ZWnj4k3uvNchl7yfKwb2L0Ib+c6pbeyNhnOA7HGlOr53lLDOKFaKXbNRVSZE4RaMGm/vDRv+L10SB+NcWCRSyFy4eWIT8APX4vXqK/42Sd2buW8xx4MNkbSQf7gefFBwpucT6CbSw2cfel9GVxgQ0cJT2EIr25CJsJ1IeNiZ1NACnTFYImgHlXlbK/do0WwsCUu9qvW4JhhLhZIf64YSnWBzZtdGQY6d8XZKxWMUdN4NNcQzmJFraIP1YEkg9CcaxuI3jPB1KBnVcMyF6Ymg736WQRDujZsaO9rzdxJ5SdEgG0gfH6ImYsir+9se1BpDxAm5/imnZushjpeHRKlC0J9hCgyo9LbugQL/rvqG1FVA3ZGzmnkeqn3f/YI7B3yCZey5wCtMsmwMdxpeFNqw2LAX3I5irgMSU1v2Qh+2T5b+NqerRMgMLUUA5RLYlVPUs4pE="};
 const tKey = TEACH_SEALED.salt.slice(0, 8);
 const tData = () => { const t = store.get('teacher', null); return t && t.k === tKey && t.data ? t.data : null; };
 CHECKS.forEach((c, i) => {
@@ -2351,7 +2351,7 @@ async function syncUp() {
   if (!pack || !d || (!pack.secs.length && !last.h)) { showSync(); return; }
   syncBusy = true;
   try {
-    const body = JSON.stringify(pack), h = hex(await crypto.subtle.digest('SHA-256', utf8(body)));
+    const body = JSON.stringify(pack), h = hex(await crypto.subtle.digest('SHA-256', utf8(body + '|' + JSON.stringify(d.teams))));
     if (h !== last.h) {
       const k = await keysFor(d.teams), iv = crypto.getRandomValues(new Uint8Array(12));
       const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, k.aes, utf8(JSON.stringify(Object.assign({ at: Date.now() }, pack)))));
@@ -2546,7 +2546,7 @@ renderTeam();
   if (!old || old.k === sealKey || !old.code) return;
   unseal(old.code).then((data) => {
     store.set('teams', { k: sealKey, code: old.code, data: data });
-    renderTeam(); renderNight(); boardKey = ''; tick();
+    renderTeam(); renderNight(); boardKey = ''; tick(); syncSoon();
   }, () => {});
 })();
 (() => {
