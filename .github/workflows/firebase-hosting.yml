@@ -1,0 +1,30 @@
+# main에 올라온 내용을 Firebase Hosting(https://seoul-nadeuri.web.app)에 올립니다.
+# 필요한 것: 저장소 Settings > Secrets and variables > Actions에
+#   FIREBASE_SERVICE_ACCOUNT 라는 이름으로 Firebase 서비스 계정 키(JSON) 전체를 등록
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - id: check
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -n "$SA" ]; then echo "ready=true" >> "$GITHUB_OUTPUT"; else echo "FIREBASE_SERVICE_ACCOUNT 시크릿이 아직 없어서 배포를 건너뜁니다."; fi
+      - if: steps.check.outputs.ready == 'true'
+        uses: actions/checkout@v4
+      - if: steps.check.outputs.ready == 'true'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          channelId: live
+          projectId: seoul-nadeuri
+          # 15.35.0부터 serviceusage.services.get 권한을 확인해 배포가 거부될 수 있어 15.34.0에 고정
+          firebaseToolsVersion: 15.34.0

@@ -1,0 +1,1498 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>서울 나들이</title>
+<meta name="description" content="11월 19일~20일 서울 현장체험학습 안내">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A1322" media="(prefers-color-scheme: dark)">
+<meta name="format-detection" content="telephone=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="서울 나들이">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preload" href="fonts/bhs-ko.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face {
+  font-family: "Black Han Sans";
+  src: url(fonts/bhs-ko.woff2) format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* 색: 서울 시내버스 네 가지 색에 역할을 하나씩 줬다.
+   파랑 = 1일차, 초록 = 2일차, 노랑 = 꼭 지킬 시간, 빨강 = 비상 */
+:root {
+  color-scheme: light dark;
+  --bg: #FFFFFF;
+  --bg2: #EEF2F6;
+  --line: #D5DBE3;
+  --ink: #0E2244;
+  --ink2: #4A5A75;
+  --blue: #0B5CAD;
+  --blue-ink: #0B5CAD;
+  --green: #48A626;
+  --green-ink: #2C7A12;
+  --yellow: #FFC20E;
+  --red: #D93A1E;
+  --red-ink: #C22F15;
+  --navy: #0B1B36;
+  --gut: 20px;
+  --text: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --display: "Black Han Sans", system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0A1322;
+    --bg2: #131F33;
+    --line: #27364E;
+    --ink: #EAF0F8;
+    --ink2: #A3B3CA;
+    --blue: #2470CC;
+    --blue-ink: #7DB2F7;
+    --green: #55B030;
+    --green-ink: #7CCB5B;
+    --red: #E0442A;
+    --red-ink: #FF7A66;
+  }
+}
+
+body, .d1 {
+  --day: var(--blue);
+  --on-day: #FFFFFF;
+  --day-ink: var(--blue-ink);
+  --on-day-soft: rgba(255, 255, 255, .36);
+}
+body[data-day="2"], .d2 {
+  --day: var(--green);
+  --on-day: var(--navy);
+  --day-ink: var(--green-ink);
+  --on-day-soft: rgba(11, 27, 54, .3);
+}
+.dn {
+  --day: var(--ink);
+  --on-day: var(--bg);
+  --day-ink: var(--ink);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 17px/1.55 var(--text);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  -webkit-tap-highlight-color: transparent;
+}
+h1, h2, h3, p, ul, ol, dl { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--day-ink); outline-offset: 2px; }
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  padding-bottom: calc(70px + env(safe-area-inset-bottom));
+}
+@media (min-width: 520px) {
+  body { background: var(--bg2); }
+  .app { box-shadow: 0 0 0 1px var(--line); }
+}
+
+/* 머리 */
+.top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: calc(16px + env(safe-area-inset-top)) var(--gut) 12px;
+}
+.mark { font: 400 27px/1 var(--display); }
+.top-date { font-size: 14px; font-weight: 700; color: var(--ink2); white-space: nowrap; }
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 var(--gut) 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--yellow);
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 700;
+}
+.preview a { font-weight: 800; white-space: nowrap; }
+
+/* 지금: 버스 안내판 */
+.board {
+  background: var(--day);
+  color: var(--on-day);
+  padding: 20px var(--gut) 22px;
+}
+.board-day { display: flex; align-items: center; gap: 9px; margin-bottom: 16px; font-size: 15px; font-weight: 700; }
+.badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: var(--on-day);
+  color: var(--day);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+.board-label { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+.board-title { font: 400 36px/1.14 var(--display); margin-bottom: 10px; }
+.board-when { font: 400 21px/1.2 var(--display); margin-bottom: 4px; }
+.board-sub { font-size: 17px; font-weight: 600; line-height: 1.5; }
+
+.strip { position: relative; height: 30px; margin: 22px 15px 16px; }
+.strip::before, .strip .fill {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 19px;
+  height: 4px;
+  border-radius: 2px;
+}
+.strip::before { right: 0; background: var(--on-day-soft); }
+.strip .fill { background: var(--on-day); transition: width .9s cubic-bezier(.2, .7, .2, 1); }
+.strip i {
+  position: absolute;
+  top: 16px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: var(--day);
+  border: 2px solid var(--on-day);
+}
+.strip i.done { background: var(--on-day); }
+.strip .bus {
+  position: absolute;
+  top: 0;
+  width: 30px;
+  height: 20px;
+  margin-left: -15px;
+  transition: left .9s cubic-bezier(.2, .7, .2, 1);
+}
+
+.next { border-top: 2px solid var(--on-day-soft); padding-top: 14px; }
+.next-row { display: flex; align-items: baseline; gap: 10px; }
+.next-time { font: 400 27px/1.1 var(--display); white-space: nowrap; }
+.next-title { font-size: 19px; font-weight: 800; line-height: 1.35; }
+.next-left { margin-top: 10px; }
+
+.meet { border-top: 2px solid var(--on-day-soft); margin-top: 16px; }
+.meet li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--on-day-soft);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.meet b { font: 400 24px/1.1 var(--display); min-width: 66px; }
+.board-link.here { margin-top: 14px; background: transparent; color: var(--on-day); border: 2px solid var(--on-day); }
+.board-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 14px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: var(--on-day);
+  color: var(--day);
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+/* 구역 */
+.sec { padding: 26px var(--gut) 4px; }
+.sec > h2, .sec > h3 { font-size: 21px; font-weight: 800; line-height: 1.3; margin-bottom: 10px; }
+.page-head { padding: 8px var(--gut) 0; }
+.page-title { font: 400 31px/1.15 var(--display); }
+.lead { margin-top: 6px; font-size: 16px; color: var(--ink2); }
+.foot { padding: 20px var(--gut) 26px; font-size: 14px; color: var(--ink2); }
+
+.promise { border-top: 2px solid var(--ink); }
+.promise li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 19px;
+  font-weight: 800;
+}
+.promise .n { font: 400 27px/1 var(--display); color: var(--day-ink); width: 22px; text-align: center; }
+
+/* 버튼 */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 54px;
+  padding: 8px 18px;
+  border-radius: 14px;
+  border: 2px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font: 800 17px/1.25 var(--text);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn.red { background: var(--red); border-color: var(--red); color: #FFFFFF; }
+.btn.day { background: var(--day); border-color: var(--day); color: var(--on-day); }
+.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.text-btn {
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--day-ink);
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* 내 메모 */
+.memo-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.memo-head h2 { font-size: 21px; font-weight: 800; }
+.memo-view { border-top: 2px solid var(--ink); }
+.memo-view div { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.memo-view dt { color: var(--ink2); font-size: 16px; font-weight: 600; white-space: nowrap; }
+.memo-view dd { margin: 0; font-size: 18px; font-weight: 800; text-align: right; }
+.memo-empty { padding: 14px 0 4px; border-top: 2px solid var(--ink); color: var(--ink2); font-size: 16px; }
+.memo-form { border-top: 2px solid var(--ink); padding-top: 16px; }
+.field { display: block; margin-bottom: 14px; }
+.field span { display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; }
+.field input {
+  width: 100%;
+  height: 52px;
+  padding: 0 14px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--ink);
+  font: 700 18px var(--text);
+}
+.field input::placeholder { color: var(--ink2); font-weight: 500; opacity: .75; }
+.field input:focus { border-color: var(--day-ink); outline: none; }
+.hint { font-size: 14px; color: var(--ink2); }
+
+.install { margin-top: 26px; padding: 14px 16px; border-radius: 14px; background: var(--bg2); font-size: 15px; }
+.install b { display: block; font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+.install .btn { margin-top: 10px; min-height: 48px; }
+
+/* 일정: 노선도 */
+.days { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px var(--gut) 0; }
+.days button {
+  min-height: 60px;
+  padding: 8px 14px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+  text-align: left;
+  cursor: pointer;
+}
+.days b { display: block; font: 400 21px/1.2 var(--display); }
+.days span { display: block; font-size: 14px; font-weight: 700; color: var(--ink2); }
+.days button[aria-pressed="true"] { background: var(--day); border-color: var(--day); color: var(--on-day); }
+.days button[aria-pressed="true"] span { color: inherit; }
+.legend { margin: 14px var(--gut) 0; font-size: 15px; color: var(--ink2); }
+.plate { display: inline-block; padding: 0 6px; border-radius: 5px; background: var(--yellow); color: var(--navy); }
+.legend .plate { font-weight: 800; }
+
+.route { margin: 8px var(--gut) 0; }
+.stop { display: grid; grid-template-columns: 62px 26px minmax(0, 1fr); column-gap: 9px; }
+.stop .t { padding-top: 13px; text-align: right; font: 400 21px/1.3 var(--display); white-space: nowrap; }
+.stop .t .plate { margin-right: -6px; }
+.stop .t small { display: block; font: 700 13px/1.3 var(--text); color: var(--ink2); }
+.rail { position: relative; }
+.rail::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  margin-left: -3px;
+  background: var(--day);
+}
+.stop:first-child .rail::before { top: 27px; }
+.stop:last-child .rail::before { bottom: auto; height: 27px; }
+.dot {
+  position: absolute;
+  left: 50%;
+  top: 18px;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 4px solid var(--day);
+}
+.stop.past .dot { background: var(--day); }
+.stop.cur .dot {
+  top: 15px;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  background: var(--yellow);
+  border-color: var(--ink);
+}
+.stop .body { padding: 12px 0 18px; }
+.stop h3 { font-size: 18px; font-weight: 800; line-height: 1.4; }
+.stop .note { margin-top: 3px; font-size: 16px; line-height: 1.5; color: var(--ink2); }
+.stop.past .t, .stop.past h3 { color: var(--ink2); }
+.stop.past .t .plate { opacity: .55; }
+.stop.past .note { opacity: .8; }
+.now-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 5px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 13px;
+  font-weight: 800;
+  vertical-align: 2px;
+}
+.acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.chip, .acts summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  list-style: none;
+}
+.acts summary::-webkit-details-marker { display: none; }
+.acts details[open] { flex-basis: 100%; }
+.acts details[open] summary { border-color: var(--ink); }
+.acts details .rules { margin-top: 8px; padding: 2px 14px; border-radius: 12px; background: var(--bg2); }
+.acts details .rules li:last-child { border-bottom: 0; }
+.acts details h4 { margin: 12px 0 0; font-size: 15px; font-weight: 800; }
+
+/* 지킬 것 */
+.rules li {
+  position: relative;
+  padding: 10px 0 10px 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 17px;
+  line-height: 1.5;
+}
+.rules li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 19px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--day);
+}
+.rules b { font-weight: 800; }
+.index { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 16px var(--gut) 0; }
+.index a { justify-content: center; padding: 0 4px; font-size: 15px; }
+.rsec { margin: 0 var(--gut); padding-top: 28px; scroll-margin-top: 8px; }
+.rsec h3 { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin-bottom: 4px; font-size: 21px; font-weight: 800; line-height: 1.3; }
+.rsec .rules { border-top: 2px solid var(--ink); }
+.rsec .badge { background: var(--day); color: var(--on-day); }
+
+/* 준비물 */
+.prog-text { margin-top: 12px; font-size: 16px; font-weight: 700; }
+.prog { height: 10px; margin: 8px 0 14px; border-radius: 5px; background: var(--bg2); overflow: hidden; }
+.prog i { display: block; height: 100%; border-radius: 5px; background: var(--day); transition: width .2s; }
+.check { border-top: 2px solid var(--ink); }
+.check label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 58px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.check input {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: none;
+  display: grid;
+  place-content: center;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  border: 2.5px solid var(--ink);
+  border-radius: 8px;
+  background: var(--bg);
+  cursor: pointer;
+}
+.check input::after {
+  content: "";
+  width: 14px;
+  height: 8px;
+  border-left: 3.5px solid var(--on-day);
+  border-bottom: 3.5px solid var(--on-day);
+  transform: translateY(-2px) rotate(-45deg) scale(0);
+  transition: transform .12s;
+}
+.check input:checked { background: var(--day); border-color: var(--day); }
+.check input:checked::after { transform: translateY(-2px) rotate(-45deg) scale(1); }
+.check input:checked + span { color: var(--ink2); }
+.plain { border-top: 2px solid var(--ink); }
+.plain li { position: relative; padding: 11px 0 11px 26px; border-bottom: 1px solid var(--line); font-size: 17px; line-height: 1.5; }
+.plain li::before { position: absolute; left: 2px; top: 10px; font-weight: 800; }
+.plain.no li::before { content: "✕"; color: var(--red-ink); }
+.plain.tell li::before { content: ""; left: 4px; top: 21px; width: 8px; height: 8px; border-radius: 2px; background: var(--day); }
+.times { border-top: 2px solid var(--ink); }
+.times li { display: flex; align-items: baseline; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 17px; font-weight: 700; }
+.times b { font: 400 23px/1.1 var(--display); min-width: 64px; }
+
+/* 비상 */
+.calls { display: grid; gap: 10px; margin-top: 14px; }
+.call {
+  display: grid;
+  grid-template-columns: minmax(74px, auto) 1fr;
+  align-items: center;
+  column-gap: 14px;
+  min-height: 70px;
+  padding: 10px 18px;
+  border: 2px solid var(--ink);
+  border-radius: 16px;
+  color: var(--ink);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  background: transparent;
+}
+.call b { font: 400 32px/1 var(--display); }
+.call b.long { font-size: 23px; }
+.call span { font-size: 16px; font-weight: 700; line-height: 1.35; }
+.call span em { display: block; font-style: normal; font-weight: 800; font-size: 18px; }
+.call.red { background: var(--red); border-color: var(--red); color: #FFFFFF; }
+.call.fill { background: var(--ink); color: var(--bg); }
+.steps { counter-reset: s; border-top: 2px solid var(--ink); }
+.steps li {
+  counter-increment: s;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+.steps li::before { content: counter(s); flex: none; width: 22px; text-align: center; font: 400 26px/1 var(--display); color: var(--red-ink); }
+.addr { border-top: 2px solid var(--ink); padding-top: 12px; }
+.addr b { display: block; font-size: 19px; font-weight: 800; }
+.addr p { font-size: 16px; color: var(--ink2); }
+.addr .chip { margin-top: 10px; }
+
+/* 박물관 견학 계획서 */
+.board-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.board-links .board-link { margin-top: 0; }
+.todo { margin: 6px var(--gut) 18px; padding: 16px; border-radius: 16px; background: var(--yellow); color: var(--navy); }
+.todo b { display: block; font-size: 19px; font-weight: 800; }
+.todo span { display: block; margin-top: 2px; font-size: 15px; font-weight: 700; }
+.todo .btn { margin-top: 12px; min-height: 50px; border-color: var(--navy); background: var(--navy); color: #FFFFFF; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.seg button {
+  min-height: 50px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.q { display: flex; align-items: baseline; gap: 10px; margin: 26px 0 8px; font-size: 18px; font-weight: 800; line-height: 1.4; }
+.q .n { flex: none; font: 400 24px/1 var(--display); color: var(--day-ink); }
+.field textarea {
+  display: block;
+  width: 100%;
+  min-height: 92px;
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--ink);
+  font: 600 17px/1.5 var(--text);
+  resize: vertical;
+}
+.field textarea::placeholder { color: var(--ink2); font-weight: 500; opacity: .75; }
+.field textarea:focus { border-color: var(--day-ink); outline: none; }
+.floor { margin: 18px 0 0; padding: 6px 0; border-bottom: 2px solid var(--ink); font-size: 16px; font-weight: 800; }
+.floor span { margin-left: 8px; font-weight: 600; color: var(--ink2); }
+.pick { border-top: 0; }
+.pick label { align-items: flex-start; padding: 12px 0; font-weight: 400; }
+.pick input { margin-top: 2px; }
+.pick b { display: block; font-size: 18px; font-weight: 800; line-height: 1.35; }
+.pick em { display: block; font-style: normal; font-size: 14px; font-weight: 800; color: var(--day-ink); }
+.pick small { display: block; margin-top: 2px; font-size: 15.5px; line-height: 1.5; color: var(--ink2); }
+.pick input:checked + span { color: inherit; }
+.count { margin: 0 0 4px; font-size: 15px; font-weight: 700; color: var(--ink2); }
+.count.over { color: var(--red-ink); }
+
+/* 아래 메뉴 */
+.tabs {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tabs ul { display: grid; grid-template-columns: repeat(5, 1fr); max-width: 480px; margin: 0 auto; }
+.tabs a {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 64px;
+  color: var(--ink2);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.tabs svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tabs a[aria-current="page"] { color: var(--ink); font-weight: 800; }
+.tabs a[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 24%;
+  right: 24%;
+  height: 4px;
+  border-radius: 0 0 4px 4px;
+  background: var(--day);
+}
+.tabs a.sos, .tabs a.sos[aria-current="page"] { color: var(--red-ink); }
+.tabs a.sos[aria-current="page"]::before { background: var(--red); }
+.tabs a:focus-visible { outline-offset: -4px; }
+
+.toast {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(76px + env(safe-area-inset-bottom));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 456px;
+  margin: 0 auto;
+  padding: 10px 10px 10px 16px;
+  border-radius: 14px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 16px;
+  font-weight: 700;
+}
+.toast button {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--yellow);
+  color: var(--navy);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 359px) {
+  :root { --gut: 16px; }
+  .board-title { font-size: 31px; }
+  .index { grid-template-columns: repeat(3, 1fr); }
+  .tabs a { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <h1 class="mark">서울 나들이</h1>
+    <p class="top-date">11월 19일(목)~20일(금)</p>
+  </header>
+  <p class="preview" id="preview" hidden></p>
+
+  <main>
+    <noscript><p class="sec">이 페이지는 자바스크립트를 켜야 보입니다.</p></noscript>
+
+    <!-- 지금 -->
+    <section class="page" id="now" aria-label="지금">
+      <div class="board" id="board" aria-live="polite"></div>
+
+      <div class="sec">
+        <h2>세 가지 약속</h2>
+        <ol class="promise">
+          <li><span class="n">1</span>짝과 함께 다닌다</li>
+          <li><span class="n">2</span>시간과 장소를 지킨다</li>
+          <li><span class="n">3</span>이상하면 바로 말한다</li>
+        </ol>
+      </div>
+
+      <div class="sec" id="memo">
+        <div class="memo-head">
+          <h2>내 메모</h2>
+          <button type="button" class="text-btn" id="memo-toggle">적기</button>
+        </div>
+        <div id="memo-view"></div>
+        <form class="memo-form" id="memo-form" hidden autocomplete="off">
+          <label class="field"><span>담임 선생님 전화번호</span><input name="teacher" inputmode="tel" placeholder="010-0000-0000"></label>
+          <label class="field"><span>내 짝</span><input name="buddy" placeholder="이름"></label>
+          <label class="field"><span>숙소 방 번호</span><input name="room" inputmode="numeric" placeholder="입실할 때 적어요"></label>
+          <label class="field"><span>같은 방 친구</span><input name="mates" placeholder="이름"></label>
+          <label class="field"><span>버스 자리</span><input name="seat" placeholder="예: 왼쪽 4번째 줄"></label>
+          <label class="field"><span>박물관 집결 장소</span><input name="meet" placeholder="당일 선생님이 알려 줘요"></label>
+          <p class="hint">적은 내용은 이 휴대전화에만 저장돼요. 다른 사람에게는 보이지 않아요.</p>
+          <div class="btn-row" style="grid-template-columns:1fr"><button type="submit" class="btn day">다 적었어요</button></div>
+        </form>
+        <div class="btn-row">
+          <a class="btn" id="call-teacher" href="#memo">선생님 번호 적기</a>
+          <a class="btn red" href="tel:119">119에 전화</a>
+        </div>
+      </div>
+
+      <div class="sec" id="install" hidden>
+        <div class="install">
+          <b>홈 화면에 추가해 두세요</b>
+          <span id="install-text">앱처럼 바로 열리고, 인터넷이 끊겨도 볼 수 있어요.</span>
+          <button type="button" class="btn" id="install-btn" hidden>홈 화면에 추가</button>
+        </div>
+      </div>
+      <p class="foot" id="foot-now"></p>
+    </section>
+
+    <!-- 일정 -->
+    <section class="page" id="plan" aria-label="일정" hidden>
+      <div class="page-head">
+        <h2 class="page-title">일정</h2>
+      </div>
+      <div class="days" id="days"></div>
+      <p class="legend"><span class="plate">노란 시간</span>은 늦으면 안 되는 시간이에요.</p>
+      <ol class="route" id="route"></ol>
+      <p class="foot">시간은 교통 상황에 따라 조금 달라질 수 있어요. 바뀌면 선생님이 바로 알려 줍니다.</p>
+    </section>
+
+    <!-- 지킬 것 -->
+    <section class="page" id="rules" aria-label="지킬 것" hidden>
+      <div class="page-head">
+        <h2 class="page-title">장소마다 지킬 것</h2>
+      </div>
+      <nav class="index" id="rule-index" aria-label="장소 바로 가기"></nav>
+      <div id="rule-list"></div>
+      <p class="foot">잘 모르겠으면 혼자 판단하지 말고 선생님께 먼저 물어보세요.</p>
+    </section>
+
+    <!-- 준비물 -->
+    <section class="page" id="pack" aria-label="준비물" hidden>
+      <div class="todo">
+        <b>박물관 견학 계획서</b>
+        <span id="plan-status"></span>
+        <a class="btn" href="#museum" data-go="museum">계획서 쓰기</a>
+      </div>
+      <div class="page-head">
+        <h2 class="page-title">준비물</h2>
+        <p class="prog-text" id="prog-text"></p>
+        <div class="prog" aria-hidden="true"><i id="prog-bar"></i></div>
+      </div>
+      <div class="sec" style="padding-top:0">
+        <ul class="check" id="check"></ul>
+      </div>
+      <div class="sec">
+        <h3>가져오지 않기</h3>
+        <ul class="plain no">
+          <li>칼, 라이터, 전자담배, 담배, 술</li>
+          <li>비싼 물건</li>
+        </ul>
+      </div>
+      <div class="sec">
+        <h3>출발 전에 담임 선생님께 알리기</h3>
+        <ul class="plain tell">
+          <li>음식 알레르기</li>
+          <li>먹고 있는 약</li>
+          <li>그 밖에 건강에서 신경 쓸 점</li>
+        </ul>
+        <p class="hint" style="margin-top:10px">멀미약은 집에서 보호자와 상의해서 준비해요.</p>
+      </div>
+      <div class="sec">
+        <h3>11월 19일 아침에 모이는 시간</h3>
+        <ul class="times">
+          <li><b>06:20</b>수능 응원 가는 학생, 학교</li>
+          <li><b>08:35</b>그 외 학생, 학교</li>
+          <li><b>09:00</b>서울로 출발</li>
+        </ul>
+      </div>
+      <p class="foot">늦을 것 같으면 담임 선생님께 바로 연락하세요.</p>
+    </section>
+
+    <!-- 국립중앙박물관: 견학 계획서와 안내 -->
+    <section class="page d2" id="museum" aria-label="국립중앙박물관" hidden>
+      <div class="page-head">
+        <h2 class="page-title">국립중앙박물관</h2>
+        <p class="lead">11월 20일 10:00부터 12:00까지, 짝과 둘이서 봐요.</p>
+      </div>
+
+      <form class="sec" id="plan-form" autocomplete="off">
+        <h3>견학 계획서</h3>
+        <div class="seg" id="grade" role="group" aria-label="학년">
+          <button type="button" data-grade="1" aria-pressed="false">1학년</button>
+          <button type="button" data-grade="2" aria-pressed="false">2학년</button>
+        </div>
+        <label class="field"><span>이름</span><input name="name" placeholder="내 이름"></label>
+
+        <h4 class="q"><span class="n">1</span>꼭 보고 싶은 것을 다섯 개까지 골라요</h4>
+        <p class="count" id="pick-count"></p>
+        <div id="picks"></div>
+
+        <h4 class="q"><span class="n">2</span>가장 기대되는 것 한 가지와 그 이유</h4>
+        <label class="field"><textarea name="hope" aria-label="가장 기대되는 것과 이유" placeholder="예: 반가사유상. 사진으로만 봤는데 실제 표정이 궁금해서"></textarea></label>
+
+        <h4 class="q"><span class="n">3</span>어떤 순서로 볼까요</h4>
+        <label class="field"><textarea name="order" aria-label="관람 순서" placeholder="예: 1층 신라실 → 2층 사유의 방 → 3층 청자실 → 1층 경천사 십층석탑"></textarea></label>
+
+        <h4 class="q"><span class="n">4</span>박물관에서 알아 오고 싶은 것</h4>
+        <label class="field"><textarea name="ask" aria-label="알아 오고 싶은 것" placeholder="예: 금관은 실제로 머리에 썼을까?"></textarea></label>
+
+        <h4 class="q"><span class="n">5</span>짝과 정한 약속</h4>
+        <label class="field"><textarea name="promise" aria-label="짝과 정한 약속" placeholder="예: 서로 안 보이면 그 층 계단 앞에서 기다리기"></textarea></label>
+
+        <div class="btn-row">
+          <button type="button" class="btn day" id="plan-share">선생님께 보내기</button>
+          <button type="button" class="btn" id="plan-copy">내용 복사</button>
+        </div>
+        <p class="hint" style="margin-top:10px">적는 대로 이 휴대전화에 저장돼요. ‘선생님께 보내기’를 누르면 카카오톡 같은 앱으로 보낼 수 있어요.</p>
+      </form>
+
+      <div class="sec dn">
+        <h3>알아 두면 좋은 것</h3>
+        <ul class="rules" style="border-top:2px solid var(--ink)">
+          <li>입구에서 <b>가방 보안검색</b>을 해요. 음식물과 칼은 가지고 들어갈 수 없어요.</li>
+          <li>전시관은 3개 층이에요. 1층은 선사 시대부터 조선까지 <b>시간 순서</b>로 이어져요.</li>
+          <li>두 시간에 다 볼 수는 없어요. <b>볼 것을 미리 골라 두면</b> 헤매지 않아요.</li>
+          <li>사진은 찍어도 되지만 <b>플래시, 삼각대, 셀카봉</b>은 쓰지 않아요.</li>
+          <li>전시실에서는 먹거나 마시지 않고, 뛰지 않고, 전시물을 만지지 않아요.</li>
+          <li>유물 옆 설명문을 먼저 읽으면 훨씬 잘 보여요.</li>
+          <li><b>12:00</b>까지 집결 장소로 가요. 10분 전에는 움직이기 시작해요.</li>
+          <li>짝이 안 보이면 그 자리에서 기다리고 전화해요.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h3>두 시간, 이렇게 돌면 무리 없어요</h3>
+        <ul class="times">
+          <li><b>10:00</b>1층 역사의 길, 선사·고대관</li>
+          <li><b>10:40</b>2층 사유의 방, 서화관, 기증관</li>
+          <li><b>11:05</b>3층 청자, 백자, 금속공예</li>
+          <li><b>11:35</b>1층 경천사 십층석탑, 못 본 곳</li>
+          <li><b>11:50</b>집결 장소로 이동</li>
+        </ul>
+      </div>
+      <p class="foot">전시품은 박물관 사정에 따라 자리가 바뀌거나 쉬는 날이 있을 수 있어요.</p>
+    </section>
+
+    <!-- 비상 -->
+    <section class="page" id="sos" aria-label="비상" hidden>
+      <div class="page-head">
+        <h2 class="page-title">길을 잃거나 위급할 때</h2>
+        <div class="calls">
+          <a class="call red" href="tel:119"><b>119</b><span>다치거나 아플 때</span></a>
+          <a class="call fill" href="tel:112"><b>112</b><span>위험한 사람을 만났거나 범죄를 봤을 때</span></a>
+          <a class="call" id="sos-teacher" href="#memo"><b class="long">선생님</b><span>번호를 먼저 적어 두세요</span></a>
+          <a class="call" href="tel:023191318"><b class="long">숙소</b><span><em>02-319-1318</em>서울유스호스텔 프런트</span></a>
+        </div>
+      </div>
+      <div class="sec">
+        <h3>길을 잃었을 때</h3>
+        <ol class="steps">
+          <li>움직이지 말고 그 자리에서 기다리기</li>
+          <li>담임 선생님께 바로 전화하기</li>
+          <li>휴대전화가 없으면 가까운 직원에게 도움 청하기</li>
+        </ol>
+      </div>
+      <div class="sec">
+        <h3>우리 숙소</h3>
+        <div class="addr">
+          <b>서울유스호스텔</b>
+          <p>서울 중구 퇴계로26가길 6 (남산)</p>
+          <a class="chip" href="https://place.map.kakao.com/7934954" target="_blank" rel="noopener">지도에서 보기</a>
+        </div>
+      </div>
+      <div class="sec">
+        <h3>미리 깔아 두기</h3>
+        <ul class="plain tell">
+          <li>앱 스토어에서 <b>안전디딤돌</b>을 검색해 설치해요. 재난 문자, 가까운 대피소, 응급처치 방법을 볼 수 있어요.</li>
+        </ul>
+      </div>
+      <p class="foot" id="foot-sos"></p>
+    </section>
+  </main>
+
+  <nav class="tabs" aria-label="메뉴">
+    <ul>
+      <li><a href="#now"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v2.5M16 18v2.5"/><path d="M8 14.5h.01M16 14.5h.01" stroke-width="2.6"/></svg>지금</a></li>
+      <li><a href="#plan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14"/><circle cx="6" cy="5" r="2" fill="var(--bg)"/><circle cx="6" cy="12" r="2" fill="var(--bg)"/><circle cx="6" cy="19" r="2" fill="var(--bg)"/><path d="M12 5h8M12 12h8M12 19h5"/></svg>일정</a></li>
+      <li><a href="#rules"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2.5"/><path d="M9 12.2l2.2 2.3 4-4.5"/></svg>지킬 것</a></li>
+      <li><a href="#pack"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5.5" y="8" width="13" height="13" rx="3.5"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8M9.5 15h5"/></svg>준비물</a></li>
+      <li><a href="#sos" class="sos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.9l1.4 3.9-1.9 1.4a12 12 0 0 0 6.2 6.2l1.4-1.9 3.9 1.4v2.9a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg>비상</a></li>
+    </ul>
+  </nav>
+
+  <div class="toast" id="toast" hidden>
+    <span>안내 내용이 바뀌었어요.</span>
+    <button type="button" id="toast-btn">새로 보기</button>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+/* ─────────────────────────────────────────────────────────────
+   내용을 바꿀 때는 아래 DAYS, RULES, PACK 만 고치면 됩니다.
+   - t: 시작 시간, end: 끝나는 시간(있을 때만)
+   - key: true 이면 늦으면 안 되는 시간(노란색)
+   - rules: 일정 화면에서 펼쳐 볼 '지킬 것' 묶음 이름
+   - here: '지금' 화면의 '여기서 지킬 것' 단추가 열어 줄 묶음 (없으면 rules 의 첫째)
+   - map: 카카오맵 장소 주소
+   ───────────────────────────────────────────────────────────── */
+const UPDATED = '2026. 11. 17.';
+
+const DAYS = [
+  {
+    date: '2026-11-19', name: '1일차', short: '11월 19일 목', long: '11월 19일 목요일',
+    stops: [
+      { t: '06:20', title: '학교 집결', note: '수능 응원 가는 학생만 모여요. 06:30에 수능 시험장으로 출발합니다.', key: true },
+      { t: '08:35', title: '학교 집결', note: '응원에 가지 않는 학생이 모이는 시간이에요. 출결을 확인합니다.', key: true },
+      { t: '09:00', title: '서울로 출발', note: '전세버스로 가고, 중간에 휴게소에서 쉬어 가요.', rules: ['bus'] },
+      { t: '12:30', title: 'LG아트센터 서울 도착, 점심', note: '같은 건물 식당 ‘차알’에서 볶음밥, 짬뽕, 짜장 가운데 골라 먹어요.', map: 'https://place.map.kakao.com/643449402', here: 'lg' },
+      { t: '13:15', title: '교육장 입장 마감', note: '1층 ‘튜브’의 LAB별 표지판 앞에 모여요. 늦으면 교육에 참여할 수 없어요.', key: true, here: 'lg' },
+      { t: '13:30', end: '15:30', title: 'LG디스커버리랩 AI 교육', note: '1학년은 2층 LAB3에서 스마트팩토리 양불판정, 2학년은 1층 OPENLAB에서 자율주행과 SLAM을 배워요.', rules: ['lg'] },
+      { t: '15:30', title: '숙소로 이동', note: '버스로 서울유스호스텔까지 가요. 퇴근 시간이라 길이 막힐 수 있어요.', here: 'bus' },
+      { t: '17:30', title: '숙소 도착, 저녁 식사', note: '숙소 식당에서 먹어요. 방에 들어가면 문에 붙은 피난안내도부터 확인해요.', rules: ['hostel', 'fire'], map: 'https://place.map.kakao.com/7934954' },
+      { t: '19:00', title: '대학로로 이동', note: '방송통신대 열린관 앞에서 내려 극장까지 골목길을 걸어가요.', here: 'show' },
+      { t: '20:00', end: '21:40', title: '뮤지컬 연의 편지', note: '플러스씨어터에서 약 100분 동안 봐요.', rules: ['show'], map: 'https://place.map.kakao.com/2115601133' },
+      { t: '21:40', title: '숙소로 복귀', note: '버스로 돌아와서 씻어요.', here: 'hostel' },
+      { t: '22:30', title: '점호, 소등', note: '22:00부터는 방 밖으로 나가지 않아요.', key: true, here: 'hostel' }
+    ]
+  },
+  {
+    date: '2026-11-20', name: '2일차', short: '11월 20일 금', long: '11월 20일 금요일',
+    stops: [
+      { t: '06:30', title: '기상', note: '씻고 짐을 정리해요.', here: 'hostel' },
+      { t: '07:30', title: '아침 식사, 퇴실', note: '숙소 식당에서 먹고, 방과 두고 가는 물건이 없는지 확인한 뒤 나와요.', here: 'health' },
+      { t: '09:00', title: '숙소 출발', note: '버스로 국립중앙박물관까지 가요.', rules: ['bus'] },
+      { t: '09:40', title: '국립중앙박물관 도착', note: '입구에서 가방 보안검색을 해요.', map: 'https://place.map.kakao.com/8830150', here: 'museum', guide: true },
+      { t: '10:00', end: '12:00', title: '상설전시 관람', note: '2인 1조로 탐험 활동지를 하면서 봐요.', rules: ['museum'] },
+      { t: '12:00', title: '집결, 점심', note: '인원을 확인하고 박물관 안 식당에서 먹어요.', key: true, here: 'health' },
+      { t: '13:30', title: '학교로 출발', note: '중간에 휴게소에서 쉬어 가요.', here: 'bus' },
+      { t: '17:00', title: '학교 도착', note: '17시쯤 도착해요. 종례를 하고 집에 갑니다.' }
+    ]
+  }
+];
+
+/* day: 1 = 1일차(파랑), 2 = 2일차(초록), 0 = 이틀 내내 */
+const RULES = {
+  bus: { name: '버스', tag: '버스', day: 0, items: [
+    '출발부터 도착까지 **안전벨트** 매기',
+    '달리는 중에 자리를 옮기거나 통로에 서 있지 않기',
+    '휴게소는 짝과 함께 다니고 **집결 시간** 지키기',
+    '인원 확인이 끝날 때까지 자리에서 기다리기',
+    '멀미가 나면 참지 말고 미리 선생님께 말하기'
+  ] },
+  lg: { name: 'LG디스커버리랩 서울', tag: 'LG', day: 1, items: [
+    '버스는 건물 앞 로터리(남측 문 앞)에서 내리기',
+    '1층 로비를 지나 **튜브**(LAB별 표지판)에서 기다리기',
+    '**13:15까지 입장**, 늦으면 교육에 참여할 수 없음',
+    '1학년은 **2층 LAB3**, 2학년은 **1층 OPENLAB**',
+    '비상구는 두 층 모두 **엘리베이터 쪽**, 교육 전에 확인하기',
+    '공연을 보러 온 분들이 있으니 조용히 하고, 자리를 비울 때는 선생님께 말하기'
+  ] },
+  hostel: { name: '숙소 생활', tag: '숙소', day: 1, items: [
+    '**22:00**부터 방 밖 이동 금지, **22:30** 점호와 소등',
+    '다른 방과 이성 학생 층에 가지 않기, 숙소 밖으로 나가지 않기',
+    '방에서 음식 조리하지 않기, 옥상에 올라가지 않기',
+    '숙소 어디서든 금연, 금주',
+    '다른 손님도 묵고 있으니 복도와 방에서 조용히 하기',
+    '시설을 망가뜨리면 물어내야 할 수 있음'
+  ] },
+  fire: { name: '불이 나거나 땅이 흔들리면', tag: '불·지진', day: 1, items: [
+    '방에 들어가면 문에 붙은 **피난안내도**로 비상계단 위치 확인하기',
+    '불이 나면 엘리베이터 대신 **비상계단**으로, 젖은 수건으로 코와 입 막기',
+    '지진이 나면 탁자 아래에서 몸을 보호하고, 흔들림이 멈추면 계단으로 나가기',
+    '밖에서는 **집결지**에 모여 인원을 확인하고, 다시 들어가지 않기'
+  ] },
+  show: { name: '대학로 공연', tag: '공연', day: 1, items: [
+    '극장까지 가는 골목은 차와 사람이 섞여 있으니 **한 줄로** 걷기',
+    '공연 중에는 휴대전화를 끄고, **사진·영상 촬영과 녹음** 하지 않기',
+    '화장실은 선생님께 말하고 다녀오기',
+    '끝나면 학년별로 모여 인원을 확인한 뒤 움직이기',
+    '밤의 대학로는 사람이 많으니 일행에서 떨어지지 않기'
+  ] },
+  museum: { name: '국립중앙박물관', tag: '박물관', day: 2, items: [
+    '입구에서 **가방 X-ray 보안검색**, 음식물과 칼은 가지고 들어갈 수 없음',
+    '**2인 1조**로 탐험 활동지를 하며 보고, 짝과 떨어지지 않기',
+    '전시실에서 뛰지 않기, 전시물 만지지 않기',
+    '‘사유의 방’은 조명이 어두우니 천천히 걷기',
+    '**12:00** 집결 장소에 늦지 않기, 모인 뒤에 함께 점심'
+  ] },
+  respect: { name: '서로 존중하기', tag: '존중', day: 0, items: [
+    '장난이라도 상대가 싫어하면 **폭력**',
+    '동의 없는 신체 접촉, 성적인 말, **몰래 촬영** 하지 않기',
+    '친구 사진과 영상은 허락 없이 SNS에 올리지 않기',
+    '피해를 입거나 보면 **바로 선생님께** 말하기. 말한 사람은 보호받아요'
+  ] },
+  health: { name: '건강과 음식', tag: '건강', day: 0, items: [
+    '밥 먹기 전에 손 씻기',
+    '남긴 음식을 두었다가 다시 먹지 않기',
+    '알레르기가 있는 음식은 먹기 전에 확인하기',
+    '배가 아프거나 열이 나면 **참지 말고 바로** 선생님께 말하기',
+    '먹는 약은 시간 맞춰 챙겨 먹기'
+  ] }
+};
+const RULE_ORDER = ['bus', 'lg', 'hostel', 'fire', 'show', 'museum', 'respect', 'health'];
+
+const PACK = ['따뜻한 겉옷', '편한 운동화', '세면도구', '여벌 옷', '상비약, 먹고 있는 약', '휴대전화', '충전기', '필기도구 (박물관 활동지에 써요)'];
+
+const MEMO = [
+  ['teacher', '담임 선생님'], ['buddy', '내 짝'], ['room', '숙소 방'],
+  ['mates', '같은 방 친구'], ['seat', '버스 자리'], ['meet', '박물관 집결 장소']
+];
+
+/* 박물관에서 볼 것 (견학 계획서에서 고르는 목록) */
+const MUSEUM = [
+  { floor: '1층', name: '선사·고대관, 중·근세관', items: [
+    { id: 'tower', name: '경천사 십층석탑', where: '역사의 길 끝', note: '고려 1348년에 대리석으로 쌓은 높이 약 13.5m의 탑. 일본으로 실려 갔다가 돌아왔어요.' },
+    { id: 'stele', name: '광개토대왕릉비 영상', where: '역사의 길', note: '고구려 비석의 탁본을 실제 크기로 보여 주는 큰 화면이에요.' },
+    { id: 'comb', name: '빗살무늬토기', where: '신석기실', note: '신석기 사람들이 곡식을 담고 음식을 끓이던 그릇. 바닥이 왜 뾰족한지 살펴보세요.' },
+    { id: 'farm', name: '농경문 청동기', where: '청동기실', note: '밭을 가는 사람이 새겨진 손바닥만 한 청동기. 2천여 년 전 농사 모습이 담겨 있어요.' },
+    { id: 'crown', name: '황남대총 금관과 금허리띠', where: '신라실', note: '신라 무덤에서 나온 금 장신구. 나뭇가지 모양 장식과 굽은옥을 찾아보세요.' },
+    { id: 'jinheung', name: '북한산 진흥왕 순수비', where: '신라실', note: '6세기 신라 진흥왕이 한강 유역을 차지한 뒤 북한산에 세운 비석이에요.' }
+  ] },
+  { floor: '2층', name: '사유의 방, 서화관, 기증관', items: [
+    { id: 'pensive', name: '반가사유상 두 점', where: '사유의 방', note: '한쪽 다리를 올리고 생각에 잠긴 삼국시대 금동 불상. 어둡고 조용한 방이니 천천히 걸어요.' },
+    { id: 'uigwe', name: '외규장각 의궤', where: '서화관 외규장각 의궤실', note: '조선 왕실 행사를 글과 그림으로 남긴 책. 1866년 프랑스군이 가져갔다가 2011년에 돌아왔어요.' },
+    { id: 'helmet', name: '손기정 기증 청동 투구', where: '기증관', note: '1936년 베를린 올림픽 마라톤 우승 기념으로 받은 고대 그리스 투구예요.' }
+  ] },
+  { floor: '3층', name: '조각·공예관, 세계문화관', items: [
+    { id: 'celadon', name: '청자 투각 칠보무늬 향로', where: '청자실', note: '고려 12세기 청자. 향로를 받치고 있는 토끼 세 마리를 찾아보세요.' },
+    { id: 'moonjar', name: '백자 달항아리', where: '분청사기·백자실', note: '조선 백자. 위아래를 따로 빚어 붙여서 완전한 원이 아닌 점이 멋이에요.' },
+    { id: 'kundika', name: '물가풍경무늬 정병', where: '금속공예실', note: '고려 청동 물병. 버드나무와 물새, 배를 은실로 새겨 넣었어요.' },
+    { id: 'iron', name: '철로 만든 큰 부처', where: '불교조각실', note: '고려 초에 쇠로 만든 높이 3m 가까운 불상. 우리나라에서 가장 큰 철불이에요.' }
+  ] }
+];
+const PICK_MAX = 5;
+
+/* ───────────── 여기부터는 동작 ───────────── */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const rich = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('nadeuri:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('nadeuri:' + k, JSON.stringify(v)); } catch (e) { /* 저장이 막힌 브라우저에서는 그냥 넘어간다 */ } }
+};
+
+const at = (date, t) => new Date(date + 'T' + t + ':00+09:00');
+const ALL = [];
+DAYS.forEach((d, di) => d.stops.forEach((s, si) => {
+  s.day = di; s.idx = si; s.start = at(d.date, s.t); s.id = 'd' + (di + 1) + '-' + si;
+  ALL.push(s);
+}));
+
+/* 주소 끝에 ?now=2026-11-19T13:40 을 붙이면 그 시간 기준으로 미리 볼 수 있다 */
+let offset = 0;
+const fake = new URLSearchParams(location.search).get('now');
+if (fake) {
+  const iso = /(Z|[+-]\d\d:?\d\d)$/i.test(fake) ? fake : (fake.length <= 16 ? fake + ':00' : fake) + '+09:00';
+  const d = new Date(iso);
+  if (!isNaN(d)) offset = d.getTime() - Date.now();
+}
+const now = () => new Date(Date.now() + offset);
+
+const kst = (d) => {
+  const p = {};
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+    .formatToParts(d).forEach((x) => { p[x.type] = x.value; });
+  return { ymd: p.year + '-' + p.month + '-' + p.day, hm: p.hour + ':' + p.minute, m: +p.month, d: +p.day };
+};
+const dayGap = (a, b) => Math.round((Date.parse(b + 'T00:00:00Z') - Date.parse(a + 'T00:00:00Z')) / 864e5);
+
+function getState(n) {
+  const first = ALL[0], last = ALL[ALL.length - 1];
+  if (n < first.start) return { mode: 'pre', days: dayGap(kst(n).ymd, DAYS[0].date) };
+  if (n.getTime() >= last.start.getTime() + 2 * 36e5) return { mode: 'post' };
+  let i = 0;
+  for (let k = 0; k < ALL.length; k++) if (ALL[k].start <= n) i = k;
+  return { mode: 'trip', cur: ALL[i], next: ALL[i + 1] || null };
+}
+
+function leftText(ms) {
+  const m = Math.round(ms / 6e4);
+  if (m < 1) return '곧 시작해요';
+  if (m < 60) return m + '분 남았어요';
+  const h = Math.floor(m / 60), r = m % 60;
+  return r ? h + '시간 ' + r + '분 남았어요' : h + '시간 남았어요';
+}
+
+const BUS = '<svg class="bus" viewBox="0 0 30 20" aria-hidden="true"><rect x="1" y="1.5" width="28" height="13.5" rx="3.5" fill="#FFC20E"/><rect x="4" y="4.5" width="6" height="4.6" rx="1" fill="#0B1B36"/><rect x="12" y="4.5" width="6" height="4.6" rx="1" fill="#0B1B36"/><rect x="20" y="4.5" width="6" height="4.6" rx="1" fill="#0B1B36"/><circle cx="8" cy="16" r="3.2" fill="#0B1B36"/><circle cx="22" cy="16" r="3.2" fill="#0B1B36"/><circle cx="8" cy="16" r="1.2" fill="#FFC20E"/><circle cx="22" cy="16" r="1.2" fill="#FFC20E"/></svg>';
+
+function strip(dayIdx, pos) {
+  const stops = DAYS[dayIdx].stops, last = stops.length - 1;
+  const dots = stops.map((s, i) => '<i class="' + (i <= pos ? 'done' : '') + '" style="left:' + (i / last * 100).toFixed(2) + '%"></i>').join('');
+  return '<div class="strip" aria-hidden="true" data-pos="' + (Math.max(0, Math.min(pos, last)) / last * 100).toFixed(2) + '"><span class="fill" style="width:0"></span>' + dots + BUS.replace('class="bus"', 'class="bus" style="left:0"') + '</div>';
+}
+
+const ruleOf = (s) => s.here || (s.rules && s.rules[0]) || '';
+
+/* ── 지금 ── */
+let boardKey = '';
+function renderBoard() {
+  const n = now(), st = getState(n), el = $('#board');
+  const dayIdx = st.mode === 'trip' ? st.cur.day : st.mode === 'post' ? 1 : 0;
+  document.body.dataset.day = dayIdx + 1;
+
+  let key, html;
+  if (st.mode === 'pre') {
+    const done = store.get('pack', []).length;
+    const title = st.days <= 0 ? '오늘 출발' : st.days === 1 ? '내일 출발' : '출발 ' + st.days + '일 전';
+    const pn = planDone();
+    key = 'pre' + st.days + '/' + done + '/' + pn;
+    html = '<p class="board-day"><span class="badge">출발 전</span>' + DAYS[0].long + '에 떠나요</p>' +
+      '<p class="board-title">' + title + '</p>' +
+      '<ul class="meet">' +
+      '<li><b>06:20</b>수능 응원 가는 학생, 학교 집결</li>' +
+      '<li><b>08:35</b>그 외 학생, 학교 집결</li>' +
+      '<li><b>09:00</b>서울로 출발</li></ul>' +
+      '<div class="board-links"><a class="board-link" href="#museum">' + (pn >= 5 ? '박물관 견학 계획서 다 썼어요' : pn ? '박물관 견학 계획서 이어 쓰기' : '박물관 견학 계획서 쓰기') + '</a>' +
+      '<a class="board-link here" href="#pack">준비물 ' + PACK.length + '개 중 ' + done + '개 챙겼어요</a></div>';
+  } else if (st.mode === 'post') {
+    key = 'post';
+    html = '<p class="board-day"><span class="badge">끝</span>11월 19일~20일</p>' +
+      '<p class="board-title">잘 다녀왔습니다</p>' +
+      '<p class="board-sub">이틀 동안 수고했어요.</p>';
+  } else {
+    const c = st.cur, x = st.next, d = DAYS[c.day];
+    key = c.id;
+    let pos = c.idx;
+    if (x && x.day === c.day) pos += Math.min(1, (n - c.start) / (x.start - c.start));
+    html = '<p class="board-day"><span class="badge">' + d.name + '</span>' + d.long + '</p>' +
+      '<p class="board-label">지금</p>' +
+      '<p class="board-title">' + esc(c.title) + '</p>' +
+      '<p class="board-when">' + c.t + (c.end ? '~' + c.end : '') + '</p>' +
+      '<p class="board-sub">' + esc(c.note) + '</p>' +
+      (ruleOf(c) ? '<a class="board-link here" href="#rules" data-rule="' + ruleOf(c) + '">여기서 지킬 것 보기</a>' : '') +
+      strip(c.day, pos) +
+      (x ? '<div class="next"><p class="board-label">다음</p>' +
+        '<p class="next-row"><span class="next-time">' + (x.day !== c.day ? '내일 ' : '') + x.t + '</span><span class="next-title">' + esc(x.title) + '</span></p>' +
+        '<p class="next-left"><span class="badge" id="left"></span></p></div>' : '');
+  }
+  if (key !== boardKey) {
+    boardKey = key;
+    el.innerHTML = html;
+    const s = $('.strip', el);
+    if (s) requestAnimationFrame(() => requestAnimationFrame(() => moveBus(s)));
+  } else {
+    const s = $('.strip', el);
+    if (s && st.mode === 'trip') {
+      const c = st.cur, x = st.next, last = DAYS[c.day].stops.length - 1;
+      let pos = c.idx;
+      if (x && x.day === c.day) pos += Math.min(1, (n - c.start) / (x.start - c.start));
+      s.dataset.pos = (pos / last * 100).toFixed(2);
+      moveBus(s);
+    }
+  }
+  const left = $('#left');
+  if (left && st.mode === 'trip' && st.next) left.textContent = leftText(st.next.start - n);
+  return st;
+}
+function moveBus(s) {
+  const p = s.dataset.pos + '%';
+  $('.fill', s).style.width = p;
+  $('.bus', s).style.left = p;
+}
+
+/* ── 일정 ── */
+let planDay = null, planAuto = null, planKey = '';
+function renderDays() {
+  $('#days').innerHTML = DAYS.map((d, i) =>
+    '<button type="button" class="d' + (i + 1) + '" data-day="' + i + '" aria-pressed="' + (i === planDay) + '"><b>' + d.name + '</b><span>' + d.short + '</span></button>').join('');
+}
+function renderPlan(st) {
+  const auto = st.mode === 'trip' ? st.cur.day : st.mode === 'post' ? 1 : 0;
+  if (auto !== planAuto) { planAuto = auto; planDay = auto; }
+  const key = planDay + '/' + (st.mode === 'trip' ? st.cur.id : st.mode);
+  if (key === planKey) return;
+  planKey = key;
+  renderDays();
+  const d = DAYS[planDay], route = $('#route');
+  route.className = 'route d' + (planDay + 1);
+  route.innerHTML = d.stops.map((s) => {
+    const cur = st.mode === 'trip' && s === st.cur;
+    const past = st.mode === 'post' || (st.mode === 'trip' && s.start < st.cur.start);
+    let acts = '';
+    if (s.rules) {
+      const count = s.rules.reduce((a, r) => a + RULES[r].items.length, 0);
+      acts += '<details><summary>지킬 것 ' + count + '가지</summary><div class="rules-wrap">' +
+        s.rules.map((r, i) => (s.rules.length > 1 ? '<h4>' + esc(RULES[r].name) + '</h4>' : '') +
+          '<ul class="rules">' + RULES[r].items.map((t) => '<li>' + rich(t) + '</li>').join('') + '</ul>').join('') +
+        '</div></details>';
+    }
+    if (s.guide) acts += '<a class="chip" href="#museum" data-go="museum">박물관 안내와 내 계획</a>';
+    if (s.map) acts += '<a class="chip" href="' + s.map + '" target="_blank" rel="noopener">지도에서 보기</a>';
+    return '<li class="stop' + (s.key ? ' key' : '') + (cur ? ' cur' : '') + (past ? ' past' : '') + '">' +
+      '<div class="t">' + (s.key ? '<span class="plate">' + s.t + '</span>' : s.t) + (s.end ? '<small>' + s.end + '까지</small>' : '') + '</div>' +
+      '<div class="rail"><span class="dot"></span></div>' +
+      '<div class="body"><h3>' + esc(s.title) + (cur ? '<span class="now-tag">지금</span>' : '') + '</h3>' +
+      '<p class="note">' + esc(s.note) + '</p>' + (acts ? '<div class="acts">' + acts + '</div>' : '') + '</div></li>';
+  }).join('');
+}
+$('#days').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-day]');
+  if (!b) return;
+  planDay = +b.dataset.day;
+  renderPlan(getState(now()));
+});
+
+/* ── 지킬 것 ── */
+function renderRules() {
+  const badge = (day) => day ? '<span class="badge">' + DAYS[day - 1].name + '</span>' : '<span class="badge">이틀 내내</span>';
+  $('#rule-index').innerHTML = RULE_ORDER.map((k) => '<a class="chip" href="#rule-' + k + '" data-jump="rule-' + k + '">' + esc(RULES[k].tag) + '</a>').join('');
+  $('#rule-list').innerHTML = RULE_ORDER.map((k) => {
+    const r = RULES[k];
+    return '<section class="rsec ' + (r.day ? 'd' + r.day : 'dn') + '" id="rule-' + k + '"><h3>' + esc(r.name) + badge(r.day) + '</h3>' +
+      '<ul class="rules">' + r.items.map((t) => '<li>' + rich(t) + '</li>').join('') + '</ul></section>';
+  }).join('');
+}
+$('#rule-index').addEventListener('click', (e) => {
+  const a = e.target.closest('a[data-jump]');
+  if (!a) return;
+  e.preventDefault();
+  document.getElementById(a.dataset.jump).scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+});
+
+/* ── 준비물 ── */
+function renderPack() {
+  const done = store.get('pack', []);
+  $('#check').innerHTML = PACK.map((t, i) =>
+    '<li><label><input type="checkbox" data-i="' + i + '"' + (done.includes(i) ? ' checked' : '') + '><span>' + esc(t) + '</span></label></li>').join('');
+  packProgress(done);
+}
+function packProgress(done) {
+  $('#prog-text').textContent = done.length === PACK.length ? '다 챙겼어요. 전날 밤에 한 번 더 확인해요.' : PACK.length + '개 중 ' + done.length + '개 챙겼어요';
+  $('#prog-bar').style.width = (done.length / PACK.length * 100) + '%';
+}
+$('#check').addEventListener('change', (e) => {
+  const i = +e.target.dataset.i;
+  let done = store.get('pack', []).filter((x) => x !== i);
+  if (e.target.checked) done.push(i);
+  store.set('pack', done);
+  packProgress(done);
+  boardKey = '';
+  renderBoard();
+});
+
+/* ── 내 메모 ── */
+const form = $('#memo-form');
+function memo() { return store.get('memo', {}); }
+function telOf(v) { const t = String(v || '').replace(/[^0-9+]/g, ''); return t.length >= 7 ? t : ''; }
+function renderMemo() {
+  const m = memo();
+  const rows = MEMO.filter(([k]) => k !== 'teacher' && m[k]).map(([k, label]) => '<div><dt>' + label + '</dt><dd>' + esc(m[k]) + '</dd></div>').join('');
+  const filled = MEMO.some(([k]) => m[k]);
+  $('#memo-view').innerHTML = rows ? '<dl class="memo-view">' + rows + '</dl>'
+    : '<p class="memo-empty">' + (filled ? '선생님 번호를 저장했어요. 방 번호와 짝 이름도 적어 두세요.' : '선생님 번호, 짝 이름, 방 번호를 적어 두면 급할 때 바로 찾을 수 있어요.') + '</p>';
+  $('#memo-toggle').textContent = form.hidden ? (filled ? '고치기' : '적기') : '닫기';
+  const tel = telOf(m.teacher);
+  const a = $('#call-teacher'), b = $('#sos-teacher');
+  if (tel) {
+    a.href = 'tel:' + tel; a.textContent = '선생님께 전화'; a.classList.add('day'); a.dataset.memo = '';
+    b.href = 'tel:' + tel; b.dataset.memo = '';
+    b.innerHTML = '<b class="long">선생님</b><span><em>' + esc(m.teacher) + '</em>담임 선생님께 전화</span>';
+  } else {
+    a.href = '#memo'; a.textContent = '선생님 번호 적기'; a.classList.remove('day'); a.dataset.memo = '1';
+    b.href = '#memo'; b.dataset.memo = '1';
+    b.innerHTML = '<b class="long">선생님</b><span>번호를 먼저 적어 두세요</span>';
+  }
+}
+function openMemo(focusName) {
+  const m = memo();
+  MEMO.forEach(([k]) => { form.elements[k].value = m[k] || ''; });
+  form.hidden = false;
+  renderMemo();
+  if (focusName) form.elements[focusName].focus({ preventScroll: true });
+  $('#memo').scrollIntoView({ block: 'start' });
+}
+function closeMemo() { form.hidden = true; renderMemo(); }
+form.addEventListener('input', () => {
+  const m = {};
+  MEMO.forEach(([k]) => { const v = form.elements[k].value.trim(); if (v) m[k] = v.slice(0, 40); });
+  store.set('memo', m);
+});
+form.addEventListener('submit', (e) => { e.preventDefault(); closeMemo(); });
+$('#memo-toggle').addEventListener('click', () => { form.hidden ? openMemo() : closeMemo(); });
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[data-memo="1"]');
+  if (!a) return;
+  e.preventDefault();
+  go('now');
+  openMemo('teacher');
+});
+
+/* ── 박물관 견학 계획서 ── */
+const planForm = $('#plan-form');
+const PLAN_TEXT = ['hope', 'order', 'ask', 'promise'];
+const getPlan = () => Object.assign({ picks: [], hope: '', order: '', ask: '', promise: '' }, store.get('plan', {}));
+const getMe = () => Object.assign({ grade: 0, name: '' }, store.get('me', {}));
+const itemOf = (id) => { for (const f of MUSEUM) for (const it of f.items) if (it.id === id) return Object.assign({ floor: f.floor }, it); return null; };
+
+function planDone() {
+  const p = getPlan();
+  return (p.picks.length ? 1 : 0) + PLAN_TEXT.filter((k) => p[k].trim()).length;
+}
+function planStatus() {
+  const n = planDone();
+  const text = n === 0 ? '아직 쓰지 않았어요' : n < 5 ? '다섯 칸 중 ' + n + '칸 썼어요' : '다 썼어요. 고치고 싶으면 다시 열어요';
+  $('#plan-status').textContent = text;
+  const p = getPlan(), c = $('#pick-count');
+  c.textContent = PICK_MAX + '개 중 ' + p.picks.length + '개 골랐어요';
+  return n;
+}
+function renderMuseum() {
+  const p = getPlan(), me = getMe();
+  $('#picks').innerHTML = MUSEUM.map((f) =>
+    '<h5 class="floor">' + f.floor + '<span>' + esc(f.name) + '</span></h5><ul class="check pick">' +
+    f.items.map((it) => '<li><label><input type="checkbox" data-id="' + it.id + '"' + (p.picks.includes(it.id) ? ' checked' : '') + '>' +
+      '<span><b>' + esc(it.name) + '</b><em>' + esc(it.where) + '</em><small>' + esc(it.note) + '</small></span></label></li>').join('') + '</ul>').join('');
+  PLAN_TEXT.forEach((k) => { planForm.elements[k].value = p[k]; });
+  planForm.elements.name.value = me.name;
+  document.querySelectorAll('#grade button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.grade === me.grade)));
+  planStatus();
+}
+$('#picks').addEventListener('change', (e) => {
+  const id = e.target.dataset.id;
+  if (!id) return;
+  const p = getPlan();
+  let picks = p.picks.filter((x) => x !== id);
+  if (e.target.checked) {
+    if (picks.length >= PICK_MAX) {
+      e.target.checked = false;
+      const c = $('#pick-count');
+      c.textContent = '다섯 개까지만 고를 수 있어요. 하나를 빼고 골라 주세요';
+      c.classList.add('over');
+      setTimeout(() => { c.classList.remove('over'); planStatus(); }, 2500);
+      return;
+    }
+    picks.push(id);
+  }
+  p.picks = picks;
+  store.set('plan', p);
+  planStatus();
+  boardKey = '';
+  renderBoard();
+});
+planForm.addEventListener('input', (e) => {
+  const k = e.target.name;
+  if (k === 'name') { const me = getMe(); me.name = e.target.value.trim().slice(0, 20); store.set('me', me); return; }
+  if (!PLAN_TEXT.includes(k)) return;
+  const p = getPlan();
+  p[k] = e.target.value.slice(0, 400);
+  store.set('plan', p);
+  planStatus();
+});
+planForm.addEventListener('submit', (e) => e.preventDefault());
+$('#grade').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-grade]');
+  if (!b) return;
+  const me = getMe();
+  me.grade = +b.dataset.grade;
+  store.set('me', me);
+  document.querySelectorAll('#grade button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+});
+function whoLine() {
+  const me = getMe(), m = memo();
+  return [(me.grade ? me.grade + '학년' : ''), me.name, (m.buddy ? '(짝: ' + m.buddy + ')' : '')].filter(Boolean).join(' ');
+}
+function planText() {
+  const p = getPlan();
+  const picks = p.picks.map((id) => itemOf(id)).filter(Boolean).map((it) => it.name + '(' + it.floor + ' ' + it.where + ')');
+  return ['[서울 나들이] 국립중앙박물관 견학 계획서', whoLine(),
+    '1. 꼭 보고 싶은 것: ' + (picks.join(', ') || '-'),
+    '2. 가장 기대되는 것과 이유: ' + (p.hope.trim() || '-'),
+    '3. 관람 순서: ' + (p.order.trim() || '-'),
+    '4. 알아 오고 싶은 것: ' + (p.ask.trim() || '-'),
+    '5. 짝과 정한 약속: ' + (p.promise.trim() || '-')].filter(Boolean).join('\n');
+}
+function copyText(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text);
+  return new Promise((ok, no) => {
+    const t = document.createElement('textarea');
+    t.value = text; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0';
+    document.body.appendChild(t); t.select();
+    try { document.execCommand('copy') ? ok() : no(); } catch (err) { no(err); }
+    t.remove();
+  });
+}
+function flash(btn, text) {
+  const old = btn.dataset.label || btn.textContent;
+  btn.dataset.label = old;
+  btn.textContent = text;
+  setTimeout(() => { btn.textContent = old; }, 2200);
+}
+function sendOut(btn, text, title) {
+  if (navigator.share) {
+    navigator.share({ title: title, text: text }).catch(() => {});
+    return;
+  }
+  copyText(text).then(() => flash(btn, '복사했어요. 붙여 넣어 보내세요'), () => flash(btn, '복사하지 못했어요'));
+}
+$('#plan-share').addEventListener('click', (e) => sendOut(e.currentTarget, planText(), '박물관 견학 계획서'));
+$('#plan-copy').addEventListener('click', (e) => {
+  const b = e.currentTarget;
+  copyText(planText()).then(() => flash(b, '복사했어요'), () => flash(b, '복사하지 못했어요'));
+});
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[data-go]');
+  if (!a) return;
+  e.preventDefault();
+  go(a.dataset.go);
+});
+
+/* ── 화면 전환 ── */
+const PAGES = ['now', 'plan', 'rules', 'pack', 'museum', 'sos'];
+function go(id, push) {
+  if (!PAGES.includes(id)) id = 'now';
+  PAGES.forEach((p) => { document.getElementById(p).hidden = p !== id; });
+  const tab = id === 'museum' ? 'pack' : id;
+  document.querySelectorAll('.tabs a').forEach((a) => {
+    if (a.getAttribute('href') === '#' + tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  if (push !== false && location.hash !== '#' + id) {
+    try { history.replaceState(null, '', location.pathname + location.search + '#' + id); } catch (e) { /* 미리 보기 창에서는 주소를 못 바꿔도 된다 */ }
+  }
+  window.scrollTo(0, 0);
+}
+document.querySelector('.tabs').addEventListener('click', (e) => {
+  const a = e.target.closest('a');
+  if (!a) return;
+  e.preventDefault();
+  go(a.getAttribute('href').slice(1));
+});
+$('#board').addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  e.preventDefault();
+  go(a.getAttribute('href').slice(1));
+  if (a.dataset.rule) document.getElementById('rule-' + a.dataset.rule).scrollIntoView({ block: 'start' });
+});
+window.addEventListener('hashchange', () => go(location.hash.slice(1), false));
+
+/* ── 홈 화면에 추가 ── */
+const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+let installEvent = null;
+if (!standalone) {
+  const ua = navigator.userAgent;
+  const ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  if (ios) {
+    $('#install-text').textContent = '사파리 아래쪽 공유 버튼을 누르고 ‘홈 화면에 추가’를 고르면 앱처럼 열려요. 인터넷이 끊겨도 볼 수 있어요.';
+    $('#install').hidden = false;
+  }
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    installEvent = e;
+    $('#install-btn').hidden = false;
+    $('#install').hidden = false;
+  });
+  $('#install-btn').addEventListener('click', () => {
+    if (!installEvent) return;
+    installEvent.prompt();
+    installEvent = null;
+    $('#install').hidden = true;
+  });
+  window.addEventListener('appinstalled', () => { $('#install').hidden = true; });
+}
+
+/* ── 시작 ── */
+function tick() {
+  const st = renderBoard();
+  renderPlan(st);
+}
+$('#foot-now').textContent = '안내 기준일 ' + UPDATED;
+$('#foot-sos').textContent = '안내 기준일 ' + UPDATED;
+if (offset) {
+  const p = $('#preview'), k = kst(now());
+  p.innerHTML = '<span>미리 보기: ' + k.m + '월 ' + k.d + '일 ' + k.hm + ' 기준</span><a href="' + esc(location.pathname) + '">끄기</a>';
+  p.hidden = false;
+}
+renderRules();
+renderPack();
+renderMemo();
+renderMuseum();
+go(location.hash.slice(1), false);
+tick();
+setInterval(tick, 20000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
+
+try {
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'updated') $('#toast').hidden = false;
+    });
+    $('#toast-btn').addEventListener('click', () => location.reload());
+    /* 안내 내용이 바뀌었는지 묻는다: 처음 열 때, 다시 화면으로 돌아올 때 */
+    const ask = (active) => navigator.serviceWorker.ready.then((reg) => { if (reg.active) reg.active.postMessage({ type: 'check', active: active }); }).catch(() => {});
+    ask(false);
+    let asked = Date.now();
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden || Date.now() - asked < 60000) return;
+      asked = Date.now();
+      ask(true);
+    });
+  }
+} catch (e) { /* 오프라인 저장을 못 쓰는 창에서는 그냥 넘어간다 */ }
+})();
+</script>
+</body>
+</html>
