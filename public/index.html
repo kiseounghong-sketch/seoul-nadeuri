@@ -891,70 +891,15 @@ button { font: inherit; color: inherit; }
       <div id="rule-list"></div>
     </section>
 
-    <!-- 준비물 -->
-    <section class="page" id="pack" aria-label="준비물" hidden>
-      <div class="page-head">
-        <h2 class="page-title">준비물</h2>
-      </div>
-      <div class="sub dn" role="group" aria-label="준비물 화면에서 볼 것">
-        <button type="button" data-pane="bring" aria-pressed="true">챙길 것</button>
-        <button type="button" data-pane="leave" aria-pressed="false">두고 올 것</button>
-        <button type="button" data-pane="tell" aria-pressed="false">알릴 것</button>
-        <button type="button" data-pane="meet" aria-pressed="false">모이는 시간</button>
-      </div>
-
-      <div class="pane" data-pane="bring">
-        <div class="todo">
-          <b>박물관 견학 계획서</b>
-          <span id="plan-status"></span>
-          <a class="btn" href="#museum" data-go="museum">계획서 쓰기</a>
-        </div>
-        <div class="sec" style="padding-top:0">
-          <p class="prog-text" id="prog-text"></p>
-          <div class="prog" aria-hidden="true"><i id="prog-bar"></i></div>
-          <ul class="check" id="check"></ul>
-        </div>
-      </div>
-
-      <div class="pane" data-pane="leave" hidden>
-        <div class="sec">
-          <h3>가져오지 않기</h3>
-          <ul class="plain no">
-            <li>칼, 라이터, 전자담배, 담배, 술</li>
-            <li>비싼 물건</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="pane" data-pane="tell" hidden>
-        <div class="sec">
-          <h3>출발 전에 담임 선생님께 알리기</h3>
-          <ul class="plain tell">
-            <li>음식 알레르기</li>
-            <li>먹고 있는 약</li>
-            <li>그 밖에 건강에서 신경 쓸 점</li>
-          </ul>
-          <p class="hint" style="margin-top:10px">멀미약은 집에서 보호자와 상의해서 준비해요.</p>
-        </div>
-      </div>
-
-      <div class="pane" data-pane="meet" hidden>
-        <div class="sec">
-          <h3>11월 19일 아침에 모이는 시간</h3>
-          <ul class="times">
-            <li><b>06:20</b>수능 응원 가는 학생, 학교</li>
-            <li><b>08:35</b>그 외 학생, 학교</li>
-            <li><b>09:00</b>서울로 출발</li>
-          </ul>
-        </div>
-        <p class="foot">11월 19일 09:00에 출발하면 이 탭은 ‘활동지’로 바뀌어요.</p>
-      </div>
-    </section>
-
-    <!-- 활동지: 출발 시각부터 준비물 탭 자리에 나온다 -->
+    <!-- 활동지: 칸마다 open 시각에 열린다 -->
     <section class="page" id="work" aria-label="활동지" hidden>
       <div class="page-head">
         <h2 class="page-title">활동지</h2>
+      </div>
+      <div class="todo" id="plan-todo" style="margin-top:8px">
+        <b>박물관 견학 계획서</b>
+        <span id="plan-status"></span>
+        <a class="btn" href="#museum" data-go="museum">계획서 쓰기</a>
       </div>
       <div class="sub" id="work-sub" role="group" aria-label="활동지 고르기"></div>
       <div id="work-list"></div>
@@ -1153,7 +1098,7 @@ button { font: inherit; color: inherit; }
       <li><a href="#now"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v2.5M16 18v2.5"/><path d="M8 14.5h.01M16 14.5h.01" stroke-width="2.6"/></svg>지금</a></li>
       <li><a href="#plan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14"/><circle cx="6" cy="5" r="2" fill="var(--bg)"/><circle cx="6" cy="12" r="2" fill="var(--bg)"/><circle cx="6" cy="19" r="2" fill="var(--bg)"/><path d="M12 5h8M12 12h8M12 19h5"/></svg>일정</a></li>
       <li><a href="#rules"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2.5"/><path d="M9 12.2l2.2 2.3 4-4.5"/></svg>지킬 것</a></li>
-      <li><a href="#pack" id="tab-swap"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5.5" y="8" width="13" height="13" rx="3.5"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8M9.5 15h5"/></svg>준비물</a></li>
+      <li><a href="#work"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20l1.1-4.4L16 5.7a2.1 2.1 0 0 1 3 3L9.1 18.6z"/><path d="M14.3 7.4l3 3"/><path d="M13 20h6"/></svg>활동지</a></li>
       <li><a href="#sos" class="sos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.9l1.4 3.9-1.9 1.4a12 12 0 0 0 6.2 6.2l1.4-1.9 3.9 1.4v2.9a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg>비상</a></li>
     </ul>
   </nav>
@@ -1169,7 +1114,7 @@ button { font: inherit; color: inherit; }
 'use strict';
 
 /* ─────────────────────────────────────────────────────────────
-   내용을 바꿀 때는 아래 DAYS, RULES, PACK, MUSEUM, WORK 만 고치면 됩니다.
+   내용을 바꿀 때는 아래 DAYS, RULES, MUSEUM, WORK, LUNCH 만 고치면 됩니다.
    - t: 시작 시간, end: 끝나는 시간(있을 때만)
    - key: true 이면 늦으면 안 되는 시간(노란색)
    - rules: 일정 화면에서 펼쳐 볼 '지킬 것' 묶음 이름
@@ -1273,8 +1218,6 @@ const RULES = {
   ] }
 };
 const RULE_ORDER = ['bus', 'lg', 'hostel', 'fire', 'show', 'museum', 'respect', 'health'];
-
-const PACK = ['따뜻한 겉옷', '편한 운동화', '세면도구', '여벌 옷', '상비약, 먹고 있는 약', '휴대전화', '충전기', '필기도구 (박물관 활동지에 써요)'];
 
 /* 1일차 점심(식당 ‘차알’). 학생은 ‘지금 → 점심’에서 고르고, 선생님 앱 ‘활동지 → 점심’에서 모아 본다.
    - hot: true 이면 매운 메뉴. ‘매운 거 못 먹어요’를 고른 학생은 고를 수 없다
@@ -1486,10 +1429,9 @@ function renderBoard() {
 
   let key, html;
   if (st.mode === 'pre') {
-    const done = store.get('pack', []).length;
     const pn = planDone();
     const lp = menuOf(getLunch().pick);
-    key = 'pre' + st.days + '/' + done + '/' + pn + '/' + (lp ? lp.id : '');
+    key = 'pre' + st.days + '/' + pn + '/' + (lp ? lp.id : '');
     html = '<p class="board-label">' + DAYS[0].short + '</p>' +
       '<ul class="meet" style="margin-top:6px">' +
       '<li><b>06:20</b>수능 응원 가는 학생, 학교 집결</li>' +
@@ -1497,8 +1439,7 @@ function renderBoard() {
       '<li><b>09:00</b>서울로 출발</li></ul>' +
       (TEACHER ? '<div class="board-links"><a class="board-link" href="#teacher">인원 체크</a><a class="board-link here" href="#twork" data-tw="lunch">점심 메뉴 보기</a><a class="board-link here" href="#twork" data-tw="plan">학생 계획서 보기</a></div>' : '') +
       '<div class="board-links s-only"><a class="board-link" href="#now" data-lunch="1">' + (lp ? '점심: ' + esc(lp.name) : '11월 19일 점심 고르기') + '</a>' +
-      '<a class="board-link" href="#museum">' + (pn >= 5 ? '박물관 견학 계획서 다 썼어요' : pn ? '박물관 견학 계획서 이어 쓰기' : '박물관 견학 계획서 쓰기') + '</a>' +
-      '<a class="board-link here" href="#pack">준비물 ' + PACK.length + '개 중 ' + done + '개 챙겼어요</a></div>';
+      '<a class="board-link" href="#museum">' + (pn >= 5 ? '박물관 견학 계획서 다 썼어요' : pn ? '박물관 견학 계획서 이어 쓰기' : '박물관 견학 계획서 쓰기') + '</a></div>';
   } else if (st.mode === 'post') {
     const wn = workNext();
     key = 'post/' + (wn ? wn.id : '');
@@ -1622,27 +1563,6 @@ function ruleAuto() {
   const st = getState(now());
   return (st.mode === 'trip' && ruleOf(st.cur)) || RULE_ORDER[0];
 }
-
-/* ── 준비물 ── */
-function renderPack() {
-  const done = store.get('pack', []);
-  $('#check').innerHTML = PACK.map((t, i) =>
-    '<li><label><input type="checkbox" data-i="' + i + '"' + (done.includes(i) ? ' checked' : '') + '><span>' + esc(t) + '</span></label></li>').join('');
-  packProgress(done);
-}
-function packProgress(done) {
-  $('#prog-text').textContent = done.length === PACK.length ? '다 챙겼어요. 전날 밤에 한 번 더 확인해요.' : PACK.length + '개 중 ' + done.length + '개 챙겼어요';
-  $('#prog-bar').style.width = (done.length / PACK.length * 100) + '%';
-}
-$('#check').addEventListener('change', (e) => {
-  const i = +e.target.dataset.i;
-  let done = store.get('pack', []).filter((x) => x !== i);
-  if (e.target.checked) done.push(i);
-  store.set('pack', done);
-  packProgress(done);
-  boardKey = '';
-  renderBoard();
-});
 
 /* ── 내 메모 ── */
 const form = $('#memo-form');
@@ -2111,6 +2031,8 @@ function workAuto() {
 let workKey = '';
 function renderWork() {
   const g = myGrade(), p = getPlan();
+  $('#plan-todo').hidden = isOpen(secOf('museum'));
+  planStatus();
   showWho('work');
   workKey = g + '/' + WORK.map((s) => (isOpen(s) ? 1 : 0)).join('');
   $('#work-sub').innerHTML = WORK.map((s) => '<button type="button" class="' + dayCls(s.day) + '" data-pane="' + s.id + '" aria-pressed="false">' + esc(s.tab) + '</button>').join('');
@@ -2196,21 +2118,9 @@ $('#work-all').addEventListener('click', (e) => {
   if (!open.length) { flash(e.currentTarget, '아직 쓴 칸이 없어요'); return; }
   sendOut(e.currentTarget, open.map(workText).join('\n\n'), '서울 나들이 활동지');
 });
-/* 출발 시각이 되면 '준비물' 탭이 '활동지' 탭으로 바뀐다 */
-const tabEl = $('#tab-swap');
-const TAB_PACK = tabEl.innerHTML;
-const TAB_WORK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20l1.1-4.4L16 5.7a2.1 2.1 0 0 1 3 3L9.1 18.6z"/><path d="M14.3 7.4l3 3"/><path d="M13 20h6"/></svg>활동지';
-let tabMode = '', curPage = 'now';
-function setTabs() {
-  const mode = workOn() ? 'work' : 'pack';
-  if (mode === tabMode) return;
-  tabMode = mode;
-  tabEl.setAttribute('href', '#' + mode);
-  tabEl.innerHTML = mode === 'work' ? TAB_WORK : TAB_PACK;
-  markTab(curPage);
-}
+let curPage = 'now';
 function markTab(id) {
-  const tab = id === 'museum' ? tabMode : id === 'login' ? 'now' : id;
+  const tab = id === 'museum' ? 'work' : id === 'login' ? 'now' : id;
   document.querySelectorAll('.tabs a').forEach((a) => {
     if (a.getAttribute('href') === '#' + tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
@@ -2632,11 +2542,11 @@ $('#tw-body').addEventListener('click', (e) => {
 });
 
 /* ── 화면 전환 ── */
-const PAGES = ['now', 'login', 'plan', 'rules', 'pack', 'work', 'museum', 'sos', 'teacher', 'twork'];
-const MY_PAGES = TEACHER ? ['now', 'plan', 'teacher', 'twork', 'sos'] : ['now', 'login', 'plan', 'rules', 'pack', 'work', 'museum', 'sos'];
+const PAGES = ['now', 'login', 'plan', 'rules', 'work', 'museum', 'sos', 'teacher', 'twork'];
+const MY_PAGES = TEACHER ? ['now', 'plan', 'teacher', 'twork', 'sos'] : ['now', 'login', 'plan', 'rules', 'work', 'museum', 'sos'];
 const NEED_LOGIN = ['now', 'work', 'museum'];
 /* 아래 메뉴로 들어오면 그 화면의 첫 항목부터 보여 준다 (박물관은 쓰던 자리를 그대로 둔다) */
-const SUB_HOME = { now: 'now', pack: 'bring', sos: 'call', teacher: 'roll' };
+const SUB_HOME = { now: 'now', sos: 'call', teacher: 'roll' };
 function go(id, push) {
   /* 예전 주소(#teacher)로 들어오면 선생님 앱으로 보낸다 */
   if (!TEACHER && (id === 'teacher' || id === 'twork')) { location.replace('/teacher/'); return; }
@@ -2704,7 +2614,6 @@ if (!standalone) {
 
 /* ── 시작 ── */
 function tick() {
-  setTabs();
   const st = renderBoard();
   renderPlan(st);
   renderNight();
@@ -2725,7 +2634,6 @@ if (offset) {
 }
 renderTeacherExtras();
 renderRules();
-renderPack();
 renderMemo();
 renderMuseum();
 renderTeam();
@@ -2762,7 +2670,6 @@ migrateMe();
     if (curPage === 'teacher' || curPage === 'twork') go(curPage);
   }, () => {});
 })();
-setTabs();
 showSync();
 syncSoon();
 go(location.hash.slice(1), false);
