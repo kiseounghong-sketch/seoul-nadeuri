@@ -1869,7 +1869,7 @@ function markTab(id) {
 }
 
 /* ── 선생님 화면: 인원 확인 ── */
-const TEACH_SEALED = {"it": 300000, "salt": "eCuYx8ylgNq3W9Duw2eciw==", "iv": "P0EfAfpnCs+GhouK", "ct": "HVLAR5P8XzA82Qqz3r0NkzCsUS0EMKjRO8sxZO9IrQgWhVvbF6YVleRDYLQiSDup4nV8qzRaHbWdzElBp97cI2KQtb9exJx1JT9QWHATTrzVT94mha0c0jwM3P/j7u+SbuVTCU6d899TsuCdd/M8/Cd/BEQ68771h3wUqkHSx+/d2WN4HEj8HZyPgA/D7vPhnTP+vi2kZ/LxqTIlzYSvdxrXnbu6f1jTWr4x83/U2A70A/CncojwGa8thuKrnglDb3Y50v55GElf+j5b6PHNW5vHGWAPajdAhqGaB1qe5VrNqF0Gihty/0aGfxjrkUYKGrtKtm90ceuRWWNMbe6nlN5I4TN2GXi+N7kzpzq+swzHLQe1mR6xyKIq0su79JH58yySGJShuPpMsIoQL1BQEckA9qZwSxhKqzxYCFnIoC1er04sqecoLBSVUI6Th9Cof4ooVjuHUmqNGmP/pryzTH9n4dP476/SkeJkB0on37bJpbmkJfROr/2+VD/clW6ZV/R/CmSknF7fwl77s4kBnwhfraFiUJHShAkRB6lW/AAufKOKKvSjp81Ldg=="};
+const TEACH_SEALED = {"it": 300000, "salt": "eP7CEubmf+OvngcI1QsA+g==", "iv": "nD5fZ5Q4k8g2i66u", "ct": "B0X/xe3fyX/GxYgYxRHOCZmd8YNod6lLFw+OtcDccg0RQfmTYQ9ELDRP9uOGSNDeX1PfN5637XC9kwkJzESpvMN8J8fcuyGGaRTgKTiOw6bJvesGrK8Xx3mLilhTAHamvcV/fgHDOO9iSaxP0JGNR1RP36yArrcUdOxvQLResJDH6JcMDIPq+NSQ8jIdjxOnqnRY434H+122mYIOo/PcS7c5weafFZXuE31G9hCrwux4LldfZCPK2JQLDyM/2a+OxjP4pdB7PCU1MnkfBeoqhVkbcRpUjb8r4J/WWkvN/gJFqZGTPlO+2VC35uV0TiHk7oE4eer5qobnm9LId0ZpARJdwUsrxC2kGRrejh8x0OJ2g/uKnodTpAOYZA4QZMfVxe5Jh1dR6V8XKr6gfcMA2FQFWiBdO5aoHoLqn8tg0OcuKkTK5PceQ+lJRRaUozQ2tOJDngRCX84yun1A9hzRG3n6GRTk1NgRQpiU/J+AFmw7yXp1nuZxIWwNGoeUCS6v9hjRZMKLSpV7cGMemV/fGbAuLbaEDZHjgfEjULAUmaryf16swHpdeZh68A=="};
 const tKey = TEACH_SEALED.salt.slice(0, 8);
 const tData = () => { const t = store.get('teacher', null); return t && t.k === tKey && t.data ? t.data : null; };
 CHECKS.forEach((c, i) => {
@@ -1911,8 +1911,8 @@ function modeNow(c) {
 function renderTeacher() {
   const body = $('#t-body'), d = tData();
   if (!d) {
-    body.innerHTML = '<form class="sec team-lock" id="t-form" style="border:0"><p class="memo-empty" style="border:0">선생님 코드 여덟 자리를 넣어 주세요.</p>' +
-      '<label class="field"><span>선생님 코드</span><input id="t-code" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="숫자 여덟 자리"></label>' +
+    body.innerHTML = '<form class="sec team-lock" id="t-form" style="border:0"><p class="memo-empty" style="border:0">선생님 코드 일곱 자리를 넣어 주세요.</p>' +
+      '<label class="field"><span>선생님 코드</span><input id="t-code" inputmode="numeric" maxlength="7" autocomplete="off" placeholder="숫자 일곱 자리"></label>' +
       '<button type="submit" class="btn day" style="width:100%">열기</button><p class="hint" id="t-msg">학생 명단이 들어 있어서 잠가 두었어요.</p></form>';
     return;
   }
@@ -1997,7 +1997,7 @@ let resetArm = 0;
 $('#t-body').addEventListener('submit', (e) => {
   e.preventDefault();
   const code = $('#t-code').value.replace(/\D/g, ''), msg = $('#t-msg'), btn = e.target.querySelector('button');
-  if (code.length !== 8) { msg.textContent = '숫자 여덟 자리를 넣어 주세요.'; msg.className = 'hint bad'; return; }
+  if (code.length !== 7) { msg.textContent = '숫자 일곱 자리를 넣어 주세요.'; msg.className = 'hint bad'; return; }
   btn.disabled = true; btn.textContent = '여는 중…';
   unseal(code, TEACH_SEALED).then((data) => { store.set('teacher', { k: tKey, code: code, data: data }); renderTeacher(); }, () => {
     btn.disabled = false; btn.textContent = '열기';
