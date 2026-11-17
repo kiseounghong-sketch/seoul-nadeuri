@@ -12,14 +12,23 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="서울 나들이">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="preload" href="fonts/bhs-ko.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="preload" href="/fonts/bhs-ko.woff2" as="font" type="font/woff2" crossorigin>
+<script>
+/* 주소가 /teacher/ 이면 같은 파일이 선생님 앱으로 열린다 (홈 화면에도 따로 추가된다) */
+if (/^\/teacher(\/|$)/.test(location.pathname)) {
+  document.documentElement.dataset.app = 'teacher';
+  document.title = '서울 나들이 선생님';
+  document.querySelector('link[rel="manifest"]').href = '/teacher.webmanifest';
+  document.querySelector('meta[name="apple-mobile-web-app-title"]').content = '나들이 선생님';
+}
+</script>
 <style>
 @font-face {
   font-family: "Black Han Sans";
-  src: url(fonts/bhs-ko.woff2) format("woff2");
+  src: url(/fonts/bhs-ko.woff2) format("woff2");
   font-weight: 400;
   font-display: swap;
 }
@@ -81,6 +90,8 @@ body[data-day="2"], .d2 {
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+/* s-only: 학생 앱에서만, t-only: 선생님 앱에서만 */
+html[data-app="teacher"] .s-only, html:not([data-app="teacher"]) .t-only { display: none !important; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
   margin: 0;
@@ -627,6 +638,10 @@ button { font: inherit; color: inherit; }
 .roll button.off { color: var(--ink2); text-decoration: line-through; opacity: .6; }
 .roll.absent button[aria-pressed="true"] { background: var(--ink2); border-color: var(--ink2); color: var(--bg); text-decoration: line-through; }
 .tcode { font: 400 22px/1.2 var(--display); letter-spacing: .06em; }
+.ans { margin: 0; }
+.ans dt { margin-top: 8px; font-size: 13px; font-weight: 700; line-height: 1.4; color: var(--ink2); }
+.ans dd { margin: 1px 0 0; font-size: 15px; line-height: 1.5; white-space: pre-wrap; }
+.ans dd.none { color: var(--ink2); }
 
 /* 뮤지컬 끝난 밤: 내일 박물관 미리 보기 */
 #tonight { padding-top: 20px; }
@@ -745,7 +760,8 @@ button { font: inherit; color: inherit; }
 
   <header class="top">
     <h1 class="mark">서울 나들이</h1>
-    <p class="top-date">11월 19일(목)~20일(금)</p>
+    <p class="top-date s-only">11월 19일(목)~20일(금)</p>
+    <p class="top-date t-only">선생님용 · 11월 19일~20일</p>
   </header>
   <p class="preview" id="preview" hidden></p>
 
@@ -756,15 +772,16 @@ button { font: inherit; color: inherit; }
     <section class="page" id="now" aria-label="지금">
       <div class="sub dn" role="group" aria-label="지금 화면에서 볼 것">
         <button type="button" data-pane="now" aria-pressed="true">지금</button>
-        <button type="button" data-pane="team" aria-pressed="false">우리 조·방</button>
-        <button type="button" data-pane="memo" aria-pressed="false">내 메모</button>
+        <button type="button" class="s-only" data-pane="team" aria-pressed="false">우리 조·방</button>
+        <button type="button" class="s-only" data-pane="memo" aria-pressed="false">내 메모</button>
+        <button type="button" class="t-only" data-pane="tmemo" aria-pressed="false">메모·코드</button>
       </div>
 
       <div class="pane" data-pane="now">
       <div class="board" id="board" aria-live="polite"></div>
       <div class="sec d2" id="tonight" hidden></div>
 
-      <div class="sec" style="padding-top:4px">
+      <div class="sec s-only" style="padding-top:4px">
         <div class="btn-row">
           <a class="btn" id="call-teacher" href="#memo">선생님 번호 적기</a>
           <a class="btn red" href="tel:119">119에 전화</a>
@@ -778,7 +795,21 @@ button { font: inherit; color: inherit; }
           <button type="button" class="btn" id="install-btn" hidden>홈 화면에 추가</button>
         </div>
       </div>
-      <p class="foot"><span id="foot-now"></span> <a href="#teacher" data-go="teacher">선생님 화면</a></p>
+      <p class="foot s-only"><span id="foot-now"></span> <a href="/teacher/">선생님 앱</a></p>
+      <p class="foot t-only"><span id="foot-t"></span> <a href="/">학생 앱</a></p>
+      </div>
+
+      <div class="pane t-only" data-pane="tmemo" hidden>
+        <div class="sec">
+          <h2>메모</h2>
+          <label class="field"><textarea id="t-memo" aria-label="메모" placeholder="약 먹는 학생, 멀미하는 학생, 바뀐 일정처럼 기억할 것"></textarea></label>
+          <p class="hint">이 휴대전화에만 저장돼요.</p>
+        </div>
+        <div class="sec" id="t-scode-sec" hidden>
+          <h2>학생 화면 코드</h2>
+          <p class="tcode" id="t-scode"></p>
+          <p class="hint">학생이 ‘우리 조·방’을 열 때 넣는 코드예요.</p>
+        </div>
       </div>
 
       <div class="pane" data-pane="team" hidden>
@@ -912,7 +943,7 @@ button { font: inherit; color: inherit; }
         <div class="prog" aria-hidden="true"><i id="work-bar"></i></div>
         <div class="btn-row" style="grid-template-columns:1fr;margin-top:0"><button type="button" class="btn" id="work-all">쓴 것 한꺼번에 보내기</button></div>
       </div>
-      <p class="foot">한두 줄이면 돼요. 이 휴대전화에만 저장되고, ‘선생님께 보내기’로 내요.</p>
+      <p class="foot">한두 줄이면 돼요. <span data-sync></span></p>
     </section>
 
     <!-- 국립중앙박물관: 견학 계획서와 안내 -->
@@ -967,6 +998,7 @@ button { font: inherit; color: inherit; }
           <button type="button" class="btn day" id="plan-share">선생님께 보내기</button>
           <button type="button" class="btn" id="plan-copy">내용 복사</button>
         </div>
+        <p class="hint" style="margin-top:10px" data-sync></p>
       </div>
       </form>
 
@@ -1001,31 +1033,39 @@ button { font: inherit; color: inherit; }
       </div>
     </section>
 
-    <!-- 선생님 화면: 주소 끝에 #teacher -->
-    <section class="page" id="teacher" aria-label="선생님 화면" hidden>
+    <!-- 선생님 앱(/teacher/): 인원 체크 -->
+    <section class="page" id="teacher" aria-label="인원 체크" hidden>
       <div class="page-head">
-        <h2 class="page-title">선생님 화면</h2>
-        <p class="lead">체크는 이 휴대전화에만 저장돼요.</p>
+        <h2 class="page-title">인원 체크</h2>
       </div>
-      <div class="sub dn" id="t-sub" role="group" aria-label="선생님 화면에서 볼 것" hidden>
+      <div class="sub dn" id="t-sub" role="group" aria-label="인원 체크 화면에서 볼 것" hidden>
         <button type="button" data-pane="roll" aria-pressed="true">인원 확인</button>
-        <button type="button" data-pane="contact" aria-pressed="false">연락처</button>
-        <button type="button" data-pane="absent" aria-pressed="false">불참</button>
-        <button type="button" data-pane="memo" aria-pressed="false">메모·코드</button>
+        <button type="button" data-pane="absent" aria-pressed="false">불참 학생</button>
       </div>
       <div id="t-body"></div>
+    </section>
+
+    <!-- 선생님 앱: 학생들이 쓴 계획서와 활동지 -->
+    <section class="page" id="twork" aria-label="학생 활동지" hidden>
+      <div class="page-head">
+        <h2 class="page-title">학생 활동지</h2>
+      </div>
+      <div class="sub" id="tw-sub" role="group" aria-label="활동 고르기" hidden></div>
+      <div id="tw-body"></div>
     </section>
 
     <!-- 비상 -->
     <section class="page" id="sos" aria-label="비상" hidden>
       <div class="page-head">
-        <h2 class="page-title">길을 잃거나 위급할 때</h2>
+        <h2 class="page-title s-only">길을 잃거나 위급할 때</h2>
+        <h2 class="page-title t-only">비상 연락</h2>
       </div>
       <div class="sub dn" role="group" aria-label="비상 화면에서 볼 것">
         <button type="button" data-pane="call" aria-pressed="true">전화</button>
-        <button type="button" data-pane="lost" aria-pressed="false">길 잃으면</button>
+        <button type="button" class="t-only" data-pane="tcontact" aria-pressed="false">연락처 적기</button>
+        <button type="button" class="s-only" data-pane="lost" aria-pressed="false">길 잃으면</button>
         <button type="button" data-pane="stay" aria-pressed="false">숙소</button>
-        <button type="button" data-pane="app" aria-pressed="false">안전 앱</button>
+        <button type="button" class="s-only" data-pane="app" aria-pressed="false">안전 앱</button>
       </div>
 
       <div class="pane" data-pane="call">
@@ -1033,9 +1073,18 @@ button { font: inherit; color: inherit; }
         <div class="calls">
           <a class="call red" href="tel:119"><b>119</b><span>다치거나 아플 때</span></a>
           <a class="call fill" href="tel:112"><b>112</b><span>위험한 사람을 만났거나 범죄를 봤을 때</span></a>
-          <a class="call" id="sos-teacher" href="#memo"><b class="long">선생님</b><span>번호를 먼저 적어 두세요</span></a>
+          <a class="call s-only" id="sos-teacher" href="#memo"><b class="long">선생님</b><span>번호를 먼저 적어 두세요</span></a>
           <a class="call" href="tel:023191318"><b class="long">숙소</b><span><em>02-319-1318</em>서울유스호스텔 프런트</span></a>
         </div>
+        <div class="calls t-only" id="t-calls" style="margin-top:8px"></div>
+      </div>
+      </div>
+
+      <div class="pane t-only" data-pane="tcontact" hidden>
+      <div class="sec">
+        <h3>연락처 적기</h3>
+        <div id="t-contact"></div>
+        <p class="hint">적으면 ‘전화’에 전화 단추가 생겨요. 이 휴대전화에만 저장돼요.</p>
       </div>
       </div>
 
@@ -1074,7 +1123,17 @@ button { font: inherit; color: inherit; }
     </section>
   </main>
 
-  <nav class="tabs" aria-label="메뉴">
+  <nav class="tabs t-only" aria-label="선생님 메뉴">
+    <ul>
+      <li><a href="#now"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v2.5M16 18v2.5"/><path d="M8 14.5h.01M16 14.5h.01" stroke-width="2.6"/></svg>지금</a></li>
+      <li><a href="#plan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14"/><circle cx="6" cy="5" r="2" fill="var(--bg)"/><circle cx="6" cy="12" r="2" fill="var(--bg)"/><circle cx="6" cy="19" r="2" fill="var(--bg)"/><path d="M12 5h8M12 12h8M12 19h5"/></svg>일정</a></li>
+      <li><a href="#teacher"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19.5c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><path d="M15.5 9.5l2 2.1 3.500-4"/></svg>인원 체크</a></li>
+      <li><a href="#twork"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20l1.1-4.4L16 5.7a2.1 2.1 0 0 1 3 3L9.1 18.6z"/><path d="M14.3 7.4l3 3"/><path d="M13 20h6"/></svg>활동지</a></li>
+      <li><a href="#sos" class="sos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.9l1.4 3.9-1.9 1.4a12 12 0 0 0 6.2 6.2l1.4-1.9 3.9 1.4v2.9a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg>비상</a></li>
+    </ul>
+  </nav>
+
+  <nav class="tabs s-only" aria-label="메뉴">
     <ul>
       <li><a href="#now"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v2.5M16 18v2.5"/><path d="M8 14.5h.01M16 14.5h.01" stroke-width="2.6"/></svg>지금</a></li>
       <li><a href="#plan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14"/><circle cx="6" cy="5" r="2" fill="var(--bg)"/><circle cx="6" cy="12" r="2" fill="var(--bg)"/><circle cx="6" cy="19" r="2" fill="var(--bg)"/><path d="M12 5h8M12 12h8M12 19h5"/></svg>일정</a></li>
@@ -1301,9 +1360,16 @@ const $ = (s, r = document) => r.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const rich = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
 
+/* 주소가 /teacher/ 이면 선생님 앱 */
+const TEACHER = document.documentElement.dataset.app === 'teacher';
+let syncTimer = 0, syncBusy = false, syncDirty = false, syncKeys = null;
+const SYNCED = ['work', 'plan', 'me', 'teams'];
 const store = {
   get(k, d) { try { const v = localStorage.getItem('nadeuri:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem('nadeuri:' + k, JSON.stringify(v)); } catch (e) { /* 저장이 막힌 브라우저에서는 그냥 넘어간다 */ } }
+  set(k, v) {
+    try { localStorage.setItem('nadeuri:' + k, JSON.stringify(v)); } catch (e) { /* 저장이 막힌 브라우저에서는 그냥 넘어간다 */ }
+    if (SYNCED.includes(k)) syncSoon();
+  }
 };
 
 /* ── 항목 단추: 화면 위 단추(.sub)를 누르면 그 항목(.pane)만 보인다 ── */
@@ -1320,6 +1386,7 @@ document.addEventListener('click', (e) => {
   const page = b.closest('.page').id, pane = b.dataset.pane || b.dataset.to;
   showPane(page, pane);
   if (page === 'now' && pane === 'memo') memoPane();
+  if (page === 'twork') renderTWork();
   window.scrollTo(0, 0);
 });
 const dayCls = (day) => (day ? 'd' + day : 'dn');
@@ -1394,7 +1461,8 @@ function renderBoard() {
       '<li><b>06:20</b>수능 응원 가는 학생, 학교 집결</li>' +
       '<li><b>08:35</b>그 외 학생, 학교 집결</li>' +
       '<li><b>09:00</b>서울로 출발</li></ul>' +
-      '<div class="board-links"><a class="board-link" href="#museum">' + (pn >= 5 ? '박물관 견학 계획서 다 썼어요' : pn ? '박물관 견학 계획서 이어 쓰기' : '박물관 견학 계획서 쓰기') + '</a>' +
+      (TEACHER ? '<div class="board-links"><a class="board-link" href="#teacher">인원 체크</a><a class="board-link here" href="#twork">학생 계획서 보기</a></div>' : '') +
+      '<div class="board-links s-only"><a class="board-link" href="#museum">' + (pn >= 5 ? '박물관 견학 계획서 다 썼어요' : pn ? '박물관 견학 계획서 이어 쓰기' : '박물관 견학 계획서 쓰기') + '</a>' +
       '<a class="board-link here" href="#pack">준비물 ' + PACK.length + '개 중 ' + done + '개 챙겼어요</a></div>';
   } else if (st.mode === 'post') {
     const wn = workNext();
@@ -1402,13 +1470,14 @@ function renderBoard() {
     html = '<p class="board-day"><span class="badge">끝</span>11월 19일~20일</p>' +
       '<p class="board-title">잘 다녀왔습니다</p>' +
       '<p class="board-sub">이틀 동안 수고했어요.</p>' +
-      (wn ? '<a class="board-link" href="#work" data-sec="' + wn.id + '">활동지 마저 쓰기: ' + esc(wn.short) + '</a>' : '');
+      (TEACHER ? '<a class="board-link" href="#twork">학생 활동지 보기</a>' : wn ? '<a class="board-link" href="#work" data-sec="' + wn.id + '">활동지 마저 쓰기: ' + esc(wn.short) + '</a>' : '');
   } else {
     const c = st.cur, x = st.next, d = DAYS[c.day];
     const wn = workNext();
     const rm = (c.here === 'hostel' || (c.rules || []).includes('hostel')) ? roomOf() : null;
     key = c.id + '/' + (wn ? wn.id : '') + '/' + (rm && rm.room ? rm.room : '') + '/' + (ruleOf(c) === 'museum' ? meetPlace() : '');
-    const links = (ruleOf(c) ? '<a class="board-link here" href="#rules" data-rule="' + ruleOf(c) + '">여기서 지킬 것 보기</a>' : '') +
+    const links = TEACHER ? '<a class="board-link" href="#teacher">인원 체크</a><a class="board-link here" href="#twork">학생 활동지 보기</a>'
+      : (ruleOf(c) ? '<a class="board-link here" href="#rules" data-rule="' + ruleOf(c) + '">여기서 지킬 것 보기</a>' : '') +
       (wn ? '<a class="board-link" href="#work" data-sec="' + wn.id + '">활동지 쓰기: ' + esc(wn.short) + '</a>' : '');
     let pos = c.idx;
     if (x && x.day === c.day) pos += Math.min(1, (n - c.start) / (x.start - c.start));
@@ -1845,7 +1914,7 @@ const NIGHT_FROM = at('2026-11-19', '21:40'), NIGHT_TO = at('2026-11-20', '10:00
 let nightKey = '';
 function renderNight() {
   const n = now(), el = $('#tonight');
-  const on = n >= NIGHT_FROM && n < NIGHT_TO;
+  const on = !TEACHER && n >= NIGHT_FROM && n < NIGHT_TO;
   const today = kst(n).ymd === DAYS[1].date;
   const p = getPlan(), m = memo(), t = teamOf();
   const key = on ? (today ? 'today' : 'eve') + JSON.stringify([p, meetPlace(), t]) : '';
@@ -2079,19 +2148,16 @@ function modeNow(c) {
   const m = tMode || c.mode;
   return m === 'room' && !roster().some((s) => s.room) ? 'grade' : m;
 }
+const LOCK = '<form class="sec team-lock t-lock" style="border:0"><p class="memo-empty" style="border:0">선생님 코드 일곱 자리를 넣어 주세요.</p>' +
+  '<label class="field"><span>선생님 코드</span><input class="t-code" inputmode="numeric" maxlength="7" autocomplete="off" placeholder="숫자 일곱 자리"></label>' +
+  '<button type="submit" class="btn day" style="width:100%">열기</button><p class="hint t-msg">학생 명단이 들어 있어서 잠가 두었어요.</p></form>';
 function renderTeacher() {
   const body = $('#t-body'), d = tData();
   $('#t-sub').hidden = !d;
-  if (!d) {
-    body.innerHTML = '<form class="sec team-lock" id="t-form" style="border:0"><p class="memo-empty" style="border:0">선생님 코드 일곱 자리를 넣어 주세요.</p>' +
-      '<label class="field"><span>선생님 코드</span><input id="t-code" inputmode="numeric" maxlength="7" autocomplete="off" placeholder="숫자 일곱 자리"></label>' +
-      '<button type="submit" class="btn day" style="width:100%">열기</button><p class="hint" id="t-msg">학생 명단이 들어 있어서 잠가 두었어요.</p></form>';
-    return;
-  }
+  if (!d) { body.innerHTML = LOCK; return; }
   const i = cpIdx(), c = CHECKS[i], dd = DAYS[c.day], mode = modeNow(c);
   tShown = i;
   const auto = tPick == null || tPick === autoCp();
-  const ct = store.get('tcontact', {});
   body.innerHTML =
     '<div class="pane" data-pane="roll">' +
     '<div class="board d' + (c.day + 1) + '" style="margin-top:2px">' +
@@ -2112,24 +2178,31 @@ function renderTeacher() {
     '</div>' +
     '<div class="sec d' + (c.day + 1) + '" style="padding-top:0" id="t-roll"></div>' +
     '</div>' +
-    '<div class="pane" data-pane="contact" hidden><div class="sec"><h3>연락처</h3><div class="calls" id="t-calls"></div>' +
-      '<div class="acts"><details><summary>연락처 적기</summary><div style="padding-top:12px" id="t-contact">' +
-        CONTACTS.map(([k, label]) => '<label class="field"><span>' + label + '</span><input data-ct="' + k + '" value="' + esc(ct[k] || '') + '" placeholder="이름 010-0000-0000" autocomplete="off"></label>').join('') +
-        '<p class="hint">적으면 위에 전화 단추가 생겨요. 이 휴대전화에만 저장돼요.</p></div></details></div></div></div>' +
     '<div class="pane" data-pane="absent" hidden><div class="sec"><h3>불참 학생</h3><p class="hint" style="margin-bottom:10px">이틀 내내 오지 않는 학생을 눌러 두면 인원에서 빠져요.</p><div class="roll absent" id="t-absent">' +
       roster().map((s) => '<button type="button" data-ab="' + esc(s.n) + '" aria-pressed="' + absentList().includes(s.n) + '">' + esc(s.n) + '</button>').join('') + '</div></div></div>' +
-    '<div class="pane" data-pane="memo" hidden><div class="sec"><h3>메모</h3><label class="field"><textarea id="t-memo" aria-label="메모" placeholder="약 먹는 학생, 멀미하는 학생, 바뀐 일정처럼 기억할 것">' + esc(store.get('tmemo', '')) + '</textarea></label><p class="hint">이 휴대전화에만 저장돼요.</p></div>' +
-    '<div class="sec"><h3>학생 화면 코드</h3><p class="tcode">' + esc(d.scode || '') + '</p><p class="hint">학생이 ‘우리 조와 방’을 열 때 넣는 코드예요.</p></div></div>';
-  showPane('teacher', subSel.teacher || 'roll');
+    '<p class="foot">체크는 이 휴대전화에만 저장돼요.</p>';
+  showPane('teacher', subSel.teacher === 'absent' ? 'absent' : 'roll');
   renderRoll();
-  renderCalls();
 }
+/* 비상 탭의 연락처, 지금 탭의 메모·코드 (선생님 앱) */
 function renderCalls() {
   const ct = store.get('tcontact', {});
-  $('#t-calls').innerHTML = CONTACTS.filter(([k]) => telOf(ct[k])).map(([k, label]) => '<a class="call" href="tel:' + telOf(ct[k]) + '"><b class="long">' + label + '</b><span><em>' + esc(ct[k]) + '</em>전화 걸기</span></a>').join('') +
-    '<a class="call" href="tel:023191318"><b class="long">숙소</b><span><em>02-319-1318</em>서울유스호스텔 프런트</span></a>' +
-    '<a class="call red" href="tel:119"><b>119</b><span>다치거나 아플 때</span></a>';
+  $('#t-calls').innerHTML = CONTACTS.filter(([k]) => telOf(ct[k])).map(([k, label]) => '<a class="call" href="tel:' + telOf(ct[k]) + '"><b class="long">' + label + '</b><span><em>' + esc(ct[k]) + '</em>전화 걸기</span></a>').join('');
 }
+function renderTeacherExtras() {
+  const ct = store.get('tcontact', {}), d = tData();
+  $('#t-contact').innerHTML = CONTACTS.map(([k, label]) => '<label class="field"><span>' + label + '</span><input data-ct="' + k + '" value="' + esc(ct[k] || '') + '" placeholder="이름 010-0000-0000" autocomplete="off"></label>').join('');
+  $('#t-memo').value = store.get('tmemo', '');
+  $('#t-scode-sec').hidden = !d;
+  $('#t-scode').textContent = d ? d.scode || '' : '';
+  renderCalls();
+}
+$('#t-contact').addEventListener('input', (e) => {
+  const t = e.target;
+  if (!t.dataset.ct) return;
+  const ct = store.get('tcontact', {}); ct[t.dataset.ct] = t.value.slice(0, 40); store.set('tcontact', ct); renderCalls();
+});
+$('#t-memo').addEventListener('input', (e) => store.set('tmemo', e.target.value.slice(0, 2000)));
 function rollStats(c, mode) {
   const ab = absentList(), list = roster().filter((s) => !ab.includes(s.n)), pres = presentOf(c);
   const groups = groupsFor(mode, list).map((g) => ({ label: g.label, names: g.names, here: g.names.filter((n) => pres.includes(n)) }));
@@ -2169,14 +2242,20 @@ function teacherText() {
   return lines.join('\n');
 }
 let resetArm = 0;
-$('#t-body').addEventListener('submit', (e) => {
+document.addEventListener('submit', (e) => {
+  const f = e.target.closest('form.t-lock');
+  if (!f) return;
   e.preventDefault();
-  const code = $('#t-code').value.replace(/\D/g, ''), msg = $('#t-msg'), btn = e.target.querySelector('button');
-  if (code.length !== 7) { msg.textContent = '숫자 일곱 자리를 넣어 주세요.'; msg.className = 'hint bad'; return; }
+  const code = $('.t-code', f).value.replace(/\D/g, ''), msg = $('.t-msg', f), btn = f.querySelector('button');
+  if (code.length !== 7) { msg.textContent = '숫자 일곱 자리를 넣어 주세요.'; msg.className = 'hint t-msg bad'; return; }
   btn.disabled = true; btn.textContent = '여는 중…';
-  unseal(code, TEACH_SEALED).then((data) => { store.set('teacher', { k: tKey, code: code, data: data }); renderTeacher(); }, () => {
+  unseal(code, TEACH_SEALED).then((data) => {
+    store.set('teacher', { k: tKey, code: code, data: data });
+    renderTeacherExtras();
+    go(curPage);
+  }, () => {
     btn.disabled = false; btn.textContent = '열기';
-    msg.textContent = '코드가 맞지 않아요. 다시 확인해 주세요.'; msg.className = 'hint bad';
+    msg.textContent = '코드가 맞지 않아요. 다시 확인해 주세요.'; msg.className = 'hint t-msg bad';
   });
 });
 $('#t-body').addEventListener('click', (e) => {
@@ -2217,18 +2296,165 @@ $('#t-body').addEventListener('click', (e) => {
     renderRoll();
   }
 });
-$('#t-body').addEventListener('input', (e) => {
-  const t = e.target;
-  if (t.dataset.ct) { const ct = store.get('tcontact', {}); ct[t.dataset.ct] = t.value.slice(0, 40); store.set('tcontact', ct); renderCalls(); }
-  if (t.id === 't-memo') store.set('tmemo', t.value.slice(0, 2000));
+
+/* ── 선생님께 자동 전달 ──
+   조 명단에서 이름을 고른 학생이 쓴 계획서와 활동지는 암호로 바꿔 서버(Firestore)에 올리고, 선생님 앱이 받아서 푼다.
+   암호 열쇠와 문서 이름은 잠긴 명단에서 만들기 때문에, 학생 코드나 선생님 코드로 명단을 연 휴대전화에서만 읽고 쓸 수 있다. */
+const FS_DOCS = 'projects/seoul-nadeuri/databases/(default)/documents';
+const FS = 'https://firestore.googleapis.com/v1/' + FS_DOCS;
+const utf8 = (t) => new TextEncoder().encode(t);
+const hex = (buf) => Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, '0')).join('');
+async function keysFor(teams) {
+  const src = JSON.stringify(teams);
+  if (syncKeys && syncKeys.src === src) return syncKeys;
+  const base = await crypto.subtle.importKey('raw', utf8(src), 'PBKDF2', false, ['deriveBits']);
+  const bits = new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: utf8('nadeuri-work-v1'), iterations: 100000, hash: 'SHA-256' }, base, 512));
+  const aes = await crypto.subtle.importKey('raw', bits.slice(0, 32), 'AES-GCM', false, ['encrypt', 'decrypt']);
+  const mac = await crypto.subtle.importKey('raw', bits.slice(32), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  syncKeys = { src: src, aes: aes, mac: mac };
+  return syncKeys;
+}
+const docId = async (k, g, name) => hex(await crypto.subtle.sign('HMAC', k.mac, utf8(g + '|' + name)));
+/* 올릴 내용: 질문과 답을 글 그대로 담아서 선생님 앱은 그대로 보여 주기만 하면 된다 */
+function workPack() {
+  const t = teamOf();
+  if (!t) return null;
+  const g = t.g, p = getPlan(), secs = [];
+  if (planDone()) {
+    secs.push({ id: 'plan', n: planDone(), of: 5, rows: [
+      ['꼭 보고 싶은 것', p.picks.map(itemOf).filter(Boolean).map((it) => it.name).join(', ')],
+      ['가장 기대되는 것과 이유', p.hope.trim()], ['관람 순서', p.order.trim()], ['알아 오고 싶은 것', p.ask.trim()], ['짝과 정한 약속', p.promise.trim()]] });
+  }
+  WORK.forEach((s) => {
+    const qs = qsOf(s, g) || [], v = ansOf(s, g);
+    const rows = qs.map((q, i) => [q[0], (v.a[i] || '').trim()]);
+    rows.push(['소감', v.feel.trim()]);
+    const n = rows.filter((r) => r[1]).length;
+    if (!n) return;
+    if (s.seen && p.picks.length) rows.unshift(['본 것', v.seen.map(itemOf).filter(Boolean).map((x) => x.name).join(', ')]);
+    secs.push({ id: s.id, n: n, of: qs.length + 1, rows: rows });
+  });
+  return { v: 1, n: getMe().name, g: g, t: t.n, secs: secs };
+}
+function syncSoon() {
+  if (TEACHER) return;
+  if (syncBusy) { syncDirty = true; return; }
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncUp, 2500);
+}
+async function syncUp() {
+  if (TEACHER || syncBusy) return;
+  const pack = workPack(), d = sealed(), last = store.get('sync', {});
+  if (!pack || !d || (!pack.secs.length && !last.h)) { showSync(); return; }
+  syncBusy = true;
+  try {
+    const body = JSON.stringify(pack), h = hex(await crypto.subtle.digest('SHA-256', utf8(body)));
+    if (h !== last.h) {
+      const k = await keysFor(d.teams), iv = crypto.getRandomValues(new Uint8Array(12));
+      const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, k.aes, utf8(JSON.stringify(Object.assign({ at: Date.now() }, pack)))));
+      let bin = '';
+      iv.forEach((b) => { bin += String.fromCharCode(b); });
+      ct.forEach((b) => { bin += String.fromCharCode(b); });
+      const res = await fetch(FS + '/work/' + await docId(k, pack.g, pack.n), { method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: { c: { stringValue: btoa(bin) }, t: { integerValue: String(Date.now()) } } }) });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      store.set('sync', { h: h, at: Date.now() });
+    }
+    syncWait = false;
+  } catch (e) {
+    syncWait = true;
+  }
+  syncBusy = false;
+  if (syncDirty) { syncDirty = false; syncSoon(); }
+  showSync();
+}
+let syncWait = false;
+function showSync() {
+  const last = store.get('sync', {}), t = teamOf();
+  const text = TEACHER ? '' : !t ? '‘지금 → 우리 조·방’에서 이름을 고르면 쓴 내용이 선생님 앱에 자동으로 보여요.'
+    : syncWait ? '아직 선생님께 전달되지 않았어요. 인터넷에 연결되면 다시 보내요.'
+    : last.at ? '쓴 내용은 선생님 앱에 자동으로 보여요. 마지막 전달 ' + kst(new Date(last.at)).hm : '쓴 내용은 선생님 앱에 자동으로 보여요.';
+  document.querySelectorAll('[data-sync]').forEach((el) => { el.textContent = text; });
+}
+window.addEventListener('online', syncSoon);
+
+/* ── 선생님 앱: 학생 활동지 ── */
+let twGrade = 0, twBusy = false, twErr = false;
+const TW_TABS = [['plan', '계획서', 2, '박물관 견학 계획서']].concat(WORK.map((s) => [s.id, s.tab, s.day, s.title]));
+async function loadTWork() {
+  const d = tData();
+  if (!d || twBusy) return;
+  twBusy = true; renderTWork();
+  try {
+    const list = roster(), k = await keysFor(d.teams), out = {};
+    const ids = await Promise.all(list.map((st) => docId(k, st.g, st.n)));
+    for (let i = 0; i < ids.length; i += 100) {
+      const res = await fetch(FS + ':batchGet', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ documents: ids.slice(i, i + 100).map((id) => FS_DOCS + '/work/' + id) }) });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      for (const r of await res.json()) {
+        if (!r.found || !r.found.fields || !r.found.fields.c) continue;
+        const who = list[ids.indexOf(r.found.name.split('/').pop())];
+        if (!who) continue;
+        try {
+          const raw = Uint8Array.from(atob(r.found.fields.c.stringValue), (c) => c.charCodeAt(0));
+          const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: raw.slice(0, 12) }, k.aes, raw.slice(12));
+          out[who.g + '|' + who.n] = JSON.parse(new TextDecoder().decode(plain));
+        } catch (err) { /* 풀리지 않는 것은 건너뛴다 */ }
+      }
+    }
+    store.set('twork', { at: Date.now(), data: out });
+    twErr = false;
+  } catch (e) {
+    twErr = true;
+  }
+  twBusy = false;
+  renderTWork();
+}
+function renderTWork() {
+  const body = $('#tw-body'), d = tData(), sub = $('#tw-sub');
+  sub.hidden = !d;
+  if (!d) { body.innerHTML = LOCK; return; }
+  const open = WORK.filter(isOpen);
+  const sel = TW_TABS.some((t) => t[0] === subSel.twork) ? subSel.twork : (open.length ? open[open.length - 1].id : 'plan');
+  subSel.twork = sel;
+  sub.innerHTML = TW_TABS.map((t) => '<button type="button" class="' + dayCls(t[2]) + '" data-pane="' + t[0] + '" aria-pressed="' + (t[0] === sel) + '">' + esc(t[1]) + '</button>').join('');
+  const tab = TW_TABS.find((t) => t[0] === sel), cache = store.get('twork', { at: 0, data: {} });
+  const list = roster().filter((st) => !twGrade || st.g === twGrade);
+  const got = [], none = [];
+  list.forEach((st) => {
+    const rec = cache.data[st.g + '|' + st.n], sec = rec && (rec.secs || []).find((x) => x.id === sel);
+    if (sec) got.push([st, sec, rec.at]); else none.push(st.n);
+  });
+  body.innerHTML = '<div class="sec ' + dayCls(tab[2]) + '">' +
+    '<h3>' + esc(tab[3]) + '</h3>' +
+    '<div class="seg three" id="tw-grade" role="group" aria-label="학년">' + [[0, '전체'], [1, '1학년'], [2, '2학년']].map(([g, l]) => '<button type="button" data-twg="' + g + '" aria-pressed="' + (g === twGrade) + '">' + l + '</button>').join('') + '</div>' +
+    '<p class="tcount"><b>' + got.length + '</b>/ ' + list.length + '명 썼어요</p>' +
+    (none.length ? '<p class="tmiss">아직 ' + none.length + '명: ' + none.map(esc).join(', ') + '</p>' : '<p class="tmiss ok">모두 썼어요.</p>') +
+    '<p class="tnote">' + (twBusy ? '받아 오는 중…' : twErr ? '받아 오지 못했어요. 인터넷을 확인해 주세요.' + (cache.at ? ' (' + kst(new Date(cache.at)).hm + '에 받은 내용)' : '') : cache.at ? kst(new Date(cache.at)).hm + '에 받아 왔어요.' : '') + '</p>' +
+    '<div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn" id="tw-load"' + (twBusy ? ' disabled' : '') + '>새로 받아 오기</button></div>' +
+    '</div>' +
+    '<div class="sec ' + dayCls(tab[2]) + '" style="padding-top:0">' + got.map(([st, sec, when]) =>
+      '<div class="rgroup"><div class="rhead"><h4>' + st.g + '학년 ' + st.t + '조 ' + esc(st.n) + '</h4><span class="rcount' + (sec.n >= sec.of ? ' full' : '') + '">' + sec.n + '/' + sec.of + '칸</span></div>' +
+      '<dl class="ans">' + sec.rows.map((r) => '<dt>' + esc(r[0]) + '</dt><dd' + (r[1] ? '' : ' class="none"') + '>' + esc(r[1] || '아직 안 썼어요') + '</dd>').join('') + '</dl></div>').join('') +
+    '</div>' +
+    '<p class="foot">조 명단에서 자기 이름을 고른 학생이 쓴 내용만 여기에 와요.</p>';
+}
+$('#tw-body').addEventListener('click', (e) => {
+  const g = e.target.closest('button[data-twg]');
+  if (g) { twGrade = +g.dataset.twg; renderTWork(); return; }
+  if (e.target.closest('#tw-load')) loadTWork();
 });
 
 /* ── 화면 전환 ── */
-const PAGES = ['now', 'plan', 'rules', 'pack', 'work', 'museum', 'sos', 'teacher'];
+const PAGES = ['now', 'plan', 'rules', 'pack', 'work', 'museum', 'sos', 'teacher', 'twork'];
+const MY_PAGES = TEACHER ? ['now', 'plan', 'teacher', 'twork', 'sos'] : ['now', 'plan', 'rules', 'pack', 'work', 'museum', 'sos'];
 /* 아래 메뉴로 들어오면 그 화면의 첫 항목부터 보여 준다 (박물관은 쓰던 자리를 그대로 둔다) */
 const SUB_HOME = { now: 'now', pack: 'bring', sos: 'call', teacher: 'roll' };
 function go(id, push) {
-  if (!PAGES.includes(id)) id = 'now';
+  /* 예전 주소(#teacher)로 들어오면 선생님 앱으로 보낸다 */
+  if (!TEACHER && (id === 'teacher' || id === 'twork')) { location.replace('/teacher/'); return; }
+  if (!MY_PAGES.includes(id)) id = TEACHER && !tData() ? 'teacher' : 'now';
   PAGES.forEach((p) => { document.getElementById(p).hidden = p !== id; });
   curPage = id;
   if (SUB_HOME[id]) showPane(id, SUB_HOME[id]);
@@ -2237,14 +2463,15 @@ function go(id, push) {
   if (id === 'museum') renderMuseum();
   if (id === 'now') renderNight();
   if (id === 'teacher') { tPick = null; tMode = null; renderTeacher(); }
+  if (id === 'twork') { renderTWork(); loadTWork(); }
   markTab(id);
   if (push !== false && location.hash !== '#' + id) {
     try { history.replaceState(null, '', location.pathname + location.search + '#' + id); } catch (e) { /* 미리 보기 창에서는 주소를 못 바꿔도 된다 */ }
   }
   window.scrollTo(0, 0);
 }
-document.querySelector('.tabs').addEventListener('click', (e) => {
-  const a = e.target.closest('a');
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('.tabs a');
   if (!a) return;
   e.preventDefault();
   go(a.getAttribute('href').slice(1));
@@ -2293,15 +2520,18 @@ function tick() {
   /* 새 칸이 열리면 활동지를 다시 그린다 (쓰는 중이면 다 쓴 뒤에) */
   const wk = myGrade() + '/' + WORK.map((s) => (isOpen(s) ? 1 : 0)).join('');
   if (curPage === 'teacher' && tPick == null && autoCp() !== tShown && !$('#t-body').contains(document.activeElement)) renderTeacher();
+  if (curPage === 'twork' && !twBusy && Date.now() - (store.get('twork', { at: 0 }).at || 0) > 60000 && navigator.onLine !== false) loadTWork();
   if (curPage === 'work' && wk !== workKey && !$('#work-list').contains(document.activeElement)) renderWork();
 }
 $('#foot-now').textContent = '안내 기준일 ' + UPDATED;
+$('#foot-t').textContent = '안내 기준일 ' + UPDATED;
 $('#foot-sos').textContent = '안내 기준일 ' + UPDATED;
 if (offset) {
   const p = $('#preview'), k = kst(now());
   p.innerHTML = '<span>미리 보기: ' + k.m + '월 ' + k.d + '일 ' + k.hm + ' 기준</span><a href="' + esc(location.pathname) + '">끄기</a>';
   p.hidden = false;
 }
+renderTeacherExtras();
 renderRules();
 renderPack();
 renderMemo();
@@ -2321,18 +2551,21 @@ renderTeam();
   if (!old || old.k === tKey || !old.code) return;
   unseal(old.code, TEACH_SEALED).then((data) => {
     store.set('teacher', { k: tKey, code: old.code, data: data });
-    if (curPage === 'teacher') renderTeacher();
+    renderTeacherExtras();
+    if (curPage === 'teacher' || curPage === 'twork') go(curPage);
   }, () => {});
 })();
 setTabs();
+showSync();
+syncSoon();
 go(location.hash.slice(1), false);
 tick();
 setInterval(tick, 20000);
-document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { tick(); syncSoon(); } });
 
 try {
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
     navigator.serviceWorker.addEventListener('message', (e) => {
       if (e.data && e.data.type === 'updated') $('#toast').hidden = false;
     });

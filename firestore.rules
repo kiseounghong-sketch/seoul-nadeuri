@@ -1,0 +1,16 @@
+rules_version = '2';
+// 학생이 쓴 계획서·활동지를 선생님 앱으로 전달하는 곳.
+// 내용(c)은 앱에서 암호로 바꿔 올리고, 문서 이름은 잠긴 명단에서 만든 64자리라 명단을 연 휴대전화만 찾을 수 있다.
+// 목록 보기와 지우기는 누구에게도 열지 않는다.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /work/{id} {
+      allow get: if true;
+      allow create, update: if id.matches('^[0-9a-f]{64}$')
+        && request.resource.data.keys().hasOnly(['c', 't'])
+        && request.resource.data.c is string
+        && request.resource.data.c.size() < 120000
+        && request.resource.data.t is int;
+    }
+  }
+}
