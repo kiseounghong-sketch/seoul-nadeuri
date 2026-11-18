@@ -601,6 +601,9 @@ button { font: inherit; color: inherit; }
 .seg button:disabled { opacity: .4; cursor: not-allowed; }
 .seg.menu { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .seg.menu button { min-height: 42px; padding: 0 2px; font-size: 13.5px; line-height: 1.2; }
+.lunch-fixed { display: flex; align-items: center; gap: 8px; padding: 6px 0 2px; border-top: 2px solid var(--ink); font-size: 14px; font-weight: 700; }
+.lunch-fixed b { font: 400 20px/1.2 var(--display); color: var(--day-ink); }
+.lunch-fixed .badge { background: var(--day); color: var(--on-day); }
 #lunch h2 small { margin-left: 6px; font-size: 12.5px; font-weight: 700; color: var(--ink2); }
 .seg .hot { display: block; margin: 2px 0 0; font-size: 12px; color: var(--red-ink); opacity: 1; }
 .seg button[aria-pressed="true"] .hot { color: inherit; }
@@ -1419,7 +1422,7 @@ function renderBoard() {
   let key, html;
   if (st.mode === 'pre') {
     const pn = planDone();
-    const lp = menuOf(getLunch().pick);
+    const lp = myMenu();
     key = 'pre' + st.days + '/' + pn + '/' + (lp ? lp.id : '');
     html = '<p class="board-label">' + DAYS[0].short + '</p>' +
       '<ul class="meet" style="margin-top:6px">' +
@@ -1439,7 +1442,7 @@ function renderBoard() {
     const c = st.cur, x = st.next, d = DAYS[c.day];
     const wn = workNext();
     const rm = (c.here === 'hostel' || (c.rules || []).includes('hostel')) ? roomOf() : null;
-    const lunchSoon = c.day === LUNCH_STOP.day && c.idx <= LUNCH_STOP.idx, lp = menuOf(getLunch().pick);
+    const lunchSoon = c.day === LUNCH_STOP.day && c.idx <= LUNCH_STOP.idx, lp = myMenu();
     key = c.id + '/' + (wn ? wn.id : '') + '/' + (rm && rm.room ? rm.room : '') + '/' + (ruleOf(c) === 'museum' ? meetPlace() : '') + '/' + (lp ? lp.id : '');
     const links = TEACHER ? '<a class="board-link" href="#teacher">인원 체크</a>' + (lunchSoon ? '<a class="board-link here" href="#twork" data-tw="lunch">점심 메뉴 보기</a>' : '<a class="board-link here" href="#twork">학생 활동지 보기</a>')
       : (ruleOf(c) ? '<a class="board-link here" href="#rules" data-rule="' + ruleOf(c) + '">여기서 지킬 것 보기</a>' : '') +
@@ -1694,7 +1697,7 @@ function whoLine() {
 }
 
 /* ── 학번 로그인과 우리 조: 명단은 암호로 잠가 두고, 선생님이 알려 준 코드를 넣은 휴대전화에서만 푼다 ── */
-const TEAMS_SEALED = {"it": 300000, "salt": "NbKOF8Gp1uy/rRw2/9VJWQ==", "iv": "kPQ3u24+Ca/GEpG4", "ct": "4MjpO79XdBmFIp726q6+p4SS0yJ2gb2+m0H9hBo17Szc4yFx/XV0XRCrQ1clyZzIjhfySguTcOLEvAUdb/Gzyy2tyK384ml3U5AdNKO8s8hl6Jhl7Z2xvicN1Wed6c16mpJcboxYNq73YljtAPURsAQMQRjlOm0JsDsq+W2q9TVNMTdWbg4xv4QgaqxEPTcYo5cWwTZra5MI/xbLxWsSl91R6ybhGrXcG/X1eIrxXZCj/z0OmYVT4Bi9yE8lV0Sq8p3o9+HJva3SD64YRFSuk4wvzylJ6yFhn+WeWz3dBwgmzJRZbJ4Q/v0dI5C/dDsCNojFLB6XSPbGQ/6XKZNi7TmxiYFsHH3Q+5axVANY1P1s0Gq0rY5OZn8mO4fCgsdI9c/mfVYW58Oj5PgyiwbkaUJ5/RiTDI6IwDd6JmnQLt4BaQhSE5thXlXkSL+qFORV5mwOgh464K5qhRrs3is5qs5caY0IT4TFPlU6uwRlNmKMcZqWF1FayITaTREp2rwtiy66coirTzXmF0ihNLVK6+rR4AeoVkElkpJDe5G7uLkFYUZCYCp7jCfZSFAWL06EUXWTu84zl0AnE0KH25C7cvvcbKxxg50u6vDhtd8hOl1HPyrbXbYKF1QYtgu2VMsNLSGxjt34C6UcJ2y/ZxWYWXI/xfNZyJENYFLkabu1L+X78MB3ZXdkpEX8KjQcSkRUFmvZxKDvx0K9Mho+QopHuBuNM6xHBU81lq2mIbkHRD/br7giAT4S76HcWqJRypyUNThUgFkSJ+1HqjBzlkeAzOAtW2vKNr1FN8ErqefEUQQkGbmALNbtjr5Piv2SgVTUiGNNrMWHtRylOMheOerfNfV5U73bafB6QmtNCkEjeTYFZvIKUe4U0bESCVVT7QkoTMCa9GAgAOZLulBhNtRcimT2GpAketA7QqdRKHh4OLdviIYDgozM0RC8avfUDq8ckVeJ/u7NnJNfxapmPA7r5V5G6f5numnJLfBYC7jr/iRrTmy0hj25DW+hZvwOiyWPI65FR4JKOSHpzAAAiX8jXMAL6VOYuCKUQtqvKX3vVTLxncs1q9NUiqxmCxdnOZxTMEztXRNugKjqiVJWHKAfTaK/pbjIW212jKrmlvux7yMOkvunizmK6VbkBolr+v29IeufdejK9V/2wvmEJAB6e6hCSoW5kF8G+NYmiQj7sTqsEuSkjOe1zfTRNrXqANEWJqkxckK4jBDKCQyoP/KIEVGwa/JGs6GlhUpPsRFRi7XY2KmSRkl2BmgWu1xcoT1Qld6uwSMGRzeZlOk/9XpSw8VG292UQNrNYBNhIlZHBE+pUoKdb3zl94F2RbsBkjf4IoMMfBMPgN4ZKUNtwPrR00e+j6enPIg/IMu/akPhO+tCpmEdqHAdHGQ6yos="};
+const TEAMS_SEALED = {"it": 300000, "salt": "JXc2/zhx5wfG0Zva1SHg8A==", "iv": "g251yax94jQaqCkg", "ct": "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"};
 async function unseal(code, box) {
   box = box || TEAMS_SEALED;
   const b = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
@@ -1853,11 +1856,23 @@ const menuOf = (id) => LUNCH.menu.find((m) => m.id === id);
 const lunchLocked = () => now() >= kt(LUNCH.until);
 const LUNCH_STOP = ALL.find((x) => DAYS[x.day].date === LUNCH.until.slice(0, 10) && x.t === LUNCH.until.slice(11));
 let lunchShown = '';
+/* 선생님이 모아서 확정한 메뉴(잠긴 명단의 lunch). 있으면 학생은 고르지 않고 이것을 본다 */
+const lunchFixed = (d, g, name) => (d && d.lunch && d.lunch[g] && d.lunch[g][name]) || '';
+function myMenu() {
+  const me = who();
+  return menuOf((me && lunchFixed(sealed(), me.g, me.name)) || getLunch().pick);
+}
 function renderLunch() {
   const el = $('#lunch'), l = getLunch(), t = who(), u = kst(kt(LUNCH.until));
-  lunchShown = lunchLocked() + '/' + !!t;
+  const fixed = t ? menuOf(lunchFixed(sealed(), t.g, t.name)) : null;
+  lunchShown = lunchLocked() + '/' + !!t + '/' + (fixed ? fixed.id : '');
   el.hidden = TEACHER || !t || lunchLocked();
   if (el.hidden) { el.innerHTML = ''; return; }
+  if (fixed) {
+    el.innerHTML = '<h2>' + esc(LUNCH.title) + '<small>' + esc(LUNCH.place) + '</small></h2>' +
+      '<p class="lunch-fixed">내 메뉴 <b>' + esc(fixed.name) + '</b><span class="badge">확정</span></p>';
+    return;
+  }
   el.innerHTML = '<h2>' + esc(LUNCH.title) + '<small>' + esc(LUNCH.place) + '</small></h2>' +
     '<div class="seg" role="group" aria-label="매운 음식">' +
     [[1, '매운 거 먹어요'], [0, '매운 거 못 먹어요']].map(([v, label]) => '<button type="button" data-hot="' + v + '" aria-pressed="' + (l.hot === v) + '">' + label + '</button>').join('') + '</div>' +
@@ -2107,7 +2122,7 @@ function markTab(id) {
 }
 
 /* ── 선생님 화면: 인원 확인 ── */
-const TEACH_SEALED = {"it": 300000, "salt": "k7mInGRnP7s2VzhzssDMFQ==", "iv": "ctJNyNFKC3Nbf/Me", "ct": "NeEsT6qqb3uHC6IlsAihnhKkkMw5waOZ9JJs9aMxccx/XPqc9CT7O80dFKnyzKuR3PuyewHXPyZT2hbBl8KsdAryXgqaTABuBNvA4JY3aziOClHCVVzzpKSKN/Jxs7ZUhEEbHH/agj22oDgG+pm5G+yHS/NZ38oEP5kgjAeJ6woJl0mR0WQpB+BiQydlEQgn2a/rjuCJFPmlzicYEOCpEfBHZce7odZG4MmRdWcSPgiYyn9/ZNzLm5cSYwavE7vzH8c5gie3gK5Zo002x0TLIYe9PaUwEFF+KB8djgpOefUH0JAlgnKg+nAaoJ2nFbOJWBQ5ppDagyl17YqxkIqPiH5KcIeMd+t6zP2B32D7+ghxZj9qZS6M5RzrZ5y8f8yXwYerVPjspN1V/Z1mWfo5LgCcjhnMJMK64nrpXyTPhoto8QTVw/HE73+TCnzaLdd9AUvA7GmemNYKR21ebGqFQK614f0ZvWRxcrHEjV9lzihirM6xWD5jjTHDA+ehjBLd1EesumC95MqYDgsZdkZWCjZCrCfRBxCxnG0gFqBmJWFe+s8xPhQKqy4ZBIfqICHXwlzvN6SZLZfuF3l0tX9sNH7q1oWRL6m583z7tqCfSo5+fyrDbe7urH7wQyVhZhgLzdPAifrSEi4mvl/01Gx4d/EiJXIA8xO8y01Ke9axo2cwMvxH2fmYoXsg/gKwG5j9mNAkK96TJybBkLx6geliSvgcQlA/RfOTZ9srDiq4kNzLxneIsfUfVXo/8mhwh8Tby0MVp3OY+5UDvx2lFsUWg99OnY7TDLEM86/+FcJHdgCXWixQYSt5H9SVopFMXdqczINF3kvuEnvwzfIoAWjxrWylfvqaT8Z7Hqxe+2QkHV8iqYfWDz2OyzakB44CidaNRVQLP92YSIxu0BTxhpd1EoN3mCUfjOmoQUAA4U/A4b1ERoemgnt8YnG6wRheJNXLVGgTtuElzp6ZdVuuUoxaJacFUzWya5lTEzZ2a45u8R00BuB6/Tvj8hoz2ZK0PV02IEz+fssSQ3GPL8aS8Dy0EUVNTvM0ejlX9bm25l+RR/GoeTzIhbNY0uxv+7tnkl/P7fU9Q9fW0UO6+CWTYm3ITTCTbZYl/swaOlRNxbX4My5v1428D7X6WPsgxYKhol14brLBWiEPo7QI+rMyc7E6eiOtv06M0ue3iZAs7PL4cViHNoytFtVt7W7yVJ7D0OYCXUpjG2z7lVXbnIiSQJxzanDgdb6aHRhqpKxh6MUgVab4TrJ14mDJt3zvfyWicPoeILSFSuq2f+nUwiB5HpXKzyEfrpQeiwwP2axWhME1Cr55YaWEqzib4wFpYOcB0B7A+3xVlDcMTAKIeZjKUpBDoGIOTM6/PR6Mrm3SsUQPdAdmrQ3Rw9juFrlC7iJjAAUXq3vgHi0fYh7xqC/YnA=="};
+const TEACH_SEALED = {"it": 300000, "salt": "RC0i2ania03Rt412MDympw==", "iv": "scMsIOTSLp5D48Vm", "ct": "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"};
 const tKey = TEACH_SEALED.salt.slice(0, 8);
 const tData = () => { const t = store.get('teacher', null); return t && t.k === tKey && t.data ? t.data : null; };
 CHECKS.forEach((c, i) => {
@@ -2481,7 +2496,7 @@ function lunchStats(list, cache) {
   const ab = absentList(), live = list.filter((st) => !ab.includes(st.n));
   const by = LUNCH.menu.map((m) => ({ m: m, names: [] })), none = [], mild = [];
   live.forEach((st) => {
-    const rec = cache.data[st.g + '|' + st.n], l = rec && rec.lunch, b = l && by.find((x) => x.m.id === l.m);
+    const rec = cache.data[st.g + '|' + st.n], l = rec && rec.lunch, mid = lunchFixed(tData(), st.g, st.n) || (l && l.m), b = mid && by.find((x) => x.m.id === mid);
     if (b) b.names.push(st.n); else none.push(st.n);
     if (l && l.hot === 0) mild.push(st.n);
   });
@@ -2597,7 +2612,7 @@ function tick() {
   /* 새 칸이 열리면 활동지를 다시 그린다 (쓰는 중이면 다 쓴 뒤에) */
   const wk = myGrade() + '/' + WORK.map((s) => (isOpen(s) ? 1 : 0)).join('');
   if (curPage === 'teacher' && tPick == null && autoCp() !== tShown && !$('#t-body').contains(document.activeElement)) renderTeacher();
-  if (!TEACHER && lunchShown !== lunchLocked() + '/' + !!who() && !$('#lunch').contains(document.activeElement)) renderLunch();
+  if (!TEACHER && lunchShown.split('/').slice(0, 2).join('/') !== lunchLocked() + '/' + !!who() && !$('#lunch').contains(document.activeElement)) renderLunch();
   if (curPage === 'work' && wk !== workKey && !$('#work-list').contains(document.activeElement)) renderWork();
 }
 $('#foot-now').textContent = '안내 기준일 ' + UPDATED;

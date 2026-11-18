@@ -6,6 +6,7 @@
 roster.json 모양: {"teams": {"1": [["이름", ...], ...], "2": [...]}, "rooms": [{"room": "503", "names": ["이름", ...]}],
                 "nums": {"1": {"1": "이름", ...}, "2": {...}}, "wk": "..."}
   - nums: 학년 → 번호 → 이름. 학생은 학번(학년+번호)으로 로그인한다. 불참 학생은 teams와 nums에서 뺀다.
+  - lunch: 학년 → 이름 → 확정된 점심 메뉴 id(LUNCH.menu의 id). 있으면 학생은 고르지 않고 확정 메뉴를 본다.
   - wk: 활동지 암호 열쇠 재료. 없으면 새로 만든다. 한 번 정해지면 바꾸지 않는다(바꾸면 서버에 올라간 내용을 못 읽는다).
 필요한 것: pip install cryptography
 """
@@ -43,7 +44,7 @@ elif sys.argv[1] == 'close':
     scode, tcode = sys.argv[3], sys.argv[4]
     if not roster.get('wk'):
         roster['wk'] = base64.b64encode(os.urandom(24)).decode()
-    student = {'teams': roster['teams'], 'rooms': roster.get('rooms', []), 'nums': roster.get('nums', {}), 'wk': roster['wk']}
+    student = {'teams': roster['teams'], 'rooms': roster.get('rooms', []), 'nums': roster.get('nums', {}), 'lunch': roster.get('lunch', {}), 'wk': roster['wk']}
     teacher = dict(student, scode=scode)
     for name, obj, code in (('TEAMS_SEALED', student, scode), ('TEACH_SEALED', teacher, tcode)):
         html, n = re.subn(PAT[name], lambda m: 'const %s = %s;' % (name, seal(obj, code)), html, count=1)
