@@ -90,6 +90,10 @@ body[data-day="2"], .d2 {
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+/* 로그인 전: 아래 메뉴를 숨기고 로그인 화면만 */
+html.gate .tabs { display: none; }
+html.gate .app { padding-bottom: 0; }
+.t-door { display: block; margin: 48px auto 16px; padding: 6px 10px; border: 0; background: none; color: var(--ink2); font-size: 11px; opacity: .35; cursor: pointer; }
 /* s-only: 학생 앱에서만, t-only: 선생님 앱에서만 */
 html[data-app="teacher"] .s-only, html:not([data-app="teacher"]) .t-only { display: none !important; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -860,12 +864,13 @@ button { font: inherit; color: inherit; }
       </div>
     </section>
 
-    <!-- 학번으로 시작하기: 로그인하지 않은 학생은 지금·활동지·박물관 대신 이 화면을 본다 -->
+    <!-- 첫 화면: 로그인하지 않으면 아래 메뉴 없이 이 화면만 보인다. 맨 아래 흐린 '교사'로 선생님 코드를 넣으면 선생님 앱으로 간다 -->
     <section class="page s-only" id="login" aria-label="학번으로 시작하기" hidden>
       <div class="page-head">
         <h2 class="page-title">학번으로 시작하기</h2>
       </div>
       <div class="sec" id="login-box"></div>
+      <button type="button" class="t-door" id="t-door">교사</button>
     </section>
 
     <!-- 일정 -->
@@ -1771,9 +1776,17 @@ function renderTeam() {
 }
 
 /* 로그인 화면: 코드(처음 한 번) + 학번 → 이름 확인 → 들어가기 */
-let loginPick = null;
+let loginPick = null, loginTeacher = false;
 function renderLogin() {
   const box = $('#login-box'), d = sealed(), needCode = !d || !d.nums;
+  $('#login .page-title').textContent = loginTeacher ? '선생님 로그인' : '학번으로 시작하기';
+  $('#t-door').textContent = loginTeacher ? '학생' : '교사';
+  if (loginTeacher) {
+    box.innerHTML = '<form class="team-lock" id="login-form" style="border:0" autocomplete="off">' +
+      '<label class="field" style="margin-top:0"><span>선생님 코드</span><input id="login-tcode" inputmode="numeric" maxlength="7" placeholder="숫자 일곱 자리"></label>' +
+      '<button type="submit" class="btn day" style="width:100%">열기</button><p class="hint" id="login-msg"></p></form>';
+    return;
+  }
   if (loginPick) {
     box.innerHTML = '<div class="team-card"><p class="team-label" style="color:inherit">' + shownNo(loginPick) + '</p><p class="team-no">' + esc(loginPick.name) + '</p></div>' +
       '<p class="lunch-q">내 이름이 맞아요?</p>' +
@@ -1781,7 +1794,7 @@ function renderLogin() {
     return;
   }
   box.innerHTML = '<form class="team-lock" id="login-form" style="border:0" autocomplete="off">' +
-    (needCode ? '<label class="field" style="margin-top:0"><span>선생님이 알려 준 코드</span><input id="login-code" inputmode="numeric" maxlength="6" placeholder="숫자 여섯 자리"></label>' : '') +
+    (needCode ? '<label class="field" style="margin-top:0"><span>선생님이 알려 준 코드</span><input id="login-code" inputmode="numeric" maxlength="7" placeholder="숫자 여섯 자리"></label>' : '') +
     '<label class="field"' + (needCode ? '' : ' style="margin-top:0"') + '><span>학번</span><input id="login-no-in" inputmode="numeric" maxlength="4" placeholder="예: 2101"></label>' +
     '<button type="submit" class="btn day" style="width:100%">다음</button><p class="hint" id="login-msg"></p></form>';
 }
@@ -1789,6 +1802,20 @@ $('#login-box').addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = e.target.querySelector('button'), codeIn = $('#login-code');
   const bad = (t) => { const msg = $('#login-msg'); msg.textContent = t; msg.className = 'hint bad'; };
+  /* 선생님 코드(일곱 자리)면 선생님 앱을 열어 준다 */
+  const tIn = $('#login-tcode'), tCode = (tIn ? tIn.value : codeIn ? codeIn.value : '').replace(/\D/g, '');
+  if (tIn || tCode.length === 7) {
+    if (tCode.length !== 7) return bad('숫자 일곱 자리를 넣어 주세요.');
+    btn.disabled = true; btn.textContent = '여는 중…';
+    try {
+      store.set('teacher', { k: tKey, code: tCode, data: await unseal(tCode, TEACH_SEALED) });
+      location.href = '/teacher/' + location.search;
+    } catch (err) {
+      btn.disabled = false; btn.textContent = tIn ? '열기' : '다음';
+      bad('코드가 맞지 않아요. 다시 확인해 주세요.');
+    }
+    return;
+  }
   const raw = $('#login-no-in').value, no = parseNo(raw);
   if (codeIn && codeIn.value.replace(/\D/g, '').length !== 6) return bad('코드 숫자 여섯 자리를 넣어 주세요.');
   if (!no) return bad('학번 네 자리를 넣어 주세요. 예: 2101');
@@ -1807,6 +1834,7 @@ $('#login-box').addEventListener('submit', async (e) => {
   loginPick = s;
   renderLogin();
 });
+$('#t-door').addEventListener('click', () => { loginTeacher = !loginTeacher; loginPick = null; renderLogin(); });
 $('#login-box').addEventListener('click', (e) => {
   if (e.target.closest('#login-no')) { loginPick = null; renderLogin(); return; }
   if (!e.target.closest('#login-yes')) return;
@@ -2537,15 +2565,15 @@ $('#tw-body').addEventListener('click', (e) => {
 /* ── 화면 전환 ── */
 const PAGES = ['now', 'login', 'plan', 'rules', 'work', 'museum', 'sos', 'teacher', 'twork'];
 const MY_PAGES = TEACHER ? ['now', 'plan', 'teacher', 'twork', 'sos'] : ['now', 'login', 'plan', 'rules', 'work', 'museum', 'sos'];
-const NEED_LOGIN = ['now', 'work', 'museum'];
 /* 아래 메뉴로 들어오면 그 화면의 첫 항목부터 보여 준다 (박물관은 쓰던 자리를 그대로 둔다) */
 const SUB_HOME = { now: 'now', sos: 'call', teacher: 'roll' };
 function go(id, push) {
   /* 예전 주소(#teacher)로 들어오면 선생님 앱으로 보낸다 */
   if (!TEACHER && (id === 'teacher' || id === 'twork')) { location.replace('/teacher/'); return; }
   if (!MY_PAGES.includes(id)) id = TEACHER && !tData() ? 'teacher' : 'now';
-  if (!TEACHER && NEED_LOGIN.includes(id) && !who()) id = 'login';
+  if (!TEACHER && !who()) id = 'login';
   if (!TEACHER && id === 'login' && who()) id = 'now';
+  document.documentElement.classList.toggle('gate', id === 'login');
   if (id === 'login') renderLogin();
   PAGES.forEach((p) => { document.getElementById(p).hidden = p !== id; });
   curPage = id;
