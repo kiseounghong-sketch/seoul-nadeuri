@@ -853,9 +853,6 @@ button { font: inherit; color: inherit; }
         <div id="memo-view"></div>
         <form class="memo-form" id="memo-form" hidden autocomplete="off">
           <label class="field"><span>담임 선생님 전화번호</span><input name="teacher" inputmode="tel" placeholder="010-0000-0000"></label>
-          <label class="field"><span>내 짝</span><input name="buddy" placeholder="이름"></label>
-          <label class="field"><span>숙소 방 번호</span><input name="room" inputmode="numeric" placeholder="입실할 때 적어요"></label>
-          <label class="field"><span>같은 방 친구</span><input name="mates" placeholder="이름"></label>
           <label class="field"><span>버스 자리</span><input name="seat" placeholder="예: 왼쪽 4번째 줄"></label>
           <label class="field"><span>박물관 집결 장소</span><input name="meet" placeholder="당일 선생님이 알려 줘요"></label>
           <div class="btn-row" style="grid-template-columns:1fr"><button type="submit" class="btn day">다 적었어요</button></div>
@@ -1228,8 +1225,7 @@ const LUNCH = { title: '11월 19일 점심', place: 'LG아트센터 식당 ‘�
 ] };
 
 const MEMO = [
-  ['teacher', '담임 선생님'], ['buddy', '내 짝'], ['room', '숙소 방'],
-  ['mates', '같은 방 친구'], ['seat', '버스 자리'], ['meet', '박물관 집결 장소']
+  ['teacher', '담임 선생님'], ['seat', '버스 자리'], ['meet', '박물관 집결 장소']
 ];
 
 /* 박물관에서 볼 것 (견학 계획서에서 고르는 목록) */
@@ -1561,12 +1557,20 @@ function ruleAuto() {
 
 /* ── 내 메모 ── */
 const form = $('#memo-form');
-function memo() { return store.get('memo', {}); }
+function memo() {
+  const m = store.get('memo', {});
+  ['buddy', 'room', 'mates'].forEach((k) => delete m[k]);
+  return m;
+}
 function telOf(v) { const t = String(v || '').replace(/[^0-9+]/g, ''); return t.length >= 7 ? t : ''; }
 function renderMemo() {
   const m = memo();
   if (MEET) { m.meet = MEET; form.elements.meet.closest('label').hidden = true; }
-  const rows = MEMO.filter(([k]) => k !== 'teacher' && m[k]).map(([k, label]) => '<div><dt>' + label + '</dt><dd>' + esc(m[k]) + '</dd></div>').join('');
+  /* 조와 방은 잠긴 명단에서만 가져온다(학생이 고칠 수 없음) */
+  const t = teamOf(), r = roomOf(), row = (label, v) => '<div><dt>' + label + '</dt><dd>' + esc(v) + '</dd></div>';
+  const rows = (t ? row('우리 조', t.n + '조' + (t.others.length ? ' (' + t.others.join(', ') + ')' : '')) : '') +
+    (r && r.room ? row('숙소 방', r.room + (r.others.length ? ' (' + r.others.join(', ') + ')' : '')) : '') +
+    MEMO.filter(([k]) => k !== 'teacher' && m[k]).map(([k, label]) => row(label, m[k])).join('');
   const filled = MEMO.some(([k]) => memo()[k]);
   $('#memo-view').innerHTML = rows ? '<dl class="memo-view">' + rows + '</dl>'
     : '<p class="memo-empty">' + (filled ? '선생님 번호 저장됨' : '아직 적은 것이 없어요') + '</p>';
@@ -1743,15 +1747,6 @@ function roomOf() {
   const r = d.rooms.find((x) => x.names.includes(me.name));
   return r ? { room: roomName(r.room), names: r.names, others: r.names.filter((x) => x !== me.name) } : { room: '' };
 }
-/* 이름을 고른 뒤 조원과 방 정보를 '내 메모'의 빈칸에 채워 둔다 */
-function fillMemo() {
-  const t = teamOf(), r = roomOf(), m = memo();
-  let changed = false;
-  if (t && t.others.length && !m.buddy) { m.buddy = t.others.join(', '); changed = true; }
-  if (r && r.room && !m.room) { m.room = r.room; changed = true; }
-  if (r && r.room && r.others.length && !m.mates) { m.mates = r.others.join(', '); changed = true; }
-  if (changed) { store.set('memo', m); renderMemo(); }
-}
 function teamOf() {
   const list = getTeams(), me = who();
   if (!list || !me) return null;
@@ -1772,7 +1767,7 @@ function renderTeam() {
     (!r ? ''
       : !r.room ? '<p class="room-wait">방 배정 명단에서 내 이름을 찾지 못했어요. 담임 선생님께 확인해요.</p>'
       : '<div class="team-card room"><p class="team-label">서울유스호스텔</p><p class="team-no">' + esc(r.room) + '</p><ul>' + li(r.names) + '</ul></div>');
-  fillMemo();
+  renderMemo();
 }
 
 /* 로그인 화면: 코드(처음 한 번) + 학번 → 이름 확인 → 들어가기 */
