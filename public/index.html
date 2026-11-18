@@ -2251,9 +2251,7 @@ function rollStats(c, mode) {
 }
 function renderRoll() {
   const c = CHECKS[cpIdx()], mode = modeNow(c), st = rollStats(c, mode), pres = presentOf(c);
-  $('#t-sum').innerHTML = '<p class="tcount"><b>' + st.here + '</b>/ ' + st.total + '명 확인</p>' +
-    (st.missing.length === 0 ? '<p class="tmiss ok">모두 확인했어요.</p>' : '<p class="tmiss">아직 ' + st.missing.length + '명: ' + st.missing.map(esc).join(', ') + '</p>') +
-    (st.ab ? '<p class="tnote">불참 ' + st.ab + '명은 빼고 셌어요.</p>' : '') +
+  $('#t-sum').innerHTML = (st.ab ? '<p class="tnote">불참 ' + st.ab + '명은 빼고 셌어요.</p>' : '') +
     '<div class="btn-row"><button type="button" class="btn day" id="t-send">결과 보내기</button><button type="button" class="btn" id="t-reset">처음부터</button></div>';
   $('#t-roll').innerHTML = st.groups.map((g, gi) => {
     const full = g.here.length === g.names.length;
