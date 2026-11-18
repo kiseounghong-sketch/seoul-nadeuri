@@ -644,6 +644,8 @@ button { font: inherit; color: inherit; }
 .board-links button.board-link { border: 2px solid var(--on-day); cursor: pointer; font-family: inherit; }
 .board-links button.board-link.here { background: transparent; color: var(--on-day); }
 .board .meet li { font-size: 14.5px; font-weight: 700; }
+#t-part { margin-top: -2px; }
+#t-part button[aria-pressed="true"] { background: var(--day); border-color: var(--day); color: var(--on-day); }
 .t-head { display: flex; align-items: center; justify-content: space-between; }
 .tcount { display: flex; align-items: baseline; gap: 6px; font-size: 15.5px; font-weight: 800; }
 .tcount b { font: 400 28px/1 var(--display); color: var(--day-ink); }
@@ -2164,7 +2166,7 @@ function roster() {
   const out = [];
   Object.keys(d.teams).forEach((g) => d.teams[g].forEach((names, i) => names.forEach((n) => out.push({ n: n, g: +g, t: i + 1, room: '', id: '' }))));
   Object.keys(d.nums || {}).forEach((g) => Object.keys(d.nums[g]).forEach((no) => { const s = out.find((x) => x.g === +g && x.n === d.nums[g][no]); if (s) s.id = g + pad2(no); }));
-  (d.rooms || []).forEach((r) => r.names.forEach((n) => { const s = out.find((x) => x.n === n); if (s) s.room = roomName(r.room); }));
+  (d.rooms || []).forEach((r) => r.names.forEach((n) => { const s = out.find((x) => x.n === n); if (s) { s.room = roomName(r.room); s.sex = r.sex || ''; } }));
   return out;
 }
 const absentList = () => store.get('tabsent', []);
@@ -2177,6 +2179,21 @@ function autoCp() {
   return k;
 }
 let tMode = null, tShown = -1;
+/* 묶음 안에서 한 쪽씩 본다: 학년별·조별은 1학년/2학년, 방별은 남자/여자(명단 rooms의 sex: 'm'|'f') */
+const tPart = {};
+function partsFor(mode) {
+  if (mode === 'room') return roster().some((s) => s.sex) ? [['m', '남자'], ['f', '여자']] : [];
+  return [['1', '1학년'], ['2', '2학년']];
+}
+function partOf(mode) {
+  const ps = partsFor(mode);
+  return !ps.length ? null : ps.some((x) => x[0] === tPart[mode]) ? tPart[mode] : ps[0][0];
+}
+function inPart(mode, s) {
+  const p = partOf(mode);
+  if (p == null) return true;
+  return mode === 'room' ? (!s.room || s.sex === p) : String(s.g) === p;
+}
 const cpIdx = autoCp;
 function groupsFor(mode, list) {
   const out = [], add = (label, s) => { let g = out.find((x) => x.label === label); if (!g) { g = { label: label, names: [] }; out.push(g); } g.names.push(s.n); };
@@ -2207,6 +2224,8 @@ function renderTeacher() {
     '<div class="sec d' + (c.day + 1) + '" style="padding-top:2px">' +
       '<div class="seg three" id="t-mode" role="group" aria-label="나눠 보기">' +
         [['grade', '학년별'], ['team', '조별'], ['room', '방별']].map(([k, l]) => '<button type="button" data-mode="' + k + '" aria-pressed="' + (k === mode) + '">' + l + '</button>').join('') + '</div>' +
+      (partsFor(mode).length ? '<div class="seg" id="t-part" role="group" aria-label="나눠 보기">' +
+        partsFor(mode).map(([k, l]) => '<button type="button" data-part="' + k + '" aria-pressed="' + (k === partOf(mode)) + '">' + l + '</button>').join('') + '</div>' : '') +
       ((tMode || c.mode) === 'room' && mode !== 'room' ? '<p class="tnote" style="margin:-4px 0 10px">방 배정이 아직 없어서 학년별로 보여 줘요.</p>' : '') +
       '<div id="t-sum"></div>' +
     '</div>' +
@@ -2238,7 +2257,7 @@ $('#t-contact').addEventListener('input', (e) => {
 });
 $('#t-memo').addEventListener('input', (e) => store.set('tmemo', e.target.value.slice(0, 2000)));
 function rollStats(c, mode) {
-  const ab = absentList(), list = roster().filter((s) => !ab.includes(s.n)), pres = presentOf(c);
+  const ab = absentList(), list = roster().filter((s) => !ab.includes(s.n) && inPart(mode, s)), pres = presentOf(c);
   const groups = groupsFor(mode, list).map((g) => ({ label: g.label, names: g.names, here: g.names.filter((n) => pres.includes(n)) }));
   const here = groups.reduce((a, g) => a + g.here.length, 0);
   return { groups: groups, here: here, total: list.length, ab: ab.length, missing: list.filter((s) => !pres.includes(s.n)).map((s) => s.n) };
@@ -2280,7 +2299,10 @@ $('#t-body').addEventListener('click', (e) => {
   const b = e.target.closest('button');
   if (!b) return;
   const c = CHECKS[cpIdx()];
-  if (b.dataset.mode) {
+  if (b.dataset.part != null) {
+    tPart[modeNow(c)] = b.dataset.part;
+    renderTeacher();
+  } else if (b.dataset.mode) {
     tMode = b.dataset.mode === c.mode ? null : b.dataset.mode;
     renderTeacher();
   } else if (b.dataset.n != null) {
