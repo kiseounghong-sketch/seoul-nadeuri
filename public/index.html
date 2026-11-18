@@ -308,15 +308,9 @@ button { font: inherit; color: inherit; }
   cursor: pointer;
 }
 
-/* 내 메모 */
+/* 항목 머리 */
 .memo-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
 .memo-head h2 { font-size: 16px; font-weight: 800; }
-.memo-view { border-top: 2px solid var(--ink); }
-.memo-view div { display: flex; justify-content: space-between; gap: 16px; padding: 6px 0; border-bottom: 1px solid var(--line); }
-.memo-view dt { color: var(--ink2); font-size: 14.5px; font-weight: 600; white-space: nowrap; }
-.memo-view dd { margin: 0; font-size: 15px; font-weight: 800; text-align: right; }
-.memo-empty { padding: 8px 0 2px; border-top: 2px solid var(--ink); color: var(--ink2); font-size: 13.5px; }
-.memo-form { border-top: 2px solid var(--ink); padding-top: 10px; }
 .field { display: block; margin-bottom: 8px; }
 .field span { display: block; margin-bottom: 2px; font-size: 13px; font-weight: 700; }
 .field input {
@@ -799,21 +793,13 @@ button { font: inherit; color: inherit; }
       <div class="sub dn" role="group" aria-label="지금 화면에서 볼 것">
         <button type="button" data-pane="now" aria-pressed="true">지금</button>
         <button type="button" class="s-only" data-pane="team" aria-pressed="false">우리 조·방</button>
-        <button type="button" class="s-only" data-pane="memo" aria-pressed="false">내 메모</button>
-        <button type="button" class="t-only" data-pane="tmemo" aria-pressed="false">메모·코드</button>
+        <button type="button" class="t-only" data-pane="tmemo" aria-pressed="false">학생 코드</button>
       </div>
 
       <div class="pane" data-pane="now">
       <div class="board" id="board" aria-live="polite"></div>
       <div class="sec d2" id="tonight" hidden></div>
       <div class="sec s-only" id="lunch" hidden></div>
-
-      <div class="sec s-only" style="padding-top:4px">
-        <div class="btn-row">
-          <a class="btn" id="call-teacher" href="#memo">선생님 번호 적기</a>
-          <a class="btn red" href="tel:119">119에 전화</a>
-        </div>
-      </div>
 
       <div class="sec" id="install" hidden>
         <div class="install">
@@ -827,10 +813,6 @@ button { font: inherit; color: inherit; }
       </div>
 
       <div class="pane t-only" data-pane="tmemo" hidden>
-        <div class="sec">
-          <h2>메모</h2>
-          <label class="field"><textarea id="t-memo" aria-label="메모" placeholder="약 먹는 학생, 멀미하는 학생, 바뀐 일정처럼 기억할 것"></textarea></label>
-        </div>
         <div class="sec" id="t-scode-sec" hidden>
           <h2>학생 화면 코드</h2>
           <p class="tcode" id="t-scode"></p>
@@ -847,21 +829,6 @@ button { font: inherit; color: inherit; }
       </div>
       </div>
 
-      <div class="pane" data-pane="memo" hidden>
-      <div class="sec" id="memo">
-        <div class="memo-head">
-          <h2>내 메모</h2>
-          <button type="button" class="text-btn" id="memo-toggle">적기</button>
-        </div>
-        <div id="memo-view"></div>
-        <form class="memo-form" id="memo-form" hidden autocomplete="off">
-          <label class="field"><span>담임 선생님 전화번호</span><input name="teacher" inputmode="tel" placeholder="010-0000-0000"></label>
-          <label class="field"><span>버스 자리</span><input name="seat" placeholder="예: 왼쪽 4번째 줄"></label>
-          <label class="field"><span>박물관 집결 장소</span><input name="meet" placeholder="당일 선생님이 알려 줘요"></label>
-          <div class="btn-row" style="grid-template-columns:1fr"><button type="submit" class="btn day">다 적었어요</button></div>
-        </form>
-      </div>
-      </div>
     </section>
 
     <!-- 첫 화면: 로그인하지 않으면 아래 메뉴 없이 이 화면만 보인다. 맨 아래 흐린 '교사'로 선생님 코드를 넣으면 선생님 앱으로 간다 -->
@@ -1033,7 +1000,6 @@ button { font: inherit; color: inherit; }
         <div class="calls">
           <a class="call red" href="tel:119"><b>119</b><span>다치거나 아플 때</span></a>
           <a class="call fill" href="tel:112"><b>112</b><span>위험한 사람을 만났거나 범죄를 봤을 때</span></a>
-          <a class="call s-only" id="sos-teacher" href="#memo"><b class="long">선생님</b><span>번호를 먼저 적어 두세요</span></a>
           <a class="call" href="tel:023191318"><b class="long">숙소</b><span><em>02-319-1318</em>서울유스호스텔 프런트</span></a>
         </div>
         <div class="calls t-only" id="t-calls" style="margin-top:8px"></div>
@@ -1231,10 +1197,6 @@ const LUNCH = { title: '11월 19일 점심', place: 'LG아트센터 식당 ‘�
   { id: 'mala', name: '마라짬뽕', hot: true }
 ] };
 
-const MEMO = [
-  ['teacher', '담임 선생님'], ['seat', '버스 자리'], ['meet', '박물관 집결 장소']
-];
-
 /* 박물관에서 볼 것 (견학 계획서에서 고르는 목록) */
 const MUSEUM = [
   { floor: '1층', name: '선사·고대관, 중·근세관', items: [
@@ -1361,7 +1323,6 @@ document.addEventListener('click', (e) => {
   if (!b) return;
   const page = b.closest('.page').id, pane = b.dataset.pane || b.dataset.to;
   showPane(page, pane);
-  if (page === 'now' && pane === 'memo') memoPane();
   if (page === 'twork') renderTWork();
   window.scrollTo(0, 0);
 });
@@ -1418,7 +1379,7 @@ function strip(dayIdx, pos) {
 }
 
 const ruleOf = (s) => s.here || (s.rules && s.rules[0]) || '';
-const meetPlace = () => MEET || (store.get('memo', {}).meet || '');
+const meetPlace = () => MEET;
 
 /* ── 지금 ── */
 let boardKey = '';
@@ -1562,64 +1523,7 @@ function ruleAuto() {
   return (st.mode === 'trip' && ruleOf(st.cur)) || RULE_ORDER[0];
 }
 
-/* ── 내 메모 ── */
-const form = $('#memo-form');
-function memo() {
-  const m = store.get('memo', {});
-  ['buddy', 'room', 'mates'].forEach((k) => delete m[k]);
-  return m;
-}
 function telOf(v) { const t = String(v || '').replace(/[^0-9+]/g, ''); return t.length >= 7 ? t : ''; }
-function renderMemo() {
-  const m = memo();
-  if (MEET) { m.meet = MEET; form.elements.meet.closest('label').hidden = true; }
-  /* 조와 방은 잠긴 명단에서만 가져온다(학생이 고칠 수 없음) */
-  const t = teamOf(), r = roomOf(), row = (label, v) => '<div><dt>' + label + '</dt><dd>' + esc(v) + '</dd></div>';
-  const rows = (t ? row('우리 조', t.n + '조' + (t.others.length ? ' (' + t.others.join(', ') + ')' : '')) : '') +
-    (r && r.room ? row('숙소 방', r.room + (r.others.length ? ' (' + r.others.join(', ') + ')' : '')) : '') +
-    MEMO.filter(([k]) => k !== 'teacher' && m[k]).map(([k, label]) => row(label, m[k])).join('');
-  const filled = MEMO.some(([k]) => memo()[k]);
-  $('#memo-view').innerHTML = rows ? '<dl class="memo-view">' + rows + '</dl>'
-    : '<p class="memo-empty">' + (filled ? '선생님 번호 저장됨' : '아직 적은 것이 없어요') + '</p>';
-  $('#memo-toggle').textContent = form.hidden ? (filled ? '고치기' : '적기') : '닫기';
-  const tel = telOf(m.teacher);
-  const a = $('#call-teacher'), b = $('#sos-teacher');
-  if (tel) {
-    a.href = 'tel:' + tel; a.textContent = '선생님께 전화'; a.classList.add('day'); a.dataset.memo = '';
-    b.href = 'tel:' + tel; b.dataset.memo = '';
-    b.innerHTML = '<b class="long">선생님</b><span><em>' + esc(m.teacher) + '</em>담임 선생님께 전화</span>';
-  } else {
-    a.href = '#memo'; a.textContent = '선생님 번호 적기'; a.classList.remove('day'); a.dataset.memo = '1';
-    b.href = '#memo'; b.dataset.memo = '1';
-    b.innerHTML = '<b class="long">선생님</b><span>번호를 먼저 적어 두세요</span>';
-  }
-}
-function openMemo(focusName) {
-  const m = memo();
-  MEMO.forEach(([k]) => { form.elements[k].value = m[k] || ''; });
-  form.hidden = false;
-  renderMemo();
-  showPane('now', 'memo');
-  if (focusName) form.elements[focusName].focus({ preventScroll: true });
-  window.scrollTo(0, 0);
-}
-function closeMemo() { form.hidden = true; renderMemo(); }
-/* 아직 아무것도 안 적었으면 '내 메모'를 열 때 적는 칸부터 보여 준다 */
-function memoPane() { if (form.hidden && !MEMO.some(([k]) => memo()[k])) openMemo(); }
-form.addEventListener('input', () => {
-  const m = {};
-  MEMO.forEach(([k]) => { const v = form.elements[k].value.trim(); if (v) m[k] = v.slice(0, 40); });
-  store.set('memo', m);
-});
-form.addEventListener('submit', (e) => { e.preventDefault(); closeMemo(); });
-$('#memo-toggle').addEventListener('click', () => { form.hidden ? openMemo() : closeMemo(); });
-document.addEventListener('click', (e) => {
-  const a = e.target.closest('a[data-memo="1"]');
-  if (!a) return;
-  e.preventDefault();
-  go('now');
-  openMemo('teacher');
-});
 
 /* ── 박물관 견학 계획서 ── */
 const planForm = $('#plan-form');
@@ -1774,7 +1678,6 @@ function renderTeam() {
     (!r ? ''
       : !r.room ? '<p class="room-wait">방 배정 명단에서 내 이름을 찾지 못했어요. 담임 선생님께 확인해요.</p>'
       : '<div class="team-card room"><p class="team-label">서울유스호스텔</p><p class="team-no">' + esc(r.room) + '</p><ul>' + li(r.names) + '</ul></div>');
-  renderMemo();
 }
 
 /* 로그인 화면: 코드(처음 한 번) + 학번 → 이름 확인 → 들어가기 */
@@ -1873,7 +1776,7 @@ $('#logout').addEventListener('click', async (e) => {
 });
 /* 저장된 내 것이 바뀌면(로그인, 서버에서 불러옴) 화면을 모두 다시 그린다 */
 function refreshMine() {
-  renderTeam(); renderMemo(); renderMuseum(); renderLunch(); renderLogin();
+  renderTeam(); renderMuseum(); renderLunch(); renderLogin();
   if (curPage === 'work') renderWork();
   nightKey = ''; renderNight();
   boardKey = ''; renderBoard();
@@ -1986,7 +1889,7 @@ function renderNight() {
   const n = now(), el = $('#tonight');
   const on = !TEACHER && n >= NIGHT_FROM && n < NIGHT_TO;
   const today = kst(n).ymd === DAYS[1].date;
-  const p = getPlan(), m = memo(), t = teamOf();
+  const p = getPlan(), t = teamOf();
   const key = on ? (today ? 'today' : 'eve') + JSON.stringify([p, meetPlace(), t]) : '';
   if (key === nightKey) return;
   nightKey = key;
@@ -2245,7 +2148,6 @@ function renderCalls() {
 function renderTeacherExtras() {
   const ct = store.get('tcontact', {}), d = tData();
   $('#t-contact').innerHTML = CONTACTS.map(([k, label]) => '<label class="field"><span>' + label + '</span><input data-ct="' + k + '" value="' + esc(ct[k] || '') + '" placeholder="이름 010-0000-0000" autocomplete="off"></label>').join('');
-  $('#t-memo').value = store.get('tmemo', '');
   $('#t-scode-sec').hidden = !d;
   $('#t-scode').textContent = d ? d.scode || '' : '';
   renderCalls();
@@ -2255,7 +2157,6 @@ $('#t-contact').addEventListener('input', (e) => {
   if (!t.dataset.ct) return;
   const ct = store.get('tcontact', {}); ct[t.dataset.ct] = t.value.slice(0, 40); store.set('tcontact', ct); renderCalls();
 });
-$('#t-memo').addEventListener('input', (e) => store.set('tmemo', e.target.value.slice(0, 2000)));
 function rollStats(c, mode) {
   const ab = absentList(), list = roster().filter((s) => !ab.includes(s.n) && inPart(mode, s)), pres = presentOf(c);
   const groups = groupsFor(mode, list).map((g) => ({ label: g.label, names: g.names, here: g.names.filter((n) => pres.includes(n)) }));
@@ -2642,7 +2543,6 @@ if (offset) {
 }
 renderTeacherExtras();
 renderRules();
-renderMemo();
 renderMuseum();
 renderTeam();
 renderLunch();
