@@ -644,6 +644,7 @@ button { font: inherit; color: inherit; }
 .board-links button.board-link { border: 2px solid var(--on-day); cursor: pointer; font-family: inherit; }
 .board-links button.board-link.here { background: transparent; color: var(--on-day); }
 .board .meet li { font-size: 14.5px; font-weight: 700; }
+.t-head { display: flex; align-items: center; justify-content: space-between; }
 .tcount { display: flex; align-items: baseline; gap: 6px; font-size: 15.5px; font-weight: 800; }
 .tcount b { font: 400 28px/1 var(--display); color: var(--day-ink); }
 .tmiss { margin-top: 4px; font-size: 14.5px; font-weight: 700; line-height: 1.5; }
@@ -991,8 +992,9 @@ button { font: inherit; color: inherit; }
 
     <!-- 선생님 앱(/teacher/): 인원 체크 -->
     <section class="page" id="teacher" aria-label="인원 체크" hidden>
-      <div class="page-head">
+      <div class="page-head t-head">
         <h2 class="page-title">인원 체크</h2>
+        <button type="button" class="text-btn" id="t-reset" hidden>초기화</button>
       </div>
       <div class="sub dn" id="t-sub" role="group" aria-label="인원 체크 화면에서 볼 것" hidden>
         <button type="button" data-pane="roll" aria-pressed="true">인원 확인</button>
@@ -2166,15 +2168,16 @@ function roster() {
   return out;
 }
 const absentList = () => store.get('tabsent', []);
-const presentOf = (c) => (store.get('tcheck', {})[c.id] || []);
+/* 체크는 한 벌만 둔다. 다시 셀 때는 '초기화' */
+const presentOf = () => (store.get('tcheck', {}).all || []);
 function autoCp() {
   const n = now();
   let k = 0;
   CHECKS.forEach((c, i) => { if (c.start && c.start <= n) k = i; });
   return k;
 }
-let tPick = null, tMode = null, tShown = -1;
-const cpIdx = () => (tPick == null ? autoCp() : tPick);
+let tMode = null, tShown = -1;
+const cpIdx = autoCp;
 function groupsFor(mode, list) {
   const out = [], add = (label, s) => { let g = out.find((x) => x.label === label); if (!g) { g = { label: label, names: [] }; out.push(g); } g.names.push(s.n); };
   if (mode === 'room') {
@@ -2194,23 +2197,14 @@ const LOCK = '<form class="sec team-lock t-lock" style="border:0">' +
 function renderTeacher() {
   const body = $('#t-body'), d = tData();
   $('#t-sub').hidden = !d;
+  $('#t-reset').hidden = !d;
   if (!d) { body.innerHTML = LOCK; return; }
-  const i = cpIdx(), c = CHECKS[i], dd = DAYS[c.day], mode = modeNow(c);
+  /* 처음 묶음(학년·조·방)은 지금 시각의 CHECKS를 따른다 */
+  const i = cpIdx(), c = CHECKS[i], mode = modeNow(c);
   tShown = i;
-  const auto = tPick == null || tPick === autoCp();
   body.innerHTML =
     '<div class="pane" data-pane="roll">' +
-    '<div class="board d' + (c.day + 1) + '" style="margin-top:2px">' +
-      '<p class="board-day"><span class="badge">' + dd.name + '</span>' + dd.long + '</p>' +
-      '<p class="board-label">' + (auto ? '지금 확인할 때' : '인원 확인') + ' (' + (i + 1) + '/' + CHECKS.length + ')</p>' +
-      '<p class="board-title">' + esc(c.title) + '</p>' +
-      (c.t ? '<p class="board-when">' + c.t + '</p>' : '') +
-      '<ul class="meet">' + c.todo.map((t) => '<li>' + esc(t) + '</li>').join('') + '</ul>' +
-      '<div class="board-links"><button type="button" class="board-link here" data-step="-1"' + (i ? '' : ' disabled') + '>이전</button>' +
-      '<button type="button" class="board-link here" data-step="1"' + (i < CHECKS.length - 1 ? '' : ' disabled') + '>다음</button>' +
-      (auto ? '' : '<button type="button" class="board-link" data-step="0">지금으로</button>') + '</div>' +
-    '</div>' +
-    '<div class="sec d' + (c.day + 1) + '">' +
+    '<div class="sec d' + (c.day + 1) + '" style="padding-top:2px">' +
       '<div class="seg three" id="t-mode" role="group" aria-label="나눠 보기">' +
         [['grade', '학년별'], ['team', '조별'], ['room', '방별']].map(([k, l]) => '<button type="button" data-mode="' + k + '" aria-pressed="' + (k === mode) + '">' + l + '</button>').join('') + '</div>' +
       ((tMode || c.mode) === 'room' && mode !== 'room' ? '<p class="tnote" style="margin:-4px 0 10px">방 배정이 아직 없어서 학년별로 보여 줘요.</p>' : '') +
@@ -2251,8 +2245,7 @@ function rollStats(c, mode) {
 }
 function renderRoll() {
   const c = CHECKS[cpIdx()], mode = modeNow(c), st = rollStats(c, mode), pres = presentOf(c);
-  $('#t-sum').innerHTML = (st.ab ? '<p class="tnote">불참 ' + st.ab + '명은 빼고 셌어요.</p>' : '') +
-    '<div class="btn-row"><button type="button" class="btn day" id="t-send">결과 보내기</button><button type="button" class="btn" id="t-reset">처음부터</button></div>';
+  $('#t-sum').innerHTML = st.ab ? '<p class="tnote" style="margin:-4px 0 0">불참 ' + st.ab + '명은 빼고 셌어요.</p>' : '';
   $('#t-roll').innerHTML = st.groups.map((g, gi) => {
     const full = g.here.length === g.names.length;
     return '<div class="rgroup"><div class="rhead"><h4>' + esc(g.label) + '</h4><span class="rcount' + (full ? ' full' : '') + '">' + g.here.length + '/' + g.names.length + '</span>' +
@@ -2262,22 +2255,9 @@ function renderRoll() {
 }
 function setPresent(c, names, on) {
   const all = store.get('tcheck', {});
-  let p = (all[c.id] || []).filter((n) => !names.includes(n));
+  let p = (all.all || []).filter((n) => !names.includes(n));
   if (on) p = p.concat(names);
-  all[c.id] = p;
-  store.set('tcheck', all);
-}
-function teacherText() {
-  const i = cpIdx(), c = CHECKS[i], mode = modeNow(c), st = rollStats(c, mode), k = kst(now());
-  const lines = ['[서울 나들이 인원 확인] ' + DAYS[c.day].short.replace(/ [^ ]+$/, '') + (c.t ? ' ' + c.t : '') + ' ' + c.title,
-    st.here + '명 / ' + st.total + '명 확인' + (st.ab ? ' (불참 ' + st.ab + '명 제외)' : '')];
-  st.groups.forEach((g) => {
-    const miss = g.names.filter((n) => !g.here.includes(n));
-    lines.push('- ' + g.label + ' ' + g.here.length + '/' + g.names.length + (miss.length ? ', 아직: ' + miss.join(', ') : ''));
-  });
-  if (!st.missing.length) lines.push('빠진 학생 없어요.');
-  lines.push('(' + k.hm + ' 기준)');
-  return lines.join('\n');
+  store.set('tcheck', { all: p });
 }
 let resetArm = 0;
 document.addEventListener('submit', (e) => {
@@ -2300,14 +2280,7 @@ $('#t-body').addEventListener('click', (e) => {
   const b = e.target.closest('button');
   if (!b) return;
   const c = CHECKS[cpIdx()];
-  if (b.dataset.step != null) {
-    const step = +b.dataset.step;
-    tPick = step === 0 ? null : Math.max(0, Math.min(CHECKS.length - 1, cpIdx() + step));
-    if (tPick === autoCp()) tPick = null;
-    tMode = null;
-    renderTeacher();
-    window.scrollTo(0, 0);
-  } else if (b.dataset.mode) {
+  if (b.dataset.mode) {
     tMode = b.dataset.mode === c.mode ? null : b.dataset.mode;
     renderTeacher();
   } else if (b.dataset.n != null) {
@@ -2323,16 +2296,14 @@ $('#t-body').addEventListener('click', (e) => {
     store.set('tabsent', ab);
     b.setAttribute('aria-pressed', String(ab.includes(n)));
     renderRoll();
-  } else if (b.id === 't-send') {
-    sendOut(b, teacherText(), '인원 확인');
-  } else if (b.id === 't-reset') {
-    if (Date.now() - resetArm > 3000) { resetArm = Date.now(); flash(b, '한 번 더 누르면 지워져요'); return; }
-    resetArm = 0;
-    const all = store.get('tcheck', {});
-    delete all[c.id];
-    store.set('tcheck', all);
-    renderRoll();
   }
+});
+$('#t-reset').addEventListener('click', (e) => {
+  const b = e.currentTarget;
+  if (Date.now() - resetArm > 3000) { resetArm = Date.now(); flash(b, '한 번 더 누르면 지워져요'); return; }
+  resetArm = 0;
+  store.set('tcheck', { all: [] });
+  if (tData()) renderRoll();
 });
 
 /* ── 선생님께 자동 전달 ──
@@ -2578,7 +2549,7 @@ function go(id, push) {
   if (id === 'work') { subSel.work = ''; renderWork(); }
   if (id === 'museum') renderMuseum();
   if (id === 'now') renderNight();
-  if (id === 'teacher') { tPick = null; tMode = null; renderTeacher(); }
+  if (id === 'teacher') { tMode = null; renderTeacher(); }
   if (id === 'twork') { renderTWork(); loadTWork(); }
   markTab(id);
   if (push !== false && location.hash !== '#' + id) {
@@ -2635,7 +2606,7 @@ function tick() {
   renderNight();
   /* 새 칸이 열리면 활동지를 다시 그린다 (쓰는 중이면 다 쓴 뒤에) */
   const wk = myGrade() + '/' + WORK.map((s) => (isOpen(s) ? 1 : 0)).join('');
-  if (curPage === 'teacher' && tPick == null && autoCp() !== tShown && !$('#t-body').contains(document.activeElement)) renderTeacher();
+  if (curPage === 'teacher' && tMode == null && autoCp() !== tShown && !$('#t-body').contains(document.activeElement)) renderTeacher();
   if (!TEACHER && lunchShown.split('/').slice(0, 2).join('/') !== lunchLocked() + '/' + !!who() && !$('#lunch').contains(document.activeElement)) renderLunch();
   if (curPage === 'work' && wk !== workKey && !$('#work-list').contains(document.activeElement)) renderWork();
 }
