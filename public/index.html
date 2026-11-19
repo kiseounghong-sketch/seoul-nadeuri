@@ -648,6 +648,10 @@ button { font: inherit; color: inherit; }
 .tcard.full .tcard-head span { color: var(--day-ink); }
 .tcard .roll { grid-template-columns: 1fr; gap: 4px; }
 .tcard .roll button { min-height: 34px; font-size: 14.5px; }
+#tw-view button[aria-pressed="true"] { background: var(--day); border-color: var(--day); color: var(--on-day); }
+.nonelist { border-top: 2px solid var(--ink); }
+.nonelist li { display: flex; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; line-height: 1.45; }
+.nonelist b { flex: none; min-width: 72px; font-size: 13px; font-weight: 800; color: var(--ink2); }
 .t-head { display: flex; align-items: center; justify-content: space-between; }
 .tcount { display: flex; align-items: baseline; gap: 6px; font-size: 15.5px; font-weight: 800; }
 .tcount b { font: 400 28px/1 var(--display); color: var(--day-ink); }
@@ -2365,7 +2369,7 @@ function showSync() {
 window.addEventListener('online', syncSoon);
 
 /* ── 선생님 앱: 학생 활동지 ── */
-let twGrade = 0, twBusy = false, twErr = false;
+let twGrade = 0, twBusy = false, twErr = false, twView = 'got';
 const TW_TABS = [['lunch', '점심', 1, LUNCH.title], ['plan', '계획서', 2, '박물관 견학 계획서']].concat(WORK.map((s) => [s.id, s.tab, s.day, s.title]));
 async function loadTWork() {
   const d = tData();
@@ -2408,22 +2412,32 @@ function renderTWork() {
   const tab = TW_TABS.find((t) => t[0] === sel), cache = store.get('twork', { at: 0, data: {} });
   const list = roster().filter((st) => !twGrade || st.g === twGrade);
   if (sel === 'lunch') { body.innerHTML = lunchTHTML(list, cache); return; }
-  const got = [], none = [];
+  const got = [], none = [], ab = absentList();
   list.forEach((st) => {
     const rec = cache.data[st.g + '|' + st.n], sec = rec && (rec.secs || []).find((x) => x.id === sel);
-    if (sec) got.push([st, sec, rec.at]); else none.push(st.n);
+    if (sec) got.push([st, sec, rec.at]); else if (!ab.includes(st.n)) none.push(st);
+  });
+  /* 안 쓴 학생은 조별로 한 줄씩 */
+  const noneByTeam = [];
+  none.forEach((st) => {
+    const k = st.g + '학년 ' + st.t + '조', row = noneByTeam.find((x) => x[0] === k);
+    if (row) row[1].push(st.n); else noneByTeam.push([k, [st.n]]);
   });
   body.innerHTML = '<div class="sec ' + dayCls(tab[2]) + '">' +
     '<h3>' + esc(tab[3]) + '</h3>' +
     twGradeSeg() +
-    '<p class="tcount"><b>' + got.length + '</b>/ ' + list.length + '명 썼어요</p>' +
+    '<div class="seg" id="tw-view" role="group" aria-label="보기">' +
+      '<button type="button" data-twv="got" aria-pressed="' + (twView === 'got') + '">쓴 학생 ' + got.length + '</button>' +
+      '<button type="button" data-twv="none" aria-pressed="' + (twView === 'none') + '">안 쓴 학생 ' + none.length + '</button></div>' +
     '<p class="tnote">' + twNote(cache) + '</p>' +
     '<div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn" id="tw-load"' + (twBusy ? ' disabled' : '') + '>새로 받아 오기</button></div>' +
     '</div>' +
+    (twView === 'none' ? '<div class="sec ' + dayCls(tab[2]) + '" style="padding-top:0">' +
+      (noneByTeam.length ? '<ul class="nonelist">' + noneByTeam.map(([k, ns]) => '<li><b>' + k + '</b>' + ns.map(esc).join(', ') + '</li>').join('') + '</ul>' : '<p class="tmiss ok">모두 썼어요.</p>') + '</div>' :
     '<div class="sec ' + dayCls(tab[2]) + '" style="padding-top:0">' + got.map(([st, sec, when]) =>
       '<div class="rgroup"><div class="rhead"><h4>' + st.g + '학년 ' + st.t + '조 ' + esc(st.n) + '</h4><span class="rcount' + (sec.n >= sec.of ? ' full' : '') + '">' + sec.n + '/' + sec.of + '칸</span></div>' +
       '<dl class="ans">' + sec.rows.map((r) => '<dt>' + esc(r[0]) + '</dt><dd' + (r[1] ? '' : ' class="none"') + '>' + esc(r[1] || '아직 안 썼어요') + '</dd>').join('') + '</dl></div>').join('') +
-    '</div>';
+    '</div>');
 }
 const twNote = (cache) => (twBusy ? '받아 오는 중…' : twErr ? '받아 오지 못했어요. 인터넷을 확인해 주세요.' + (cache.at ? ' (' + kst(new Date(cache.at)).hm + '에 받은 내용)' : '') : cache.at ? kst(new Date(cache.at)).hm + '에 받아 왔어요.' : '');
 const twGradeSeg = () => '<div class="seg three" id="tw-grade" role="group" aria-label="학년">' + [[0, '전체'], [1, '1학년'], [2, '2학년']].map(([g, l]) => '<button type="button" data-twg="' + g + '" aria-pressed="' + (g === twGrade) + '">' + l + '</button>').join('') + '</div>';
@@ -2465,6 +2479,8 @@ function lunchTText() {
 $('#tw-body').addEventListener('click', (e) => {
   const g = e.target.closest('button[data-twg]');
   if (g) { twGrade = +g.dataset.twg; renderTWork(); return; }
+  const v = e.target.closest('button[data-twv]');
+  if (v) { twView = v.dataset.twv; renderTWork(); return; }
   if (e.target.closest('#tw-load')) loadTWork();
   const ls = e.target.closest('#tw-lunch-send');
   if (ls) sendOut(ls, lunchTText(), '점심 메뉴');
