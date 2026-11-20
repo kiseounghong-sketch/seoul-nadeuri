@@ -796,6 +796,7 @@ button { font: inherit; color: inherit; }
     <p class="top-date t-only">선생님용 · 11월 19일~20일</p>
   </header>
   <p class="preview" id="preview" hidden></p>
+  <p class="preview s-only" id="store-warn" hidden style="background:var(--red);color:#FFFFFF">이 브라우저는 저장이 안 돼요. 크롬이나 사파리로 열어 주세요.</p>
 
   <main>
     <noscript><p class="sec">이 페이지는 자바스크립트를 켜야 보입니다.</p></noscript>
@@ -1312,6 +1313,8 @@ let syncTimer = 0, syncBusy = false, syncDirty = false, syncKeys = null;
 const SYNCED = ['work', 'plan', 'me', 'teams', 'lunch'];
 /* 학번으로 로그인한 학생의 것. 서버에도 암호문으로 올라가고, 다른 휴대전화에서 로그인하면 불러온다 */
 const MINE = ['plan', 'work', 'lunch'];
+/* 이 브라우저에 저장이 되는지 먼저 확인한다(안 되면 화면 위에 알린다) */
+const storeOk = (() => { try { localStorage.setItem('nadeuri:_t', '1'); localStorage.removeItem('nadeuri:_t'); return true; } catch (e) { return false; } })();
 const store = {
   get(k, d) { try { const v = localStorage.getItem('nadeuri:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
   put(k, v) { try { if (v == null) localStorage.removeItem('nadeuri:' + k); else localStorage.setItem('nadeuri:' + k, JSON.stringify(v)); } catch (e) { /* 저장이 막힌 브라우저에서는 그냥 넘어간다 */ } },
@@ -1873,7 +1876,8 @@ function flash(btn, text) {
   const old = btn.dataset.label || btn.textContent;
   btn.dataset.label = old;
   btn.textContent = text;
-  setTimeout(() => { btn.textContent = old; }, 2200);
+  clearTimeout(btn._flash);
+  btn._flash = setTimeout(() => { btn.textContent = old; }, 2600);
 }
 function sendOut(btn, text, title) {
   if (navigator.share) {
@@ -1995,13 +1999,15 @@ function renderWork() {
         '<label class="field"><textarea data-k="' + k + '" data-i="' + i + '" aria-label="' + esc(q[0]) + '" placeholder="' + esc(q[1]) + '"' + dis + '>' + esc(v.a[i] || '') + '</textarea></label>').join('') +
         '<h4 class="q"><span class="tag">소감</span>' + esc(s.feel) + '</h4>' +
         '<label class="field"><textarea data-k="' + k + '" data-i="feel" aria-label="' + esc(s.feel) + '" placeholder="느낀 대로 두세 줄"' + dis + '>' + esc(v.feel) + '</textarea></label>' +
-        '<div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn day" data-send="' + s.id + '"' + dis + '>선생님께 보내기</button></div>';
+        '<div class="btn-row" style="grid-template-columns:1fr"><button type="button" class="btn day" data-save="' + s.id + '"' + dis + '>저장하기</button></div>' +
+        '<p class="hint" style="margin-top:4px" data-saved></p>';
     }
     return '<section class="wsec pane ' + dayCls(s.day) + (lock ? ' locked' : '') + '" data-pane="' + s.id + '" id="w-' + s.id + '" hidden>' +
       '<div class="wsec-head"><h3>' + esc(s.title) + '</h3><span data-badge>' + badgeOf(s, st) + '</span><p class="wsec-when">' + esc(s.when + sub) + '</p></div>' + body + '</section>';
   }).join('');
   workStatus();
   showPane('work', secOf(subSel.work) ? subSel.work : workAuto());
+  showSync();
 }
 function workStatus() {
   const g = myGrade();
@@ -2036,6 +2042,7 @@ $('#work-list').addEventListener('input', (e) => {
   w[t.dataset.k] = o;
   store.set('work', w);
   workStatus();
+  showSync();
 });
 $('#work-list').addEventListener('change', (e) => {
   const t = e.target;
@@ -2047,6 +2054,8 @@ $('#work-list').addEventListener('change', (e) => {
   store.set('work', w);
 });
 $('#work-list').addEventListener('click', (e) => {
+  const sv = e.target.closest('button[data-save]');
+  if (sv) { saveNow(sv); return; }
   const b = e.target.closest('button[data-send], button[data-copy]');
   if (!b) return;
   const s = secOf(b.dataset.send || b.dataset.copy);
@@ -2321,8 +2330,9 @@ async function syncUp() {
       let bin = '';
       iv.forEach((b) => { bin += String.fromCharCode(b); });
       ct.forEach((b) => { bin += String.fromCharCode(b); });
-      const res = await fetch(FS + '/work/' + await docId(k, pack.id), { method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fields: { c: { stringValue: btoa(bin) }, t: { integerValue: String(Date.now()) } } }) });
+      const req = JSON.stringify({ fields: { c: { stringValue: btoa(bin) }, t: { integerValue: String(Date.now()) } } });
+      /* 앱을 닫거나 다른 앱으로 넘어가도 끝까지 보내지도록 keepalive (64KB 아래일 때만 쓸 수 있다) */
+      const res = await fetch(FS + '/work/' + await docId(k, pack.id), { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: req, keepalive: req.length < 60000 });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       store.set('sync', { h: h, at: Date.now() });
     }
@@ -2337,7 +2347,40 @@ async function syncUp() {
 }
 let syncWait = false, syncOk = 0, pulled = false;
 const unsent = () => (store.get('stateAt', 0) > 0 && (store.get('sync', {}).at || 0) < store.get('stateAt', 0) && syncOk < store.get('stateAt', 0));
-/* 서버에 올라간 내 것을 받아 와서, 이 휴대전화 것보다 새것이면 바꿔 넣는다 */
+/* 서버 것과 합칠 때 이 휴대전화에 쓴 글이 빈칸으로 덮이지 않게 한다(a는 칸별 답) */
+function keepText(local, server, key) {
+  if (server == null || server === '') return local;
+  if (local == null || local === '') return server;
+  if (typeof server === 'string') return server.trim() ? server : local;
+  if (Array.isArray(server)) {
+    if (key !== 'a') return server.length ? server : local;
+    const n = Math.max(server.length, Array.isArray(local) ? local.length : 0);
+    return Array.from({ length: n }, (_, i) => keepText(Array.isArray(local) ? local[i] : null, server[i]));
+  }
+  if (typeof server === 'object' && typeof local === 'object' && !Array.isArray(local)) {
+    const out = Object.assign({}, local);
+    Object.keys(server).forEach((x) => { out[x] = keepText(local[x], server[x], x); });
+    return out;
+  }
+  return server;
+}
+/* '저장하기': 바로 보내고 결과를 알려 준다 */
+async function saveNow(b) {
+  b.disabled = true; b.textContent = '저장 중…';
+  clearTimeout(syncTimer);
+  for (let i = 0; i < 80 && syncBusy; i++) await new Promise((r) => setTimeout(r, 100));
+  await syncUp();
+  b.disabled = false; b.textContent = '저장하기';
+  flash(b, !storeOk ? '저장이 안 되는 브라우저예요' : syncWait || unsent() ? '휴대전화에 저장했어요. 인터넷 되면 보내요' : '저장했어요 ✓');
+}
+function savedText() {
+  if (!who() || !storeOk) return '';
+  if (syncWait) return '휴대전화에 저장됨 · 인터넷 연결되면 선생님께 보내요';
+  if (unsent()) return '휴대전화에 저장됨 · 보내는 중…';
+  const at = Math.max(store.get('sync', {}).at || 0, syncOk);
+  return at ? '저장됨 · 선생님께 전달 ' + kst(new Date(at)).hm : '';
+}
+/* 서버에 올라간 내 것을 받아 와서, 이 휴대전화 것보다 새것이면 합쳐 넣는다 */
 async function pullDown() {
   const me = who(), d = sealed();
   if (TEACHER || !me || !d) return false;
@@ -2349,7 +2392,7 @@ async function pullDown() {
     const got = JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: raw.slice(0, 12) }, k.aes, raw.slice(12))));
     pulled = true;
     if (got.id !== me.id || !got.s || (got.s.at || 0) <= store.get('stateAt', 0)) return false;
-    MINE.forEach((x) => store.put(x, got.s[x]));
+    MINE.forEach((x) => store.put(x, keepText(store.get(x, null), got.s[x])));
     store.put('stateAt', got.s.at);
     store.put('owner', me.id);
     refreshMine();
@@ -2365,6 +2408,7 @@ function showSync() {
     : last.at ? '쓴 내용은 선생님 앱에 자동으로 보여요. 마지막 전달 ' + kst(new Date(last.at)).hm : '쓴 내용은 선생님 앱에 자동으로 보여요.';
   document.querySelectorAll('[data-sync]').forEach((el) => { el.textContent = text; });
   document.querySelectorAll('[data-lunch-sync]').forEach((el) => { el.textContent = lunchSyncText(); });
+  document.querySelectorAll('[data-saved]').forEach((el) => { el.textContent = savedText(); });
 }
 window.addEventListener('online', syncSoon);
 
@@ -2576,6 +2620,7 @@ if (offset) {
   p.hidden = false;
 }
 renderTeacherExtras();
+if (!storeOk) $('#store-warn').hidden = false;
 renderRules();
 renderMuseum();
 renderTeam();
@@ -2619,7 +2664,11 @@ tick();
 setInterval(tick, 20000);
 /* 선생님 앱 활동지 화면을 보고 있으면 10초마다 새로 받아 온다 */
 if (TEACHER) setInterval(() => { if (curPage === 'twork' && !document.hidden && !twBusy && navigator.onLine !== false) loadTWork(); }, 10000);
-document.addEventListener('visibilitychange', () => { if (!document.hidden) { pulled = false; tick(); syncSoon(); } });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { if (!TEACHER && unsent()) { clearTimeout(syncTimer); syncUp(); } return; }
+  pulled = false; tick(); syncSoon();
+});
+window.addEventListener('pagehide', () => { if (!TEACHER && unsent()) { clearTimeout(syncTimer); syncUp(); } });
 
 try {
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
