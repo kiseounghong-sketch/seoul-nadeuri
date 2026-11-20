@@ -691,6 +691,7 @@ button { font: inherit; color: inherit; }
 /* 활동지 */
 .wsec { margin: 8px var(--gut) 0; }
 .wsec-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
+.wsec-head .wsave { margin-left: auto; min-height: 30px; padding: 0 12px; border-radius: 8px; font-size: 13px; }
 .wsec-head h3 { font-size: 16px; font-weight: 800; line-height: 1.3; }
 .wsec-head .badge { background: var(--day); color: var(--on-day); }
 .wsec-head .badge.wait { background: var(--bg2); color: var(--ink2); }
@@ -2005,7 +2006,8 @@ function renderWork() {
         '<p class="hint" style="margin-top:4px" data-saved></p>';
     }
     return '<section class="wsec pane ' + dayCls(s.day) + (lock ? ' locked' : '') + '" data-pane="' + s.id + '" id="w-' + s.id + '" hidden>' +
-      '<div class="wsec-head"><h3>' + esc(s.title) + '</h3><span data-badge>' + badgeOf(s, st) + '</span><p class="wsec-when">' + esc(s.when + sub) + '</p></div>' + body + '</section>';
+      '<div class="wsec-head"><h3>' + esc(s.title) + '</h3><span data-badge>' + badgeOf(s, st) + '</span>' +
+      (qs ? '<button type="button" class="btn day wsave" data-save="' + s.id + '"' + dis + '>저장하기</button>' : '') + '<p class="wsec-when">' + esc(s.when + sub) + '</p></div>' + body + '</section>';
   }).join('');
   workStatus();
   showPane('work', secOf(subSel.work) ? subSel.work : workAuto());
